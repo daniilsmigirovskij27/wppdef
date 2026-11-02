@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v0.9.0 — Lesta Style Adaptation</title>
+<title>WPPDef v0.9.1 — Content & UI Fix</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap');
 
@@ -329,7 +329,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .mg-title{font-family:'Oswald', sans-serif;font-size:18px;color:var(--danger);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;text-align:center}
 .mg-sub{font-size:11px;color:var(--dim);margin-bottom:12px;text-align:center;max-width:340px;line-height:1.5}
 .mg-timer{font-family:'Oswald', sans-serif;font-size:28px;font-weight:700;color:var(--warning);margin-bottom:10px}
-.mg-area{position:relative;width:100%;max-width:400px;height:300px;background:var(--bg);border:1px solid var(--danger);border-radius:4px;overflow:hidden}
+.mg-area{position:relative;width:100%;max-width:400px;min-width: 300px;height:300px;background:var(--bg);border:1px solid var(--danger);border-radius:4px;overflow:hidden}
 .mg-node{position:absolute;padding:8px 10px;font-size:11px;font-family:'Roboto Mono', monospace;border:1px solid;border-radius:4px;cursor:pointer;user-select:none;background:var(--panel);font-weight:700}
 .mg-node.bad{border-color:var(--danger);color:var(--danger)}
 .mg-node.good{border-color:var(--accent);color:var(--accent)}
@@ -352,6 +352,9 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .boss-hp-bar{height:100%;background:linear-gradient(90deg,var(--danger) 0%,#ff6644 50%,var(--danger) 100%);background-size:200% 100%;animation:bossHpDrain 2s linear infinite;transition:width .5s ease-out;}
 .boss-hp-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald', sans-serif;font-size:10px;font-weight:700;color:var(--text);letter-spacing:2px}
 .prob-badge{font-size:10px!important;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--purple-dim);color:var(--purple)}
+
+/* FIX 1: Mini-game layout fix */
+#mgBody { width: 100%; display: flex; justify-content: center; }
 
 @media (max-width:600px){
   h1{font-size:20px;letter-spacing:2px}
@@ -377,13 +380,13 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v0.9.0 • LESTA STYLE ADAPTATION • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v0.9.1 • CONTENT & UI FIX • WIND POWER PLANT DEFENSE</div></header>
 
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
   <div class="stat-card"><div class="stat-label">Уровень</div><div class="stat-value" id="statLevel">1</div></div>
   <div class="stat-card"><div class="stat-label">Угроза</div><div class="stat-value" id="statThreat">0%</div></div>
-  <div class="stat-card gold"><div class="stat-label">Бюджет (₽)</div><div class="stat-value gold" id="statCredits">0</div></div>
+  <div class="stat-card gold"><div class="stat-label">Червонцы</div><div class="stat-value gold" id="statCredits">0</div></div>
 </div>
 
 <div class="game-field">
@@ -394,8 +397,8 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
     <div class="menu-stats">
       <div class="menu-stat"><div class="menu-stat-label">Рекорд</div><div class="menu-stat-value" id="menuHighScore">0</div></div>
       <div class="menu-stat"><div class="menu-stat-label">Игр</div><div class="menu-stat-value" id="menuGamesPlayed">0</div></div>
-      <div class="menu-stat gold"><div class="menu-stat-label">Бюджет (₽)</div><div class="menu-stat-value gold" id="menuCredits">0</div></div>
-      <div class="menu-stat gold"><div class="menu-stat-label">Доход</div><div class="menu-stat-value gold" id="menuIncome">0 ₽/с</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Червонцы</div><div class="menu-stat-value gold" id="menuCredits">0 ₡</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Доход</div><div class="menu-stat-value gold" id="menuIncome">0 ₡/с</div></div>
     </div>
     <div class="menu-grid">
       <button class="menu-btn-mini gold" id="btnUpgrade">🏭 Прокачка</button>
@@ -458,6 +461,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       </div>
       <div class="attack-tools">
         <button class="btn ghost small" id="btnHint">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
+        <button class="btn ghost small" id="btnFreeze">🧊 Стоп-время (<span id="freezeLeft">0</span>)</button>
         <button class="btn skip small" id="btnSkip" style="display:none">⏭️ Пропуск (<span id="skipsLeft">1</span>)</button>
       </div>
       <div class="options-grid" id="optionsGrid"></div>
@@ -475,7 +479,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <div class="menu-stat"><div class="menu-stat-label">Макс комбо</div><div class="menu-stat-value" id="finalCombo">0</div></div>
     </div>
     <div class="xp-badge" id="xpGained">+0 XP</div>
-    <div class="xp-badge" id="creditsGained" style="background:var(--gold-dim);color:var(--gold);margin-bottom:14px">+0 ₽</div>
+    <div class="xp-badge" id="creditsGained" style="background:var(--gold-dim);color:var(--gold);margin-bottom:14px">+0 ₡</div>
     <button class="btn" id="btnRestart">🔄 В МЕНЮ</button>
   </div>
 </div>
@@ -489,6 +493,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <script>
 'use strict';
 
+// CRITICAL: SALT and SCHEMA remain unchanged to preserve player progress
 const SALT='wppdef_v080_sec_x9z2a1';
 const SCHEMA=8;
 
@@ -581,7 +586,25 @@ const ATTACKS=[
   {id:'container',category:'hard',name:'CONTAINER ESCAPE',description:'Выход из контейнера.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Seccomp и namespaces',damage:31,reward:150,hint:'Seccomp.'},
   {id:'cache_poison',category:'hard',name:'WEB CACHE POISONING',description:'Кэш отравлен.',wrongOptions:['Очистить','Игнорировать','Перезагрузить'],correctOption:'Cache-Control и Vary',damage:30,reward:148,hint:'Cache-Control.'},
   {id:'mem_cor',category:'hard',name:'MEMORY CORRUPTION',description:'Повреждение памяти.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'ASLR и DEP',damage:32,reward:152,hint:'ASLR.'},
-  {id:'sidechan',category:'hard',name:'SIDE-CHANNEL',description:'Анализ по времени.',wrongOptions:['Игнорировать','Ускорить ответ','Перезагрузить'],correctOption:'Константное время операций',damage:30,reward:148,hint:'Constant-time.'}
+  {id:'sidechan',category:'hard',name:'SIDE-CHANNEL',description:'Анализ по времени.',wrongOptions:['Игнорировать','Ускорить ответ','Перезагрузить'],correctOption:'Константное время операций',damage:30,reward:148,hint:'Constant-time.'},
+  // NEW ATTACKS (15 total: 5 easy, 5 medium, 5 hard)
+  {id:'spam_calls',category:'easy',name:'СПАМ-ЗВОНКИ',description:'Массовые звонки на телефоны диспетчеров.',wrongOptions:['Ответить всем','Игнорировать','Сменить номера'],correctOption:'Включить фильтр вызовов',damage:10,reward:38,hint:'Блокировка на уровне АТС.'},
+  {id:'social_phish',category:'easy',name:'ФИШИНГ В СОЦСЕТЯХ',description:'Фейковый аккаунт директора просит данные.',wrongOptions:['Написать в ЛС','Заблокировать','Переслать коллегам'],correctOption:'Проверить через внутренний чат',damage:11,reward:40,hint:'Внешние каналы не доверенны.'},
+  {id:'fake_login',category:'easy',name:'ПОДДЕЛЬНАЯ СТРАНИЦА',description:'Сотрудник ввёл пароль на клон-сайте.',wrongOptions:['Сменить пароль','Игнорировать','Удалить браузер'],correctOption:'Отозвать сессию и инструктаж',damage:12,reward:42,hint:'Срочный сброс токенов.'},
+  {id:'weak_password',category:'easy',name:'СЛАБЫЙ ПАРОЛЬ',description:'Админ использует "admin123".',wrongOptions:['Уволить','Игнорировать','Сменить IP'],correctOption:'Принудительная смена + 2FA',damage:13,reward:45,hint:'Политика сложных паролей.'},
+  {id:'usb_drop',category:'easy',name:'ЗАБЫТАЯ ФЛЕШКА',description:'Неизвестный USB в порту сервера.',wrongOptions:['Проверить содержимое','Выкинуть','Перезагрузить'],correctOption:'Физическое извлечение и аудит',damage:14,reward:48,hint:'Никакого подключения к сети.'},
+  
+  {id:'iot_ddos',category:'medium',name:'DDoS ЧЕРЕЗ IoT',description:'Атака через умные камеры офиса.',wrongOptions:['Отключить интернет','Игнорировать','Перезагрузить роутер'],correctOption:'Сегментация сети IoT',damage:20,reward:75,hint:'Изоляция периметра.'},
+  {id:'gps_spoof_med',category:'medium',name:'ПОДМЕНА GPS',description:'Трекер служебного авто показывает поле.',wrongOptions:['Позвонить водителю','Игнорировать','Перезагрузить трекер'],correctOption:'Переключить на ГЛОНАСС/инерцию',damage:21,reward:78,hint:'Резервные системы навигации.'},
+  {id:'sms_intercept',category:'medium',name:'ПЕРЕХВАТ SMS',description:'Коды 2FA приходят на чужой номер.',wrongOptions:['Сменить номер','Игнорировать','Отключить 2FA'],correctOption:'Переход на аппаратные ключи',damage:22,reward:82,hint:'SIM-swap защита.'},
+  {id:'mitm_proxy',category:'medium',name:'ПРОКСИ-АТАКА',description:'Трафик идёт через неизвестный узел.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить ПК'],correctOption:'Принудительный HTTPS и проверка сертификатов',damage:20,reward:76,hint:'Шифрование канала.'},
+  {id:'priv_esc_med',category:'medium',name:'ЭСКАЛАЦИЯ ПРАВ',description:'Пользователь получил доступ к /etc/shadow.',wrongOptions:['Удалить пользователя','Игнорировать','Перезагрузить'],correctOption:'Аудит sudo и закрытие уязвимости',damage:23,reward:84,hint:'Принцип наименьших привилегий.'},
+
+  {id:'satellite_hack',category:'hard',name:'АТАКА НА СПУТНИК',description:'Попытка перехвата управления каналом связи.',wrongOptions:['Игнорировать','Перезагрузить терминал','Сменить частоту'],correctOption:'Активация резервного защищённого канала',damage:35,reward:150,hint:'Аппаратное шифрование.'},
+  {id:'uav_firmware',category:'hard',name:'ПРОШИВКА БПЛА',description:'Обнаружена модификация кода дрона-инспектора.',wrongOptions:['Удалить дрон','Игнорировать','Перепрошить "как есть"'],correctOption:'Карантин и проверка хэш-сумм',damage:36,reward:155,hint:'Целостность кода.'},
+  {id:'quantum_hack',category:'hard',name:'КВАНТОВЫЙ ВЗЛОМ',description:'Попытка расшифровки архивов алгоритмом Шора.',wrongOptions:['Удалить архивы','Игнорировать','Увеличить длину ключа RSA'],correctOption:'Переход на постквантовую криптографию',damage:38,reward:160,hint:'Алгоритмы, устойчивые к квантовым атакам.'},
+  {id:'scada_zero',category:'hard',name:'SCADA 0-DAY',description:'Неизвестная уязвимость в контроллере турбины.',wrongOptions:['Обновить антивирус','Игнорировать','Перезагрузить ПЛК'],correctOption:'Физическая изоляция сегмента',damage:37,reward:158,hint:'Воздушный зазор (air gap).'},
+  {id:'ai_poison',category:'hard',name:'ОТРАВЛЕНИЕ AI',description:'В обучающую выборку внесены вредоносные паттерны.',wrongOptions:['Перезагрузить сервер','Игнорировать','Удалить модель'],correctOption:'Откат к чистой версии и аудит данных',damage:34,reward:152,hint:'Валидация датасетов.'}
 ];
 
 const BOSSES=[
@@ -596,13 +619,17 @@ const SKILLS=[
   {id:'reaction',name:'РЕАКЦИЯ',desc:'+2 сек к таймеру',maxLevel:5,costs:[100,250,500,1000,2000]},
   {id:'analysis',name:'АНАЛИЗ',desc:'+10% к очкам',maxLevel:5,costs:[100,250,500,1000,2000]},
   {id:'shield',name:'КИБЕРЩИТ',desc:'−10% урона',maxLevel:5,costs:[150,300,600,1200,2500]},
-  {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]}
+  {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]},
+  // NEW SKILLS
+  {id:'crit',name:'КРИТИЧЕСКИЙ ОТВЕТ',desc:'Шанс x2 очков за правильный ответ',maxLevel:5,costs:[500, 1500, 4000, 10000, 25000]},
+  {id:'freeze',name:'ЗАМОРОЗКА',desc:'+5 сек к таймеру (1 раз за игру)',maxLevel:1,costs:[2000]}
 ];
 
+// FIX 4: Branches expanded to level 20 with exponential costs
 const BRANCHES={
-  turbines:{name:'ВЕТРОГЕНЕРАТОРЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:10,costs:[100,200,400,800,1600,3200,6400,12800,25600,50000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₽/сек`},
-  defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:10,costs:[50,100,200,400,800,1500,3000,6000,12000,25000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
-  staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:10,costs:[50,100,200,400,800,1500,3000,6000,12000,25000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`}
+  turbines:{name:'ВЕТРОГЕНЕРАТОРЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₡/сек`},
+  defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
+  staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`}
 };
 
 const OPERATORS={
@@ -625,7 +652,7 @@ const ACHIEVEMENTS=[
   {id:'persistent',name:'УПОРНЫЙ',desc:'10 игр',icon:'🔁'},
   {id:'scholar',name:'УЧЁНЫЙ',desc:'Навык до макс',icon:'🎓'},
   {id:'rich',name:'БОГАЧ',desc:'10000 XP',icon:'💰'},
-  {id:'tycoon',name:'МАГНАТ',desc:'5000 бюджета',icon:'💎'},
+  {id:'tycoon',name:'МАГНАТ',desc:'5000 червонцев',icon:'💎'},
   {id:'builder',name:'СТРОИТЕЛЬ',desc:'Ветрогенераторы 5',icon:'🏗️'},
   {id:'shooter',name:'СТРЕЛОК',desc:'10 мини-игр',icon:'🎯'},
   {id:'op_master',name:'МАСТЕР',desc:'Специалист 5 ур.',icon:'⭐'}
@@ -680,7 +707,7 @@ const ui={
   screenMenu:$('screenMenu'),screenOperator:$('screenOperator'),screenMap:$('screenMap'),
   screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),
   attackLabel:$('attackLabel'),attackName:$('attackName'),attackDesc:$('attackDesc'),timerValue:$('timerValue'),
-  optionsGrid:$('optionsGrid'),hintsLeft:$('hintsLeft'),btnHint:$('btnHint'),actionBar:$('actionBar'),
+  optionsGrid:$('optionsGrid'),hintsLeft:$('hintsLeft'),btnHint:$('btnHint'),btnFreeze:$('btnFreeze'),freezeLeft:$('freezeLeft'),actionBar:$('actionBar'),
   finalScore:$('finalScore'),finalLevel:$('finalLevel'),finalRepelled:$('finalRepelled'),finalCombo:$('finalCombo'),
   xpGained:$('xpGained'),creditsGained:$('creditsGained'),
   toastContainer:$('toastContainer'),
@@ -782,7 +809,8 @@ function effects(){
   const d=state.branches.defense,s=state.branches.staff;const opBonus=state.operator?(OPERATORS[state.operator]?.bonus||{}):{};
   return{damageReduction:Math.min(0.7,d*0.05+getSkillDR()),timeBonus:d+getTimeBonus()+(opBonus.timeBonus||0)+(state.permanentBonuses?.timeBonus||0),scoreBonus:s*0.10+(getRewardMult()-1)+(state.permanentBonuses?.scoreBonus||0),xpBonus:s*0.05};
 }
-function updateCreditsUI(){const cr=Math.floor(state.credits);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₽';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₽/с';}
+// FIX 2: Currency text updated to "Червонцы"
+function updateCreditsUI(){const cr=Math.floor(state.credits);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₡';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₡/с';}
 
 let audioCtx=null,ambientTimer=null,sirenTimer=null;
 function ensureAudio(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch{}}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();}
@@ -880,17 +908,17 @@ function updateContract(stat,val,abs=false){for(const c of CONTRACTS){if(c.stat!
 function openContracts(){
   checkContracts();ui.modalTitle.textContent='📜 КОНТРАКТЫ ДНЯ';let html='<div style="text-align:center;font-size:11px;color:var(--dim);margin-bottom:12px">Сброс в 00:00</div>';
   for(const c of CONTRACTS){const prog=Math.min(state.contracts.progress[c.id]||0,c.target);const claimed=state.contracts.claimed.includes(c.id);const done=prog>=c.target;const pct=(prog/c.target)*100;
-    html+=`<div class="contract-card ${done?'done':''} ${claimed?'claimed':''}"><div class="contract-header"><div class="contract-name">${c.name}</div><div class="contract-reward">+${c.reward} ₽</div></div><div class="contract-desc">${prog}/${c.target}</div><div class="contract-progress"><div class="contract-bar" style="width:${pct}%"></div></div><button class="contract-claim" data-c="${c.id}" ${!done||claimed?'disabled':''}>${claimed?'✓ ПОЛУЧЕНО':done?'ЗАБРАТЬ':'В ПРОЦЕССЕ'}</button></div>`;
+    html+=`<div class="contract-card ${done?'done':''} ${claimed?'claimed':''}"><div class="contract-header"><div class="contract-name">${c.name}</div><div class="contract-reward">+${c.reward} ₡</div></div><div class="contract-desc">${prog}/${c.target}</div><div class="contract-progress"><div class="contract-bar" style="width:${pct}%"></div></div><button class="contract-claim" data-c="${c.id}" ${!done||claimed?'disabled':''}>${claimed?'✓ ПОЛУЧЕНО':done?'ЗАБРАТЬ':'В ПРОЦЕССЕ'}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
-  ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₽','coin',2500);updateCreditsUI();openContracts();};});
+  ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 function openUpgrade(){
-  ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₽</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₽/с</div></div>';
+  ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
   for(const key of ['turbines','defense','staff']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
-    html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₽`}</button></div>`;
+    html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₡`}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if(state.credits<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
@@ -936,7 +964,7 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">Боссов</div><div class="stat-item-value">${s.bossesDefeated}</div></div>
     <div class="stat-item"><div class="stat-item-label">В игре</div><div class="stat-item-value">${h}ч ${m}м</div></div>
     <div class="stat-item"><div class="stat-item-label">XP</div><div class="stat-item-value">${state.xp}</div></div>
-    <div class="stat-item"><div class="stat-item-label">Бюджет</div><div class="stat-item-value">${Math.floor(state.credits)} ₽</div></div>
+    <div class="stat-item"><div class="stat-item-label">Червонцы</div><div class="stat-item-value">${Math.floor(state.credits)} ₡</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
   </div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
@@ -1293,7 +1321,7 @@ async function showRandomEvent(){
     state.credits+=cr;STORE.set('credits',state.credits);updateCreditsUI();
     game.intel=Math.min(100,(game.intel||0)+40);
     game.threat=Math.max(0,game.threat-6);
-    toast('✅ Инцидент закрыт: +'+cr+' ₽, +40 INTEL, −6% угрозы','coin',3000);
+    toast('✅ Инцидент закрыт: +'+cr+' ₡, +40 INTEL, −6% угрозы','coin',3000);
     playSuccess();
   }else{
     game.threat=Math.min(100,game.threat+9);
@@ -1343,6 +1371,7 @@ async function startGame(){
     running:true,paused:false,nextAttackTimer:null,
     hintsLeft:3+getFreeHints()+(opBonus.freeHints||0),
     hintUsed:false,
+    freezeUsed: false, // FIX 5: Track freeze usage
     autoSkipLeft: hackerSkips,
     gameStartTime:Date.now(),totalTime:0,
     attackCounter:0,shooterBonus:0,tempScoreBonus:0,eventTimeBonus:0,
@@ -1358,6 +1387,12 @@ async function startGame(){
   showScreen('attack');
   ui.hintsLeft.textContent=game.hintsLeft;
   ui.btnHint.disabled=false;
+  
+  // FIX 5: Initialize freeze button state
+  const freezeLvl = getSkillLevel('freeze');
+  ui.freezeLeft.textContent = freezeLvl > 0 ? '1' : '0';
+  ui.btnFreeze.disabled = freezeLvl === 0;
+  
   ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
   renderVesScene();
   renderIntel();
@@ -1504,6 +1539,25 @@ function renderPhase(){
   renderIntel();
   renderVesScene();
 }
+
+// FIX 5: Improved Freeze button logic (adds time directly instead of complex interval clearing)
+ui.btnFreeze.onclick = function() {
+  if (getSkillLevel('freeze') > 0 && !game.freezeUsed && game.running && !game.paused && game.timeLeft > 0 && game.activeAttack) {
+    game.freezeUsed = true;
+    ui.freezeLeft.textContent = '0';
+    ui.btnFreeze.disabled = true;
+
+    // Просто добавляем 5 секунд к текущему таймеру
+    game.timeLeft += 5;
+    ui.timerValue.textContent = mutator().id === 'blind' ? '??' : game.timeLeft;
+    ui.timerValue.classList.remove('critical');
+    updateRiskIndicator();
+
+    toast('🧊 +5 секунд к таймеру!', 'info', 2000);
+    beep(600, 200, 0.15, 'triangle');
+    vibe([40, 40, 40]);
+  }
+};
 
 ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
   btn.onclick=async()=>{
@@ -1730,6 +1784,14 @@ function finishRound(correct,a,opt){
 
   if(correct){
     let pts=opt.noScore?0:Math.round(a.reward*rM*(isBoss?2.2:1));
+    
+    // FIX 5: Critical hit logic
+    const critChance = getSkillLevel('crit') * 0.05; // 5%, 10%, 15%, 20%, 25%
+    if (critChance > 0 && Math.random() < critChance) {
+      pts *= 2;
+      toast('💥 КРИТИЧЕСКИЙ ОТВЕТ! x2 очков', 'success', 1500);
+    }
+    
     if(opt.emp)pts=Math.round(pts*1.2);
     game.combo=(game.combo||0)+1;
     game.streakRepelled=(game.streakRepelled||0)+1;
@@ -1810,7 +1872,7 @@ function finishRound(correct,a,opt){
     const bonus=500+game.score*0.25;
     state.credits+=Math.round(bonus);
     STORE.set('credits',state.credits);
-    showBanner('СМЕНА СДАНА','Бонус +'+Math.round(bonus)+' ₽');
+    showBanner('СМЕНА СДАНА','Бонус +'+Math.round(bonus)+' ₡');
     toast('🏅 ВЭС устояла все 15 уровней!','achievement',5000);
     setTimeout(()=>endGame(),2400);
     return;
@@ -1865,7 +1927,7 @@ function endGame(){
   ui.finalRepelled.textContent=game.attacksRepelled;
   ui.finalCombo.textContent='x'+game.maxCombo;
   ui.xpGained.textContent='+'+xp+' XP';
-  ui.creditsGained.textContent='+'+cr+' ₽';
+  ui.creditsGained.textContent='+'+cr+' ₡';
   updateCreditsUI();
   showScreen('gameover');
   playError();
@@ -2012,8 +2074,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v0.9.0','color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cLesta Style Adaptation','color:#8a9199;font-size:12px');
+console.log('%c⚡ WPPDef v0.9.1','color:#ff7b00;font-size:20px;font-weight:bold;');
+console.log('%cContent & UI Fix','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
