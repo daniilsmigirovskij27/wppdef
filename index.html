@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0e1a" id="themeMeta">
-<title>WPPDef v0.8.1 — Living Perks</title>
+<title>WPPDef v0.8.2 — Bugfix Update</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root,[data-theme="cyber"]{
@@ -84,7 +84,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .turbine-tower{width:7px;height:65px;background:linear-gradient(180deg,var(--accent) 0%,var(--dim) 100%);border-radius:2px;position:relative}
 .turbine-live.damaged .turbine-tower{background:linear-gradient(180deg,var(--danger) 0%,#5a1a1a 100%);animation:turbineBroken 2s infinite}
 .turbine-live.shielded .turbine-tower{box-shadow:0 0 15px var(--accent-glow)}
-.turbine-blades{position:absolute;top:20px;left:50%;width:36px;height:36px;margin-left:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
+.turbine-blades{position:absolute;top:20px;left:50%;width:36px;height:36px;margin-left:-18px;margin-top:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
 .turbine-live.damaged .turbine-blades{animation:turbineSpin 25s linear infinite;opacity:.6}
 .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{content:'';position:absolute;top:50%;left:50%;width:34px;height:4px;background:var(--accent);border-radius:4px;transform-origin:0% 50%;box-shadow:0 0 8px var(--accent-glow);margin-top:-2px}
 .turbine-blades::before{transform:rotate(0deg)}
@@ -323,7 +323,7 @@ h1{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:3p
   .ves-scene{height:90px}
   .turbine-live{width:36px;height:70px}
   .turbine-tower{height:50px;width:6px}
-  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:20px}
+  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:20px;margin-top:-14px}
   .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{width:26px}
   .combo-display{font-size:36px}
   .floating-number{font-size:20px}
@@ -333,7 +333,7 @@ h1{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:3p
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v0.8.1 • LIVING PERKS • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v0.8.2 • BUGFIX UPDATE • WIND POWER PLANT DEFENSE</div></header>
 
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
@@ -840,6 +840,7 @@ function openContracts(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
 }
 function openUpgrade(){
@@ -849,6 +850,7 @@ function openUpgrade(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if(state.credits<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
 }
 function openSkills(){
@@ -858,6 +860,7 @@ function openSkills(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.skill-buy').forEach(btn=>{btn.onclick=()=>{const s=SKILLS.find(x=>x.id===btn.dataset.s),lvl=getSkillLevel(s.id);if(lvl>=s.maxLevel||state.xp<s.costs[lvl])return;state.xp-=s.costs[lvl];state.skills[s.id]=lvl+1;STORE.set('xp',state.xp);STORE.set('skills',state.skills);beep(880,120,0.12);toast('✅ '+s.name+' → '+(lvl+1),'success');openSkills();};});
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
 }
 
@@ -869,6 +872,7 @@ function openAchievements(){
     html+=`<div class="ach-card ${un?'unlocked':''}"><div class="ach-icon">${un?a.icon:'🔒'}</div><div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div></div>`;
   }
   ui.modalBody.innerHTML=html;
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
 }
 
@@ -891,6 +895,7 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">Кредиты</div><div class="stat-item-value">${Math.floor(state.credits)}</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
   </div>`;
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
 }
 function openSettings(){
@@ -901,11 +906,12 @@ function openSettings(){
     <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖</button></div>
     <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️</button></div>`;
+  history.pushState({modal: true}, '');
   ui.modalOverlay.classList.add('active');
   $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
   $('soundToggle').onclick=()=>{state.soundOn=!state.soundOn;STORE.set('soundOn',state.soundOn);openSettings();};
   $('vibeToggle').onclick=()=>{state.vibeOn=!state.vibeOn;STORE.set('vibeOn',state.vibeOn);openSettings();};
-  $('replayTut').onclick=()=>{ui.modalOverlay.classList.remove('active');startTutorial(true);};
+  $('replayTut').onclick=()=>{history.back();startTutorial(true);};
   $('resetBtn').onclick=()=>{
     if(!confirm('Удалить весь прогресс?'))return;
     SAVE_KEYS.forEach(k=>{localStorage.removeItem('shieldVes_'+k);localStorage.removeItem('shieldVes__sig_'+k);});
@@ -1259,12 +1265,11 @@ async function startGame(){
   
   const opBonus=(OPERATORS[state.operator]?.bonus)||{};
   
-  // Хакер: автопропуск зависит от уровня
   let hackerSkips = 0;
   if(state.operator==='hacker'){
     const hLvl = opLevel('hacker');
     if(hLvl>=9) hackerSkips = 2;
-    else if(hLvl>=3) hackerSkips = 2; // ур.3 тоже даёт +1 (итого 2)
+    else if(hLvl>=3) hackerSkips = 2;
     else hackerSkips = 1;
   }
   
@@ -1389,7 +1394,6 @@ function renderPhase(){
     ui.btnHint.disabled=true;
   }
 
-  // Показ/скрытие кнопки пропуска (Хакер)
   const btnSkip=$('btnSkip');
   if(btnSkip){
     if(state.operator==='hacker' && game.autoSkipLeft>0){
@@ -1473,7 +1477,6 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
       if(game.analyzed){toast('Уже проанализировано','warning',1200);return;}
       game.analyzed=true;
       
-      // Форензик ур.6: первый анализ за игру бесплатный (не тратит время)
       const freeAnalyze = state.operator==='forensic' && opLevel('forensic')>=6 && !game.forensicFreeUsed;
       if(!freeAnalyze){
         game.timeLeft=Math.max(1,game.timeLeft-CFG.analyzeCost);
@@ -1526,7 +1529,6 @@ ui.btnHint.onclick=function(){
   toast('💡 '+phase.hint,'info',5000);
   beep(1000,100,0.08);
 
-  // Аналитик ур.6: подсказка бесплатна (не тратит заряд)
   const freeHint = state.operator==='analyst' && opLevel('analyst')>=6;
   if(!freeHint){
     game.hintsLeft--;
@@ -1539,7 +1541,6 @@ ui.btnHint.onclick=function(){
   if(game.hintsLeft<=0)ui.btnHint.disabled=true;
 };
 
-// Обработчик кнопки пропуска (Хакер)
 $('btnSkip').onclick=function(){
   if(!game.running||game.paused||game.resolving||!game.activeAttack)return;
   if(game.autoSkipLeft<=0)return;
@@ -1576,7 +1577,6 @@ function handleAnswer(correct,btn,emp){
   const ph=game.activePhase;
   game.lastAnsweredBtn=btn;
   
-  // Рискёр: ответ на последних 20% времени
   if(game.maxTime && game.timeLeft/game.maxTime <= 0.2){
     game.riskAnswered = true;
   }
@@ -1641,7 +1641,6 @@ function finishRound(correct,a,opt){
   let rM=1+eff.scoreBonus+(game.tempScoreBonus||0);
   let dM=1-eff.damageReduction;
   
-  // ИНЖЕНЕР: ур.3 −20% урона, ур.9 −40% урона
   if(state.operator==='engineer'){
     if(opLevel('engineer')>=9) dM*=0.6;
     else if(opLevel('engineer')>=3) dM*=0.8;
@@ -1653,7 +1652,6 @@ function finishRound(correct,a,opt){
   if(opt.shield)dM*=.5;
   rM*=riskMultiplier();
   
-  // АНАЛИТИК ур.9: +50% награды за быстрый ответ (>70% времени)
   if(state.operator==='analyst' && opLevel('analyst')>=9){
     if(game.maxTime && game.timeLeft/game.maxTime > 0.7){
       rM *= 1.5;
@@ -1816,6 +1814,7 @@ function pauseGame(){
   clearInterval(game.timer);
   clearInterval(shuffleTimer);
   clearTimeout(game.nextAttackTimer);
+  history.pushState({pause: true}, '');
   ui.pauseOverlay.classList.add('active');
 }
 function resumeGame(){
@@ -1855,6 +1854,18 @@ function quitToMenu(){
   updateMenu();
 }
 
+// Обработка кнопки "Назад" на Android
+window.addEventListener('popstate', () => {
+  if (ui.modalOverlay.classList.contains('active')) {
+    ui.modalOverlay.classList.remove('active');
+  } else if (ui.pauseOverlay.classList.contains('active')) {
+    ui.pauseOverlay.classList.remove('active');
+    if (game.running && game.paused) {
+      resumeGame();
+    }
+  }
+});
+
 let tutIndex=0;
 function renderTutorial(){
   const s=TUTORIAL[tutIndex];
@@ -1888,12 +1899,15 @@ $('btnStats').onclick=openStats;
 $('btnSettings').onclick=openSettings;
 $('btnTutorial').onclick=()=>startTutorial(true);
 
-ui.modalClose.onclick=()=>ui.modalOverlay.classList.remove('active');
-ui.modalOverlay.onclick=e=>{if(e.target===ui.modalOverlay)ui.modalOverlay.classList.remove('active');};
-
-$('btnPause').onclick=pauseGame;
-$('btnResume').onclick=resumeGame;
-$('btnQuitGame').onclick=quitToMenu;
+ui.modalClose.onclick = () => { if(ui.modalOverlay.classList.contains('active')) history.back(); };
+ui.modalOverlay.onclick = e => { if(e.target === ui.modalOverlay && ui.modalOverlay.classList.contains('active')) history.back(); };
+$('btnResume').onclick = () => { if(ui.pauseOverlay.classList.contains('active')) history.back(); };
+$('btnQuitGame').onclick = () => {
+    if(ui.pauseOverlay.classList.contains('active')){
+        history.back();
+        quitToMenu();
+    }
+};
 
 ui.tutNext.onclick=()=>{
   if(tutIndex>=TUTORIAL.length-1){closeTutorial();return;}
@@ -1925,8 +1939,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v0.8.1','color:#00ff88;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff88');
-console.log('%cLiving Perks Update','color:#6b7280;font-size:12px');
+console.log('%c⚡ WPPDef v0.8.2','color:#00ff88;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff88');
+console.log('%cBugfix Update','color:#6b7280;font-size:12px');
 </script>
 </body>
 </html>
