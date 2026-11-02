@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0a0e1a" id="themeMeta">
-<title>WPPDef v0.8.2 — Bugfix Update</title>
+<title>WPPDef v0.8.9 — Stable & History Fix</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root,[data-theme="cyber"]{
@@ -84,7 +84,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .turbine-tower{width:7px;height:65px;background:linear-gradient(180deg,var(--accent) 0%,var(--dim) 100%);border-radius:2px;position:relative}
 .turbine-live.damaged .turbine-tower{background:linear-gradient(180deg,var(--danger) 0%,#5a1a1a 100%);animation:turbineBroken 2s infinite}
 .turbine-live.shielded .turbine-tower{box-shadow:0 0 15px var(--accent-glow)}
-.turbine-blades{position:absolute;top:20px;left:50%;width:36px;height:36px;margin-left:-18px;margin-top:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
+.turbine-blades{position:absolute;top:0;left:50%;width:36px;height:36px;margin-left:-18px;margin-top:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
 .turbine-live.damaged .turbine-blades{animation:turbineSpin 25s linear infinite;opacity:.6}
 .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{content:'';position:absolute;top:50%;left:50%;width:34px;height:4px;background:var(--accent);border-radius:4px;transform-origin:0% 50%;box-shadow:0 0 8px var(--accent-glow);margin-top:-2px}
 .turbine-blades::before{transform:rotate(0deg)}
@@ -323,7 +323,7 @@ h1{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:3p
   .ves-scene{height:90px}
   .turbine-live{width:36px;height:70px}
   .turbine-tower{height:50px;width:6px}
-  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:20px;margin-top:-14px}
+  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:0;margin-top:-14px}
   .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{width:26px}
   .combo-display{font-size:36px}
   .floating-number{font-size:20px}
@@ -333,7 +333,7 @@ h1{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:3p
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v0.8.2 • BUGFIX UPDATE • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v0.8.9 • STABLE & HISTORY FIX • WIND POWER PLANT DEFENSE</div></header>
 
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
@@ -840,7 +840,7 @@ function openContracts(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 function openUpgrade(){
@@ -850,7 +850,7 @@ function openUpgrade(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if(state.credits<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 function openSkills(){
@@ -860,7 +860,7 @@ function openSkills(){
   }
   ui.modalBody.innerHTML=html;
   ui.modalBody.querySelectorAll('.skill-buy').forEach(btn=>{btn.onclick=()=>{const s=SKILLS.find(x=>x.id===btn.dataset.s),lvl=getSkillLevel(s.id);if(lvl>=s.maxLevel||state.xp<s.costs[lvl])return;state.xp-=s.costs[lvl];state.skills[s.id]=lvl+1;STORE.set('xp',state.xp);STORE.set('skills',state.skills);beep(880,120,0.12);toast('✅ '+s.name+' → '+(lvl+1),'success');openSkills();};});
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 
@@ -872,7 +872,7 @@ function openAchievements(){
     html+=`<div class="ach-card ${un?'unlocked':''}"><div class="ach-icon">${un?a.icon:'🔒'}</div><div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div></div>`;
   }
   ui.modalBody.innerHTML=html;
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 
@@ -895,7 +895,7 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">Кредиты</div><div class="stat-item-value">${Math.floor(state.credits)}</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
   </div>`;
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 function openSettings(){
@@ -906,7 +906,7 @@ function openSettings(){
     <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖</button></div>
     <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️</button></div>`;
-  history.pushState({modal: true}, '');
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
   $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
   $('soundToggle').onclick=()=>{state.soundOn=!state.soundOn;STORE.set('soundOn',state.soundOn);openSettings();};
@@ -924,7 +924,14 @@ function renderOperators(){
   ui.operatorList.innerHTML='';
   Object.values(OPERATORS).forEach(op=>{
     const card=document.createElement('div');
-    card.className='operator-card'+(selectedOperator===op.id||(selectedOperator===null&&state.operator===op.id)?' selected':'');
+    // Подсветка: если выбран вручную ИЛИ если это сохраненный оператор (и ручной еще не сделан)
+    const isSaved = !selectedOperator && state.operator === op.id;
+    const isSelected = selectedOperator === op.id || isSaved;
+    
+    // Если это сохраненный оператор, сразу фиксируем его как выбранный
+    if (isSaved) selectedOperator = op.id;
+
+    card.className='operator-card'+(isSelected?' selected':'');
     const lvl=opLevel(op.id);
     const perks=opPerks(op.id);
     const perksHTML=perks.map(p=>`<span class="perk ${p.unlocked?'unlocked':'locked'}">${p.unlocked?'✅':'🔒'} Ур.${p.lvl}: ${p.name} — ${p.desc}</span>`).join('');
@@ -938,9 +945,15 @@ function renderOperators(){
     };
     ui.operatorList.appendChild(card);
   });
-  $('btnToMap').disabled=!selectedOperator&&!state.operator;
+  // Кнопка активна, если есть выбранный или сохраненный оператор
+  $('btnToMap').disabled = !(selectedOperator || state.operator);
 }
-function openOperatorSelect(){renderOperators();showScreen('operator');}
+
+function openOperatorSelect(){
+  renderOperators();
+  showScreen('operator');
+  history.pushState({screen: 'submenu'}, '');
+}
 
 function openMap(){
   selectedShields={...state.mapShields};
@@ -964,6 +977,7 @@ function openMap(){
   }
   render();
   showScreen('map');
+  history.pushState({screen: 'submenu'}, '');
 }
 
 let shooterState={active:false,drones:0,timer:null,startTime:0,total:5};
@@ -1255,10 +1269,18 @@ async function showRandomEvent(){
 
 async function startGame(){
   ensureAudio();startAmbient();tickIncome();checkContracts();
-  state.operator=selectedOperator||state.operator||'engineer';
-  state.mapShields={...selectedShields};
-  STORE.set('operator',state.operator);
-  STORE.set('mapShields',state.mapShields);
+  
+  // Максимально надежная цепочка: ручной выбор -> сохраненный -> инженер по умолчанию (как в v0.8.1)
+  state.operator = selectedOperator || state.operator || 'engineer';
+  
+  if(Object.keys(selectedShields).length === 0) {
+      toast('⚠️ Распределите щиты на карте ВЭС!', 'error', 2000);
+      return;
+  }
+  
+  state.mapShields = {...selectedShields};
+  STORE.set('operator', state.operator);
+  STORE.set('mapShields', state.mapShields);
   
   TURBINES.forEach(t=>{state.turbineHealth[t]=100;});
   STORE.set('turbineHealth',state.turbineHealth);
@@ -1268,9 +1290,9 @@ async function startGame(){
   let hackerSkips = 0;
   if(state.operator==='hacker'){
     const hLvl = opLevel('hacker');
-    if(hLvl>=9) hackerSkips = 2;
-    else if(hLvl>=3) hackerSkips = 2;
-    else hackerSkips = 1;
+    hackerSkips = 1;
+    if(hLvl >= 3) hackerSkips += 1;
+    if(hLvl >= 9) hackerSkips += 1;
   }
   
   game={
@@ -1290,7 +1312,9 @@ async function startGame(){
     lastAnsweredBtn:null,
     forensicFreeUsed: false
   };
+  
   updateStats();
+  history.replaceState({screen: 'attack'}, '');
   showScreen('attack');
   ui.hintsLeft.textContent=game.hintsLeft;
   ui.btnHint.disabled=false;
@@ -1837,7 +1861,9 @@ function resumeGame(){
         handleAnswer(false,null);
       }
     },1000);
-  }else if(game.timeLeft>0){
+  } else if(game.running && !game.activeAttack) {
+      game.nextAttackTimer = setTimeout(()=>spawnAttack(), 1000);
+  } else if(game.timeLeft>0){
     spawnAttack();
   }
 }
@@ -1860,9 +1886,16 @@ window.addEventListener('popstate', () => {
     ui.modalOverlay.classList.remove('active');
   } else if (ui.pauseOverlay.classList.contains('active')) {
     ui.pauseOverlay.classList.remove('active');
-    if (game.running && game.paused) {
-      resumeGame();
-    }
+    if (game.running && game.paused) resumeGame();
+  } else if (ui.screenGameOver.classList.contains('active')) {
+    showScreen('menu');
+    updateMenu();
+  } else if (ui.screenMap.classList.contains('active')) {
+    showScreen('operator');
+  } else if (ui.screenOperator.classList.contains('active')) {
+    showScreen('menu');
+  } else if (game.running && !game.paused && ui.screenAttack.classList.contains('active')) {
+    pauseGame();
   }
 });
 
@@ -1939,8 +1972,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v0.8.2','color:#00ff88;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff88');
-console.log('%cBugfix Update','color:#6b7280;font-size:12px');
+console.log('%c⚡ WPPDef v0.8.9','color:#00ff88;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff88');
+console.log('%cStable & History Fix','color:#6b7280;font-size:12px');
 </script>
 </body>
 </html>
