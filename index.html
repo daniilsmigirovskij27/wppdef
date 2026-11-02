@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="cyber">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a" id="themeMeta">
+<title>WPPDef v0.8.1 — Living Perks</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root,[data-theme="cyber"]{
+  --bg:#0a0e1a;--panel:#111827;--panel-2:#0f1623;--border:#1f2937;
+  --text:#e5e7eb;--dim:#6b7280;--accent:#00ff88;--accent-dim:rgba(0,255,136,.1);--accent-glow:rgba(0,255,136,.5);
+  --danger:#ff3366;--danger-dim:rgba(255,51,102,.1);--warning:#ffaa00;--warning-dim:rgba(255,170,0,.1);
+  --info:#00aaff;--info-dim:rgba(0,170,255,.1);--gold:#ffcc00;--gold-dim:rgba(255,204,0,.12);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.15);
+  --grid-color:rgba(0,255,136,.04);
+  --body-bg-grad:radial-gradient(ellipse at 50% 0%,#0a1e2e 0%,#0a0e1a 70%);
+}
+[data-theme="alarm"]{
+  --bg:#0a0000;--panel:#1a0505;--panel-2:#140303;--border:#3d0a0a;
+  --text:#f5e5e5;--dim:#7a4444;--accent:#ff3355;--accent-dim:rgba(255,51,85,.15);
+  --danger:#ffcc00;--danger-dim:rgba(255,204,0,.15);--warning:#ff6600;--warning-dim:rgba(255,102,0,.15);
+  --info:#ff9933;--info-dim:rgba(255,153,51,.15);--gold:#ffcc00;--gold-dim:rgba(255,204,0,.15);
+  --purple:#ff66aa;--purple-dim:rgba(255,102,170,.15);
+  --grid-color:rgba(255,51,85,.05);
+  --body-bg-grad:radial-gradient(ellipse at 50% 0%,#2a0505 0%,#0a0000 70%);
+}
+body{font-family:'Courier New',monospace;background:var(--body-bg-grad);color:var(--text);min-height:100vh;overflow-x:hidden;position:relative;transition:background .5s,color .3s}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:40px 40px;animation:gridScroll 20s linear infinite;pointer-events:none;z-index:0}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:40px 40px}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+@keyframes correctPulse{0%,100%{box-shadow:0 0 0 var(--accent)}50%{box-shadow:0 0 30px var(--accent)}}
+@keyframes bossPulse{0%,100%{border-color:var(--danger);box-shadow:0 0 20px var(--danger-dim)}50%{border-color:var(--danger);box-shadow:0 0 40px var(--danger)}}
+@keyframes droneMove{from{transform:translate(0,0)}to{transform:translate(var(--dx),var(--dy))}}
+@keyframes droneHit{0%{transform:scale(1)}50%{transform:scale(1.5);opacity:.7}100%{transform:scale(0);opacity:0}}
+@keyframes shieldGlow{0%,100%{box-shadow:0 0 8px var(--accent-dim)}50%{box-shadow:0 0 20px var(--accent)}}
+@keyframes glitch{0%,100%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(-2px,-2px)}60%{transform:translate(2px,2px)}80%{transform:translate(2px,-2px)}}
+@keyframes emergencyFlash{0%,100%{background:transparent}50%{background:rgba(255,51,102,.15)}}
+@keyframes bossHpDrain{from{background-position:0 0}to{background-position:200% 0}}
+@keyframes riskGlow{0%,100%{text-shadow:0 0 10px var(--warning)}50%{text-shadow:0 0 25px var(--warning),0 0 40px var(--danger)}}
+@keyframes comboFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-80%) scale(1)}100%{opacity:0;transform:translate(-50%,-150%) scale(.8)}}
+@keyframes turbineSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes turbineBroken{0%,100%{filter:brightness(1) hue-rotate(0)}50%{filter:brightness(.5) hue-rotate(-30deg) saturate(2)}}
+@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(0)}}
+@keyframes floatUp{
+  0%{opacity:0;transform:translate(-50%,0) scale(.5)}
+  15%{opacity:1;transform:translate(-50%,-10px) scale(1.3)}
+  100%{opacity:0;transform:translate(-50%,-90px) scale(1)}
+}
+@keyframes screenShake{
+  0%,100%{transform:translate(0,0)}
+  10%{transform:translate(calc(var(--shake-intensity,10px) * -0.6), calc(var(--shake-intensity,10px) * 0.4))}
+  20%{transform:translate(calc(var(--shake-intensity,10px) * 0.8), calc(var(--shake-intensity,10px) * -0.5))}
+  30%{transform:translate(calc(var(--shake-intensity,10px) * -0.4), calc(var(--shake-intensity,10px) * 0.6))}
+  40%{transform:translate(calc(var(--shake-intensity,10px) * 0.6), calc(var(--shake-intensity,10px) * -0.3))}
+  50%{transform:translate(calc(var(--shake-intensity,10px) * -0.5), calc(var(--shake-intensity,10px) * 0.4))}
+  60%{transform:translate(calc(var(--shake-intensity,10px) * 0.3), 0)}
+  70%{transform:translate(calc(var(--shake-intensity,10px) * -0.2), calc(var(--shake-intensity,10px) * -0.1))}
+  80%{transform:translate(calc(var(--shake-intensity,10px) * 0.1), 0)}
+}
+
+.container{max-width:800px;margin:0 auto;padding:14px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
+.container.screen-shake{animation:screenShake .35s ease-out}
+
+.floating-number{
+  position:fixed;
+  font-family:'Courier New',monospace;
+  font-size:24px;
+  font-weight:900;
+  pointer-events:none;
+  z-index:9998;
+  text-shadow:0 0 12px currentColor, 0 2px 6px rgba(0,0,0,.9);
+  animation:floatUp 1.3s ease-out forwards;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+
+.ves-scene{position:relative;width:100%;height:110px;background:linear-gradient(180deg,rgba(0,255,136,.03) 0%,transparent 100%);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-around;padding:0 10px}
+.ves-scene.emergency{animation:emergencyFlash 1s infinite;border-color:var(--danger)}
+.turbine-live{position:relative;width:45px;height:85px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.turbine-tower{width:7px;height:65px;background:linear-gradient(180deg,var(--accent) 0%,var(--dim) 100%);border-radius:2px;position:relative}
+.turbine-live.damaged .turbine-tower{background:linear-gradient(180deg,var(--danger) 0%,#5a1a1a 100%);animation:turbineBroken 2s infinite}
+.turbine-live.shielded .turbine-tower{box-shadow:0 0 15px var(--accent-glow)}
+.turbine-blades{position:absolute;top:20px;left:50%;width:36px;height:36px;margin-left:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
+.turbine-live.damaged .turbine-blades{animation:turbineSpin 25s linear infinite;opacity:.6}
+.turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{content:'';position:absolute;top:50%;left:50%;width:34px;height:4px;background:var(--accent);border-radius:4px;transform-origin:0% 50%;box-shadow:0 0 8px var(--accent-glow);margin-top:-2px}
+.turbine-blades::before{transform:rotate(0deg)}
+.turbine-blades::after{transform:rotate(120deg)}
+.turbine-blades .b3{transform:rotate(240deg)}
+.turbine-live.damaged .turbine-blades::before,.turbine-live.damaged .turbine-blades::after,.turbine-live.damaged .turbine-blades .b3{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+.turbine-label{font-size:8px;color:var(--dim);margin-top:4px;font-family:'Courier New',monospace}
+.turbine-shield-indicator{position:absolute;top:6px;right:-4px;font-size:12px}
+.spark-particle{position:absolute;width:4px;height:4px;background:var(--warning);border-radius:50%;pointer-events:none;animation:spark .6s ease-out forwards;box-shadow:0 0 6px var(--warning)}
+
+.combo-display{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:900;color:var(--gold);text-shadow:0 0 30px var(--gold),0 0 60px var(--warning);pointer-events:none;z-index:9999;opacity:0;font-family:'Courier New',monospace;letter-spacing:4px}
+.combo-display.active{animation:comboFly 1.2s ease-out forwards}
+.risk-indicator{text-align:center;font-size:11px;color:var(--warning);margin-bottom:6px;font-weight:700;letter-spacing:2px;min-height:16px}
+.risk-indicator.hot{animation:riskGlow 1s infinite;color:var(--danger)}
+header{text-align:center;padding:12px 0;border-bottom:2px solid var(--accent);margin-bottom:12px;position:relative}
+header::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:2px;background:var(--accent);animation:pulse 2s infinite}
+h1{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:3px;text-shadow:0 0 20px var(--accent);margin-bottom:4px}
+.subtitle{font-size:10px;color:var(--dim);letter-spacing:2px}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 4px;text-align:center}
+.stat-card.gold{border-color:var(--gold)}
+.stat-label{font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.stat-value{font-size:17px;font-weight:700;color:var(--accent);font-family:'Courier New',monospace}
+.stat-value.gold{color:var(--gold)}
+.stat-value.danger{color:var(--danger);animation:pulse 1s infinite}
+.stat-value.warning{color:var(--warning)}
+.game-field{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:400px}
+.screen{width:100%;display:none;animation:fadeIn .4s}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+.menu-icon{font-size:56px;margin-bottom:10px;animation:pulse 3s infinite}
+.menu-title{font-size:24px;color:var(--accent);text-transform:uppercase;letter-spacing:4px;margin-bottom:8px;text-shadow:0 0 30px var(--accent)}
+.menu-subtitle{font-size:12px;color:var(--dim);text-align:center;max-width:420px;line-height:1.5;margin-bottom:14px}
+.menu-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;width:100%;max-width:380px}
+.menu-stat{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.menu-stat.gold{border-color:var(--gold)}
+.menu-stat-label{font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}
+.menu-stat-value{font-size:15px;font-weight:700;color:var(--accent)}
+.menu-stat-value.gold{color:var(--gold)}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:400px;margin-bottom:10px}
+.menu-btn-mini{padding:10px;font-size:11px;font-family:inherit;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:8px;cursor:pointer;transition:all .2s;min-height:46px}
+.menu-btn-mini:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.menu-btn-mini.gold:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.btn{padding:12px 22px;font-size:14px;font-weight:700;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:2px;border:2px solid var(--accent);background:transparent;color:var(--accent);border-radius:8px;cursor:pointer;transition:all .25s;min-height:46px}
+.btn:hover{background:var(--accent);color:var(--bg);box-shadow:0 0 30px var(--accent);transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.btn.danger:hover{background:var(--danger);color:var(--bg)}
+.btn.small{padding:8px 14px;font-size:11px;min-height:38px}
+.btn.ghost{border-color:var(--border);color:var(--dim)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.skip{border-color:var(--gold);color:var(--gold)}
+.btn.skip:hover{background:var(--gold-dim);color:var(--gold);box-shadow:0 0 20px var(--gold-dim)}
+.attack-screen-inner{width:100%;display:flex;flex-direction:column;align-items:stretch;position:relative}
+.attack-header{text-align:center;margin-bottom:10px}
+.attack-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.attack-label.boss{color:var(--danger);animation:pulse .8s infinite;font-weight:700}
+.attack-name{font-size:20px;color:var(--danger);text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 20px var(--danger);animation:glitch .4s infinite;text-align:center}
+.attack-name.boss{font-size:22px}
+.attack-description{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--danger);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.5}
+.attack-description.boss{border-color:var(--danger);animation:bossPulse 2s infinite}
+.timer-display{text-align:center;margin-bottom:10px}
+.timer-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px}
+.timer-value{font-size:34px;font-weight:700;color:var(--accent);font-family:'Courier New',monospace;text-shadow:0 0 20px var(--accent)}
+.timer-value.critical{color:var(--danger);animation:pulse .5s infinite}
+.attack-tools{display:flex;gap:6px;margin-bottom:10px;justify-content:center;flex-wrap:wrap}
+.action-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.action-btn{padding:8px 6px;font-size:11px;font-family:inherit;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--panel);border:2px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;transition:all .2s;min-height:46px}
+.action-btn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.action-btn[data-act="shield"].active{border-color:var(--info);background:var(--info-dim);color:var(--info)}
+.action-btn[data-act="analyze"].active{border-color:var(--purple);background:var(--purple-dim);color:var(--purple)}
+.action-btn:disabled,.action-btn.blocked{opacity:.25;cursor:not-allowed;text-decoration:line-through}
+.options-grid{display:grid;gap:8px;width:100%}
+.option-btn{padding:12px;font-size:12px;font-family:'Courier New',monospace;text-align:left;background:var(--panel);border:2px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;transition:all .2s;min-height:48px;line-height:1.4;position:relative}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim);transform:translateX(4px)}
+.option-btn.correct{border-color:var(--accent);background:var(--accent-dim);animation:correctPulse .5s}
+.option-btn.wrong{border-color:var(--danger);background:var(--danger-dim);animation:shake .5s}
+.option-btn.eliminated{opacity:.3;text-decoration:line-through;pointer-events:none}
+.option-btn:disabled{cursor:not-allowed;opacity:.6}
+.pause-btn{position:absolute;top:0;right:0;padding:6px 10px;background:var(--panel);border:1px solid var(--border);color:var(--accent);border-radius:6px;cursor:pointer;font-size:14px;z-index:10;min-width:40px;min-height:40px}
+.gameover-icon{font-size:70px;margin-bottom:12px;animation:pulse 1s infinite}
+.gameover-title{font-size:26px;color:var(--danger);text-transform:uppercase;letter-spacing:4px;margin-bottom:10px;text-shadow:0 0 30px var(--danger);text-align:center}
+.gameover-subtitle{font-size:12px;color:var(--dim);text-align:center;margin-bottom:16px;line-height:1.5}
+.gameover-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;width:100%;max-width:340px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:5000;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;text-align:center}
+.modal-close{display:block;margin:14px auto 0}
+.skill-card,.branch-card,.contract-card{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.branch-card.turbines{border-color:var(--gold)}
+.branch-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.branch-icon{font-size:20px}
+.branch-name{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.branch-card.turbines .branch-name{color:var(--gold)}
+.branch-level{font-size:10px;color:var(--dim);margin-left:auto;font-family:'Courier New',monospace}
+.branch-desc{font-size:11px;color:var(--dim);margin-bottom:6px;line-height:1.4}
+.branch-effect{font-size:11px;color:var(--text);margin-bottom:8px;padding:6px 8px;background:var(--bg);border-radius:6px;border-left:3px solid var(--accent)}
+.branch-card.turbines .branch-effect{border-left-color:var(--gold)}
+.branch-progress,.skill-progress{display:flex;align-items:center;gap:5px;margin-bottom:8px}
+.branch-pip,.skill-pip{flex:1;height:5px;background:var(--border);border-radius:3px}
+.branch-pip.filled,.skill-pip.filled{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.branch-card.turbines .branch-pip.filled{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.branch-buy,.skill-buy{width:100%;padding:8px 12px;font-size:11px;font-family:inherit;font-weight:700;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:6px;cursor:pointer;transition:all .2s;min-height:38px}
+.branch-buy:hover:not(:disabled),.skill-buy:hover:not(:disabled){background:var(--accent);color:var(--bg)}
+.branch-card.turbines .branch-buy{border-color:var(--gold);color:var(--gold)}
+.branch-card.turbines .branch-buy:hover:not(:disabled){background:var(--gold);color:var(--bg)}
+.branch-buy:disabled,.skill-buy:disabled{opacity:.4;cursor:not-allowed}
+.skill-name{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.skill-desc{font-size:11px;color:var(--dim);margin-bottom:6px;line-height:1.4}
+.skill-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.skill-level{font-size:10px;color:var(--dim);font-family:'Courier New',monospace}
+.wallet-bar{display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border:1px solid var(--gold);border-radius:8px;margin-bottom:12px;font-family:'Courier New',monospace;font-size:12px}
+.wallet-bar .coins{color:var(--gold);font-weight:700}
+.wallet-bar .income{color:var(--accent)}
+.xp-badge{display:inline-block;padding:3px 8px;background:var(--info-dim);color:var(--info);border-radius:6px;font-size:11px;font-weight:700;margin-bottom:10px}
+.ach-card{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px;opacity:.4;transition:all .3s}
+.ach-card.unlocked{opacity:1;border-color:var(--accent)}
+.ach-icon{font-size:24px;flex-shrink:0;width:34px;text-align:center}
+.ach-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px}
+.ach-card.unlocked .ach-name{color:var(--accent)}
+.ach-desc{font-size:10px;color:var(--dim);line-height:1.3}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stat-item{background:var(--panel-2);padding:8px;border-radius:8px;border:1px solid var(--border)}
+.stat-item-label{font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}
+.stat-item-value{font-size:14px;font-weight:700;color:var(--accent)}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.settings-row:last-of-type{border-bottom:none}
+.settings-label{font-size:12px;color:var(--text)}
+.toggle{position:relative;width:44px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--text);border-radius:50%;transition:transform .2s}
+.toggle.on{background:var(--accent)}
+.toggle.on::after{transform:translateX(20px);background:var(--bg)}
+.tutorial-slide{text-align:center;padding:16px 6px}
+.tutorial-icon{font-size:56px;margin-bottom:12px}
+.tutorial-title{font-size:18px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.tutorial-text{font-size:12px;color:var(--text);line-height:1.6;margin-bottom:16px}
+.tutorial-dots{display:flex;gap:5px;justify-content:center;margin-bottom:14px}
+.tutorial-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .3s}
+.tutorial-dot.active{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.pause-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:4000;padding:20px;flex-direction:column;text-align:center}
+.pause-overlay.active{display:flex}
+.pause-title{font-size:28px;color:var(--accent);text-transform:uppercase;letter-spacing:5px;text-shadow:0 0 30px var(--accent);margin-bottom:10px}
+.pause-text{color:var(--dim);font-size:12px;margin-bottom:20px}
+.pause-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:260px}
+.toast-container{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:calc(100vw - 32px);width:max-content}
+.toast{padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700;font-family:'Courier New',monospace;background:var(--panel);border:2px solid;box-shadow:0 4px 20px rgba(0,0,0,.5);animation:slideUp .3s;pointer-events:auto;max-width:100%;word-break:break-word}
+.toast.success{border-color:var(--accent);color:var(--accent)}
+.toast.error{border-color:var(--danger);color:var(--danger)}
+.toast.warning{border-color:var(--warning);color:var(--warning)}
+.toast.info{border-color:var(--info);color:var(--info)}
+.toast.achievement{border-color:var(--warning);color:var(--warning);background:linear-gradient(135deg,var(--panel) 0%,var(--warning-dim) 100%)}
+.toast.coin{border-color:var(--gold);color:var(--gold);background:linear-gradient(135deg,var(--panel) 0%,var(--gold-dim) 100%)}
+.operator-card{background:var(--panel-2);border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.operator-card:hover{border-color:var(--accent)}
+.operator-card.selected{border-color:var(--accent);box-shadow:0 0 20px var(--accent-dim);background:linear-gradient(135deg,var(--panel-2) 0%,var(--accent-dim) 100%)}
+.operator-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.operator-icon{font-size:32px}
+.operator-name{font-size:14px;font-weight:700;color:var(--accent);text-transform:uppercase}
+.operator-role{font-size:10px;color:var(--dim);font-family:'Courier New',monospace}
+.operator-desc{font-size:11px;color:var(--text);line-height:1.4;margin-bottom:4px}
+.operator-perks{font-size:10px;color:var(--dim);margin-top:6px;padding:6px 8px;background:var(--bg);border-radius:6px;line-height:1.5}
+.operator-perks .perk{display:block;margin-bottom:3px}
+.operator-perks .perk.unlocked{color:var(--accent)}
+.operator-perks .perk.locked{color:var(--dim);opacity:.5}
+.map-container{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.map-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.turbine-cell{aspect-ratio:1;background:var(--panel);border:2px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;min-height:80px}
+.turbine-cell:hover{border-color:var(--accent)}
+.turbine-cell.shielded{border-color:var(--accent);background:linear-gradient(135deg,var(--panel) 0%,var(--accent-dim) 100%);animation:shieldGlow 2s infinite}
+.turbine-icon{font-size:26px;margin-bottom:2px}
+.turbine-name{font-size:9px;color:var(--dim);text-transform:uppercase;font-family:'Courier New',monospace}
+.turbine-shield{position:absolute;top:4px;right:4px;font-size:14px}
+.map-info{text-align:center;font-size:11px;color:var(--dim);margin-bottom:10px}
+.map-info strong{color:var(--accent)}
+.shooter-field{position:relative;width:100%;height:340px;background:radial-gradient(circle at 50% 50%,rgba(0,255,136,.03) 0%,var(--bg) 70%);border:2px solid var(--danger);border-radius:12px;overflow:hidden;margin-bottom:10px;touch-action:manipulation}
+.shooter-field.shake{animation:shake .3s}
+.drone{position:absolute;font-size:38px;cursor:pointer;user-select:none;transition:transform .1s;filter:drop-shadow(0 0 8px var(--danger))}
+.drone.hit{animation:droneHit .3s forwards;pointer-events:none}
+.shooter-timer{font-family:'Courier New',monospace;font-size:20px;text-align:center;color:var(--danger);margin-bottom:8px;font-weight:700}
+.shooter-hint{text-align:center;font-size:11px;color:var(--dim);margin-bottom:10px}
+.contract-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px}
+.contract-name{font-size:12px;font-weight:700;color:var(--text);flex:1}
+.contract-reward{font-size:11px;color:var(--gold);font-weight:700;font-family:'Courier New',monospace}
+.contract-desc{font-size:10px;color:var(--dim);margin-bottom:8px}
+.contract-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.contract-bar{height:100%;background:var(--accent);transition:width .3s}
+.contract-claim{width:100%;padding:8px 12px;font-size:11px;font-family:inherit;font-weight:700;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:6px;cursor:pointer;min-height:34px}
+.contract-claim:hover:not(:disabled){background:var(--accent);color:var(--bg)}
+.contract-claim:disabled{opacity:.4;cursor:not-allowed}
+.contract-card.done{border-color:var(--accent)}
+.contract-card.claimed{opacity:.5}
+.intel-wrap{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.intel-bar{flex:1;height:10px;background:var(--panel-2);border:1px solid var(--purple);border-radius:5px;overflow:hidden}
+.intel-fill{height:100%;width:0;background:var(--purple);box-shadow:0 0 10px var(--purple);transition:width .3s}
+.intel-label{font-size:9px;color:var(--purple);letter-spacing:1px;font-weight:700}
+.emp-btn{padding:6px 10px;font-size:10px;font-family:inherit;font-weight:700;border:1px solid var(--purple);background:var(--purple-dim);color:var(--purple);border-radius:6px;cursor:pointer}
+.emp-btn:disabled{opacity:.3;cursor:not-allowed}
+.mg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:6000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:18px}
+.mg-overlay.on{display:flex}
+.mg-title{font-size:18px;color:var(--danger);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;text-align:center}
+.mg-sub{font-size:11px;color:var(--dim);margin-bottom:12px;text-align:center;max-width:340px;line-height:1.5}
+.mg-timer{font-size:26px;font-weight:700;color:var(--warning);margin-bottom:10px;font-family:'Courier New',monospace}
+.mg-area{position:relative;width:100%;max-width:400px;height:300px;background:var(--bg);border:2px solid var(--danger);border-radius:12px;overflow:hidden}
+.mg-node{position:absolute;padding:8px 10px;font-size:11px;font-family:'Courier New',monospace;border:2px solid;border-radius:8px;cursor:pointer;user-select:none;background:var(--panel);font-weight:700}
+.mg-node.bad{border-color:var(--danger);color:var(--danger)}
+.mg-node.good{border-color:var(--accent);color:var(--accent)}
+.mg-node.dead{opacity:.15;pointer-events:none;transform:scale(.8)}
+.mg-seq{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:340px}
+.mg-port{width:70px;height:70px;border:2px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);font-family:'Courier New',monospace;font-size:12px;font-weight:700;cursor:pointer;transition:all .12s}
+.mg-port.flash{background:var(--accent);color:var(--bg);box-shadow:0 0 25px var(--accent);transform:scale(1.08)}
+.mg-port.err{background:var(--danger);color:var(--bg)}
+.mg-wires{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:340px}
+.mg-wire{padding:14px;border:2px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);font-family:inherit;font-size:12px;cursor:pointer;font-weight:700}
+.mg-wire:hover{border-color:var(--warning)}
+.mg-clue{font-size:11px;color:var(--info);background:var(--info-dim);padding:8px 10px;border-radius:6px;margin-bottom:6px;max-width:340px;line-height:1.4}
+.sector-banner{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:9000;text-align:center;pointer-events:none;opacity:0;transition:opacity .4s}
+.sector-banner.on{opacity:1}
+.sector-banner .n{font-size:34px;color:var(--warning);font-weight:900;letter-spacing:5px;text-shadow:0 0 30px var(--warning)}
+.sector-banner .d{font-size:13px;color:var(--text);margin-top:8px;letter-spacing:2px}
+.boss-hp{width:100%;height:14px;background:var(--panel-2);border:1px solid var(--danger);border-radius:7px;margin-bottom:10px;overflow:hidden;position:relative}
+.boss-hp-bar{height:100%;background:linear-gradient(90deg,var(--danger) 0%,#ff6644 50%,var(--danger) 100%);background-size:200% 100%;animation:bossHpDrain 2s linear infinite;transition:width .5s ease-out;box-shadow:0 0 10px var(--danger)}
+.boss-hp-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text);letter-spacing:2px;text-shadow:0 0 4px #000}
+.prob-badge{font-size:10px!important;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--purple-dim);color:var(--purple)}
+@media (max-width:600px){
+  h1{font-size:18px;letter-spacing:2px}
+  .menu-title{font-size:20px}
+  .attack-name{font-size:16px}
+  .timer-value{font-size:28px}
+  .stat-value{font-size:14px}
+  .btn{padding:10px 18px;font-size:12px}
+  .option-btn{padding:10px;font-size:11px;min-height:44px}
+  .shooter-field{height:280px}
+  .drone{font-size:32px}
+  .action-btn{padding:6px 4px;font-size:10px;min-height:42px}
+  .ves-scene{height:90px}
+  .turbine-live{width:36px;height:70px}
+  .turbine-tower{height:50px;width:6px}
+  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:20px}
+  .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{width:26px}
+  .combo-display{font-size:36px}
+  .floating-number{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="combo-display" id="comboDisplay"></div>
+<div class="container">
+<header><h1>WPPDef</h1><div class="subtitle">v0.8.1 • LIVING PERKS • WIND POWER PLANT DEFENSE</div></header>
+
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
+  <div class="stat-card"><div class="stat-label">Уровень</div><div class="stat-value" id="statLevel">1</div></div>
+  <div class="stat-card"><div class="stat-label">Угроза</div><div class="stat-value" id="statThreat">0%</div></div>
+  <div class="stat-card gold"><div class="stat-label">Кредиты</div><div class="stat-value gold" id="statCredits">0</div></div>
+</div>
+
+<div class="game-field">
+  <div class="screen active" id="screenMenu">
+    <div class="menu-icon">🛡️</div>
+    <div class="menu-title">WPPDef</div>
+    <div class="menu-subtitle">Wind Power Plant Defense — живая оборона. Умные враги, тактика, мини-игры.</div>
+    <div class="menu-stats">
+      <div class="menu-stat"><div class="menu-stat-label">Рекорд</div><div class="menu-stat-value" id="menuHighScore">0</div></div>
+      <div class="menu-stat"><div class="menu-stat-label">Игр</div><div class="menu-stat-value" id="menuGamesPlayed">0</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Кредиты</div><div class="menu-stat-value gold" id="menuCredits">0 ₡</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Доход</div><div class="menu-stat-value gold" id="menuIncome">0 ₡/с</div></div>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-btn-mini gold" id="btnUpgrade">🏭 Прокачка</button>
+      <button class="menu-btn-mini" id="btnSkills">🎓 Навыки</button>
+      <button class="menu-btn-mini" id="btnContracts">📜 Контракты</button>
+      <button class="menu-btn-mini" id="btnAchievements">🏆 Достижения</button>
+      <button class="menu-btn-mini" id="btnStats">📊 Статистика</button>
+      <button class="menu-btn-mini" id="btnSettings">⚙️ Настройки</button>
+    </div>
+    <button class="btn" id="btnStart" style="margin-bottom:10px">▶️ НАЧАТЬ ИГРУ</button>
+    <button class="btn ghost small" id="btnTutorial">📖 Как играть</button>
+  </div>
+
+  <div class="screen" id="screenOperator">
+    <div class="menu-title" style="font-size:20px;margin-bottom:6px">👤 ВЫБОР ОПЕРАТОРА</div>
+    <div class="menu-subtitle" style="margin-bottom:14px">У каждого — свой стиль и перки (ур. 3, 6, 9)</div>
+    <div id="operatorList" style="width:100%;max-width:440px;margin-bottom:12px"></div>
+    <div style="display:flex;gap:8px;width:100%;max-width:420px">
+      <button class="btn ghost small" id="btnBackMenu" style="flex:1">← Назад</button>
+      <button class="btn small" id="btnToMap" style="flex:2" disabled>Дальше →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screenMap">
+    <div class="menu-title" style="font-size:20px;margin-bottom:6px">🗺️ КАРТА ВЭС</div>
+    <div class="menu-subtitle" style="margin-bottom:12px">Турбина со щитом получает −30% урона</div>
+    <div style="width:100%;max-width:420px">
+      <div class="map-container">
+        <div class="map-grid" id="mapGrid"></div>
+        <div class="map-info">Очков защиты: <strong id="shieldsLeft">3</strong> из <strong>3</strong></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost small" id="btnBackOp" style="flex:1">← Назад</button>
+        <button class="btn small" id="btnStartGame" style="flex:2">🎮 В БОЙ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="screenShooter">
+    <div class="menu-title" style="font-size:20px;margin-bottom:6px;color:var(--danger)">⚡ ОТБЕЙ ДРОНЫ!</div>
+    <div class="shooter-hint">Уничтожьте все дроны за 5 секунд</div>
+    <div class="shooter-timer"><span id="shooterTimer">5.0</span> с</div>
+    <div class="shooter-field" id="shooterField"></div>
+    <div style="text-align:center;font-size:11px;color:var(--dim)">Дронов: <span id="dronesLeft">5</span></div>
+  </div>
+
+  <div class="screen" id="screenAttack">
+    <div class="ves-scene" id="vesScene"></div>
+    <div class="attack-screen-inner">
+      <button class="pause-btn" id="btnPause">⏸️</button>
+      <div id="bossHpContainer"></div>
+      <div class="attack-header"><div class="attack-label" id="attackLabel">⚠️ ВХОДЯЩАЯ АТАКА</div><div class="attack-name" id="attackName">—</div></div>
+      <div class="attack-description" id="attackDesc">—</div>
+      <div class="risk-indicator" id="riskIndicator"></div>
+      <div class="timer-display"><div class="timer-label">Время</div><div class="timer-value" id="timerValue">15</div></div>
+      <div class="action-bar" id="actionBar">
+        <button class="action-btn active" data-act="attack">⚔️ АТАКА</button>
+        <button class="action-btn" data-act="shield">🛡️ ЗАЩИТА</button>
+        <button class="action-btn" data-act="analyze">🔍 АНАЛИЗ</button>
+      </div>
+      <div class="attack-tools">
+        <button class="btn ghost small" id="btnHint">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
+        <button class="btn skip small" id="btnSkip" style="display:none">⏭️ Пропуск (<span id="skipsLeft">1</span>)</button>
+      </div>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="screenGameOver">
+    <div class="gameover-icon">💥</div>
+    <div class="gameover-title">КРИТИЧЕСКИЙ СБОЙ</div>
+    <div class="gameover-subtitle">Угроза достигла 100%</div>
+    <div class="gameover-stats">
+      <div class="menu-stat"><div class="menu-stat-label">Счёт</div><div class="menu-stat-value" id="finalScore">0</div></div>
+      <div class="menu-stat"><div class="menu-stat-label">Уровень</div><div class="menu-stat-value" id="finalLevel">1</div></div>
+      <div class="menu-stat"><div class="menu-stat-label">Отражено</div><div class="menu-stat-value" id="finalRepelled">0</div></div>
+      <div class="menu-stat"><div class="menu-stat-label">Макс комбо</div><div class="menu-stat-value" id="finalCombo">0</div></div>
+    </div>
+    <div class="xp-badge" id="xpGained">+0 XP</div>
+    <div class="xp-badge" id="creditsGained" style="background:var(--gold-dim);color:var(--gold);margin-bottom:14px">+0 ₡</div>
+    <button class="btn" id="btnRestart">🔄 В МЕНЮ</button>
+  </div>
+</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal"><div class="modal-title" id="modalTitle"></div><div id="modalBody"></div><button class="btn ghost small modal-close" id="modalClose">Закрыть</button></div></div>
+<div class="modal-overlay" id="tutorialOverlay"><div class="modal"><div class="tutorial-slide" id="tutorialSlide"></div><div class="tutorial-dots" id="tutorialDots"></div><div style="display:flex;gap:8px;justify-content:center"><button class="btn ghost small" id="tutSkip">Пропустить</button><button class="btn small" id="tutNext">Далее</button></div></div></div>
+<div class="pause-overlay" id="pauseOverlay"><div class="pause-title">ПАУЗА</div><div class="pause-text">Игра приостановлена</div><div class="pause-actions"><button class="btn" id="btnResume">▶️ ПРОДОЛЖИТЬ</button><button class="btn danger small" id="btnQuitGame">🚪 В МЕНЮ</button></div></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+'use strict';
+
+const SALT='wppdef_v080_sec_x9z2a1';
+const SCHEMA=8;
+
+function secureHash(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193);}return(h>>>0).toString(36);}
+const STORE={
+  get(k,d){try{const raw=localStorage.getItem('shieldVes_'+k);if(raw===null)return d;const v=JSON.parse(raw);const sig=localStorage.getItem('shieldVes__sig_'+k);if(sig!==null&&sig!==secureHash(raw+SALT))return d;return v;}catch{return d;}},
+  set(k,v){try{const raw=JSON.stringify(v);localStorage.setItem('shieldVes_'+k,raw);localStorage.setItem('shieldVes__sig_'+k,secureHash(raw+SALT));}catch{}}
+};
+
+const MIGRATIONS={
+  1:d=>{d.credits=d.credits??0;d.branches=d.branches??{turbines:0,defense:0,staff:0};d.lastIncomeTick=d.lastIncomeTick??Date.now();return d;},
+  2:d=>{d.recentAttacks=d.recentAttacks??[];return d;},
+  3:d=>{d.operator=d.operator??null;d.mapShields=d.mapShields??{};d.contracts=d.contracts??{date:null,progress:{},claimed:[]};d.shooterWins=d.shooterWins??0;return d;},
+  4:d=>{d.operatorXP=d.operatorXP??{analyst:0,engineer:0,hacker:0,dispatcher:0,forensic:0};d.permanentBonuses=d.permanentBonuses??{scoreBonus:0,timeBonus:0};return d;},
+  5:d=>{d.stats=d.stats||{};d.stats.eventsCount=d.stats.eventsCount??0;d.stats.maxCombo=d.stats.maxCombo??0;return d;},
+  6:d=>{d.turbineHealth=d.turbineHealth??{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100};return d;},
+  7:d=>{d.stats=d.stats||{};d.stats.bossesDefeated=d.stats.bossesDefeated??0;return d;},
+  8:d=>{d.stats=d.stats||{};['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated'].forEach(k=>{d.stats[k]=d.stats[k]??0;});return d;}
+};
+const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth'];
+
+function migrate(){
+  const stored=STORE.get('schemaVersion',1);if(stored>=SCHEMA)return;
+  let d={};SAVE_KEYS.forEach(k=>{const v=STORE.get(k);if(v!==undefined)d[k]=v;});
+  for(let v=stored;v<SCHEMA;v++){if(MIGRATIONS[v])try{d=MIGRATIONS[v](d);}catch(e){}}
+  Object.entries(d).forEach(([k,v])=>{if(v!==undefined)STORE.set(k,v);});
+  STORE.set('schemaVersion',SCHEMA);
+}
+migrate();
+
+const ATTACKS=[
+  {id:'ddos',category:'easy',name:'DDoS-АТАКА',description:'Аномальный трафик на порт 8080.',wrongOptions:['Игнорировать','Перезагрузить','Отключить интернет'],correctOption:'Переключить на резервный канал',damage:12,reward:40,hint:'Резервный канал снимет нагрузку.'},
+  {id:'phishing',category:'easy',name:'ФИШИНГ',description:'Письмо с .exe от "руководства".',wrongOptions:['Открыть','Переслать','Удалить'],correctOption:'Заблокировать и инструктаж',damage:10,reward:35,hint:'Блокировать источник.'},
+  {id:'gps',category:'easy',name:'GPS-СПУФИНГ',description:'Координаты сместились на 500м.',wrongOptions:['Перезагрузить','Игнорировать','Вызвать ремонтников'],correctOption:'Инерциальная навигация',damage:12,reward:45,hint:'Независимый источник.'},
+  {id:'sql_inj',category:'easy',name:'SQL-ИНЪЕКЦИЯ',description:'Попытки SQL через форму входа.',wrongOptions:['Забанить IP','Отключить веб','Сменить пароли'],correctOption:'Параметризованные запросы',damage:14,reward:50,hint:'Экранирование.'},
+  {id:'social',category:'easy',name:'СОЦИНЖЕНЕРИЯ',description:'Звонок требует пароль.',wrongOptions:['Назвать','Перевести','Проигнорировать'],correctOption:'Запросить по каналу',damage:10,reward:40,hint:'Не доверяй голосу.'},
+  {id:'brute',category:'easy',name:'БРУТФОРС',description:'40 000 попыток входа.',wrongOptions:['Заблокировать admin','Игнорировать','Отключить'],correctOption:'Rate-limit и CAPTCHA',damage:11,reward:42,hint:'Ограничить частоту.'},
+  {id:'badusb',category:'easy',name:'BAD USB',description:'Флешка на парковке.',wrongOptions:['Посмотреть','Разобрать','Выкинуть'],correctOption:'Изолировать и проверить в песочнице',damage:14,reward:52,hint:'Изоляция.'},
+  {id:'xss',category:'easy',name:'XSS-АТАКА',description:'Скрипт в поле комментария.',wrongOptions:['Удалить комментарий','Заблокировать IP','Перезагрузить'],correctOption:'Экранирование вывода',damage:11,reward:44,hint:'Экранировать вывод.'},
+  {id:'clickjack',category:'easy',name:'КЛИКДЖЕКИНГ',description:'Сайт встроен в iframe.',wrongOptions:['Закрыть браузер','Сменить пароль','Игнорировать'],correctOption:'X-Frame-Options DENY',damage:10,reward:40,hint:'Запрет iframe.'},
+  {id:'cookie_theft',category:'easy',name:'КРАЖА СЕССИИ',description:'Сессия активна с чужого IP.',wrongOptions:['Сменить пароль','Игнорировать','Позвонить'],correctOption:'Отозвать сессии',damage:12,reward:50,hint:'Отозвать.'},
+  {id:'rogue_wifi',category:'easy',name:'ROGUE WI-FI',description:'Открытая сеть VES_Guest.',wrongOptions:['Подключиться','Игнорировать','Пожаловаться'],correctOption:'Оповестить и отключить',damage:13,reward:48,hint:'Не подключаться.'},
+  {id:'tailgating',category:'easy',name:'ТЕЙЛГЕЙТИНГ',description:'Чужой идёт за сотрудником.',wrongOptions:['Позвать охрану','Игнорировать','Пропустить'],correctOption:'Задержать и проверить пропуск',damage:11,reward:42,hint:'Проверка пропуска.'},
+  {id:'shoulder',category:'easy',name:'ПОДСМАТРИВАНИЕ',description:'Кто-то смотрит в монитор.',wrongOptions:['Закрыть ноутбук','Уйти','Игнорировать'],correctOption:'Повернуть экран и сменить пароль',damage:10,reward:40,hint:'Сменить пароль.'},
+  {id:'dumpster',category:'easy',name:'DUMPSTER DIVING',description:'Документы в мусорке.',wrongOptions:['Выбросить дальше','Игнорировать','Сжечь'],correctOption:'Шредер и политика утилизации',damage:12,reward:46,hint:'Шредер.'},
+  {id:'qr_phish',category:'easy',name:'QR-ФИШИНГ',description:'Поддельный QR на парковке.',wrongOptions:['Сканировать','Игнорировать','Удалить'],correctOption:'Сообщить в ИБ',damage:11,reward:44,hint:'Не сканировать.'},
+  {id:'fake_update',category:'easy',name:'ПОДДЕЛЬНОЕ ОБНОВЛЕНИЕ',description:'Всплывающее окно "обновить Flash".',wrongOptions:['Обновить','Игнорировать','Перезагрузить'],correctOption:'Закрыть и проверить источник',damage:12,reward:46,hint:'Не нажимать.'},
+  {id:'watering',category:'easy',name:'WATERING HOLE',description:'Любимый сайт заражён.',wrongOptions:['Очистить кэш','Игнорировать','Сменить браузер'],correctOption:'Не посещать, сообщить ИБ',damage:13,reward:48,hint:'Не заходить.'},
+  {id:'vishing',category:'easy',name:'ВИШИНГ',description:'Голосовой фишинг по телефону.',wrongOptions:['Назвать данные','Положить трубку','Перезвонить'],correctOption:'Запросить через официальный канал',damage:11,reward:44,hint:'Официальный канал.'},
+  {id:'smishing',category:'easy',name:'СМИШИНГ',description:'SMS со ссылкой от "банка".',wrongOptions:['Перейти','Игнорировать','Ответить'],correctOption:'Удалить и заблокировать',damage:12,reward:46,hint:'Не переходить.'},
+  {id:'pretexting',category:'easy',name:'ПРЕТЕКСТИНГ',description:'"Я из IT, нужен пароль".',wrongOptions:['Дать пароль','Игнорировать','Перезвонить'],correctOption:'Запросить через тикет-систему',damage:11,reward:44,hint:'Тикет-система.'},
+  {id:'spoof',category:'medium',name:'ПОДМЕНА ДАННЫХ',description:'Температура скачет 20-120°C.',wrongOptions:['Остановить','Перезагрузить','Вызвать'],correctOption:'Сверить с замерами',damage:18,reward:70,hint:'Независимая проверка.'},
+  {id:'plc',category:'medium',name:'ВНЕДРЕНИЕ В ПЛК',description:'ПЛК шлёт команды вне регламента.',wrongOptions:['Перепрошить','Отключить','Игнорировать'],correctOption:'Изолировать и диагностика',damage:22,reward:80,hint:'Сначала изолировать.'},
+  {id:'mitm',category:'medium',name:'MITM',description:'Перехват трафика SCADA-ПЛК.',wrongOptions:['Сменить пароли','Перезагрузить','Игнорировать'],correctOption:'VPN-туннель',damage:20,reward:75,hint:'Шифрование.'},
+  {id:'ransomware',category:'medium',name:'ШИФРОВАЛЬЩИК',description:'Файлы SCADA зашифрованы.',wrongOptions:['Заплатить','Перезагрузить','Удалить'],correctOption:'Изолировать и восстановить из бэкапа',damage:25,reward:90,hint:'Бэкап.'},
+  {id:'insider',category:'medium',name:'ИНСАЙДЕР',description:'Сотрудник выгружает конфигурации.',wrongOptions:['Уволить','Остановить','Игнорировать'],correctOption:'Заблокировать и СБ',damage:22,reward:85,hint:'СБ.'},
+  {id:'api_abuse',category:'medium',name:'API-ABUSE',description:'5000 запросов/мин.',wrongOptions:['Заблокировать','Игнорировать','Увеличить лимит'],correctOption:'Отозвать ключ',damage:19,reward:78,hint:'Отозвать.'},
+  {id:'cred_stuff',category:'medium',name:'CREDENTIAL STUFFING',description:'Массовые входы.',wrongOptions:['Сменить пароли','Игнорировать','Блокировать'],correctOption:'MFA и мониторинг',damage:20,reward:82,hint:'MFA.'},
+  {id:'webhook_hij',category:'medium',name:'ПОДМЕНА WEBHOOK',description:'Алерты на чужой сервер.',wrongOptions:['Отключить','Пересоздать','Игнорировать'],correctOption:'Проверить подпись',damage:21,reward:80,hint:'Подпись.'},
+  {id:'csrf',category:'medium',name:'CSRF',description:'Поддельный запрос от имени юзера.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'CSRF-токены',damage:19,reward:76,hint:'Токены.'},
+  {id:'idor',category:'medium',name:'IDOR',description:'Смена ID в URL даёт чужие данные.',wrongOptions:['Заблокировать IP','Игнорировать','Сменить пароль'],correctOption:'Проверка прав доступа',damage:20,reward:78,hint:'Проверка прав.'},
+  {id:'ssrf',category:'medium',name:'SSRF',description:'Запрос на внутренний API.',wrongOptions:['Заблокировать IP','Игнорировать','Перезагрузить'],correctOption:'Белый список URL',damage:21,reward:80,hint:'Белый список.'},
+  {id:'xxe',category:'medium',name:'XXE',description:'XML с внешними сущностями.',wrongOptions:['Отключить XML','Игнорировать','Сменить пароль'],correctOption:'Запрет внешних сущностей',damage:20,reward:78,hint:'DTD off.'},
+  {id:'path_trav',category:'medium',name:'PATH TRAVERSAL',description:'Запрос ../../etc/passwd.',wrongOptions:['Игнорировать','Сменить пароль','Перезагрузить'],correctOption:'Нормализация путей',damage:19,reward:76,hint:'Нормализация.'},
+  {id:'header_inj',category:'medium',name:'HEADER INJECTION',description:'CRLF в HTTP-заголовке.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Валидация заголовков',damage:20,reward:78,hint:'Валидация.'},
+  {id:'session_fix',category:'medium',name:'SESSION FIXATION',description:'ID сессии предустановлен.',wrongOptions:['Игнорировать','Сменить пароль','Перезагрузить'],correctOption:'Регенерация ID при входе',damage:21,reward:80,hint:'Регенерация.'},
+  {id:'race',category:'medium',name:'RACE CONDITION',description:'Двойная команда.',wrongOptions:['Игнорировать','Перезагрузить','Отключить'],correctOption:'Транзакции и блокировки',damage:20,reward:78,hint:'Транзакции.'},
+  {id:'dns',category:'medium',name:'DNS POISONING',description:'DNS-кэш отравлен.',wrongOptions:['Сменить DNS','Игнорировать','Перезагрузить'],correctOption:'DNSSEC',damage:21,reward:80,hint:'DNSSEC.'},
+  {id:'bgp',category:'medium',name:'BGP HIJACK',description:'Маршрут перехвачен.',wrongOptions:['Игнорировать','Перезагрузить','Позвонить'],correctOption:'ROA и префикс-фильтры',damage:22,reward:82,hint:'ROA.'},
+  {id:'deser',category:'medium',name:'ДЕСЕРИАЛИЗАЦИЯ',description:'Подозрительный объект.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Запрет небезопасной десериализации',damage:21,reward:80,hint:'Запрет.'},
+  {id:'priv_esc',category:'medium',name:'ПОВЫШЕНИЕ ПРИВИЛЕГИЙ',description:'Юзер → root.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Принцип наименьших прав',damage:22,reward:84,hint:'Min privilege.'},
+  {id:'stuxnet',category:'hard',name:'ЦЕЛЕВАЯ АТАКА',description:'Сигнатура в прошивке.',wrongOptions:['Антивирус','Продолжить','Сбросить'],correctOption:'Остановить и в ФСТЭК',damage:35,reward:140,hint:'Остановка.'},
+  {id:'zero_day',category:'hard',name:'0-DAY',description:'Неизвестная уязвимость.',wrongOptions:['Ждать патча','Перезагрузить','Отключить'],correctOption:'Изолировать сегмент',damage:32,reward:150,hint:'Сегментация.'},
+  {id:'apt',category:'hard',name:'APT-ГРУППИРОВКА',description:'Долгая активность.',wrongOptions:['Удалить','Перезагрузить','Игнорировать'],correctOption:'Изолировать C2',damage:34,reward:160,hint:'Аудит.'},
+  {id:'deepfake',category:'hard',name:'DEEPFAKE',description:'Видеозвонок от "директора".',wrongOptions:['Выполнить','Игнорировать','Записать'],correctOption:'Перезвонить',damage:33,reward:155,hint:'Второй канал.'},
+  {id:'state_hack',category:'hard',name:'ГОС-ХАКЕР',description:'APT гос-группа.',wrongOptions:['Обычные','Игнорировать','Отключить'],correctOption:'Спецпротокол',damage:36,reward:170,hint:'Спецпротокол.'},
+  {id:'supply_chain',category:'hard',name:'SUPPLY-CHAIN',description:'Закладка в обновлении.',wrongOptions:['Откатить','Сообщить','Продолжить'],correctOption:'Заблокировать и изолировать',damage:33,reward:150,hint:'Изоляция.'},
+  {id:'firmware',category:'hard',name:'ПОДМЕНА ПРОШИВКИ',description:'Хеш не совпадает.',wrongOptions:['Перепрошить','Отключить','Игнорировать'],correctOption:'Откатить из бэкапа',damage:32,reward:148,hint:'Откат.'},
+  {id:'aipoison',category:'hard',name:'ОТРАВЛЕНИЕ AI',description:'Прогнозы оптимистичны.',wrongOptions:['Перезагрузить','Игнорировать','Уволить'],correctOption:'Откатить модель',damage:30,reward:145,hint:'Откат.'},
+  {id:'s3_leak',category:'hard',name:'УТЕЧКА S3',description:'Бэкапы публичны.',wrongOptions:['Удалить','Игнорировать','Сменить пароль'],correctOption:'Закрыть и ротировать',damage:31,reward:148,hint:'Ротация.'},
+  {id:'ai_exploit',category:'hard',name:'ГЕНЕРАТИВНЫЙ ЭКСПЛОИТ',description:'LLM выполняет команды.',wrongOptions:['Отключить','Игнорировать','Обучить'],correctOption:'Изолировать LLM',damage:32,reward:152,hint:'Изоляция.'},
+  {id:'quantum_prep',category:'hard',name:'КВАНТОВАЯ ПОДГОТОВКА',description:'Перехват для расшифровки.',wrongOptions:['Сменить пароли','Игнорировать','RSA 4096'],correctOption:'Пост-квантовые',damage:30,reward:155,hint:'Пост-квант.'},
+  {id:'botnet',category:'hard',name:'БОТНЕТ IoT',description:'Тысячи устройств.',wrongOptions:['Блокировать','Отключить','Игнорировать'],correctOption:'Scrubbing',damage:29,reward:145,hint:'Scrubbing.'},
+  {id:'tor_backdoor',category:'hard',name:'TOR-БЭКДОР',description:'Скрытое Tor из ПЛК.',wrongOptions:['Блокировать','Игнорировать','Перезагрузить'],correctOption:'Изолировать и forensics',damage:33,reward:158,hint:'Forensics.'},
+  {id:'mfa_bypass',category:'hard',name:'ОБХОД MFA',description:'Push-bombing.',wrongOptions:['Отключить','Игнорировать','Сменить телефон'],correctOption:'Number matching',damage:31,reward:150,hint:'Number matching.'},
+  {id:'jwt',category:'hard',name:'JWT-ПОДДЕЛКА',description:'None-алгоритм.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Строгая валидация alg',damage:30,reward:148,hint:'Валидация alg.'},
+  {id:'oauth',category:'hard',name:'OAUTH-ПЕРЕХВАТ',description:'Redirect URI подменён.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Строгий белый список',damage:32,reward:152,hint:'Whitelist.'},
+  {id:'kernel',category:'hard',name:'KERNEL EXPLOIT',description:'Уязвимость ядра.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Обновить ядро',damage:34,reward:158,hint:'Обновление.'},
+  {id:'hw_backdoor',category:'hard',name:'HW-БЭКДОР',description:'Закладка в чипе.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Замена и аудит',damage:36,reward:165,hint:'Замена.'},
+  {id:'container',category:'hard',name:'CONTAINER ESCAPE',description:'Выход из контейнера.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'Seccomp и namespaces',damage:31,reward:150,hint:'Seccomp.'},
+  {id:'cache_poison',category:'hard',name:'WEB CACHE POISONING',description:'Кэш отравлен.',wrongOptions:['Очистить','Игнорировать','Перезагрузить'],correctOption:'Cache-Control и Vary',damage:30,reward:148,hint:'Cache-Control.'},
+  {id:'mem_cor',category:'hard',name:'MEMORY CORRUPTION',description:'Повреждение памяти.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'ASLR и DEP',damage:32,reward:152,hint:'ASLR.'},
+  {id:'sidechan',category:'hard',name:'SIDE-CHANNEL',description:'Анализ по времени.',wrongOptions:['Игнорировать','Ускорить ответ','Перезагрузить'],correctOption:'Константное время операций',damage:30,reward:148,hint:'Constant-time.'}
+];
+
+const BOSSES=[
+  {id:'boss_apt28',category:'boss',name:'APT28: КООРДИНИРОВАННАЯ',isBoss:true,bossHp:150,description:'ФАЗА 1/3: Фишинг на 5 сотрудников.',wrongOptions:['Заблокировать всех','Игнорировать','Отключить почту'],correctOption:'Заблокировать письма',damage:40,reward:120,hint:'Изолировать.',phase2:{description:'ФАЗА 2/3: Боковое перемещение.',wrongOptions:['Перезагрузить','Игнорировать','Мониторинг'],correctOption:'Сегментировать сеть',hint:'Сегментация.'},phase3:{description:'ФАЗА 3/3: Кража данных.',wrongOptions:['Уволить всех','Игнорировать','Перезагрузить'],correctOption:'Отозвать доступы',hint:'Отозвать.'}},
+  {id:'boss_grid',category:'boss',name:'BLACKOUT',isBoss:true,bossHp:180,description:'ФАЗА 1/3: Атака на диспетчерскую.',wrongOptions:['Отключить','Продолжить','Полиция'],correctOption:'Изолированный режим',damage:45,reward:140,hint:'Изоляция.',phase2:{description:'ФАЗА 2/3: Изменение уставок.',wrongOptions:['Перезагрузить','Игнорировать','Отключить'],correctOption:'Из эталона',hint:'Эталон.'},phase3:{description:'ФАЗА 3/3: Каскадное отключение.',wrongOptions:['Запустить','Игнорировать','Перезагрузить'],correctOption:'Аварийная остановка',hint:'Остановка.'}},
+  {id:'boss_quantum',category:'boss',name:'QUANTUM CRACK',isBoss:true,bossHp:200,description:'ФАЗА 1/3: Криптоанализ RSA.',wrongOptions:['Увеличить ключ','Игнорировать','Отключить'],correctOption:'Пост-квантовые',damage:48,reward:150,hint:'Пост-квант.',phase2:{description:'ФАЗА 2/3: Перехват ключей.',wrongOptions:['Перезагрузить','Игнорировать','Продолжить'],correctOption:'Ротация ключей',hint:'Ротация.'},phase3:{description:'ФАЗА 3/3: Расшифровка архивов.',wrongOptions:['Удалить','Игнорировать','Перезагрузить'],correctOption:'Сменить все ключи',hint:'Полная ротация.'}},
+  {id:'boss_supply',category:'boss',name:'SUPPLY-CHAIN: КАСКАД',isBoss:true,bossHp:220,description:'ФАЗА 1/3: Бэкдор в 20 ВЭУ.',wrongOptions:['Откатить','Игнорировать','Продолжить'],correctOption:'Заблокировать и изолировать',damage:50,reward:160,hint:'Изоляция.',phase2:{description:'ФАЗА 2/3: Атака на билд-сервер.',wrongOptions:['Перезагрузить','Игнорировать','Продолжить'],correctOption:'Подпись артефактов',hint:'Подпись.'},phase3:{description:'ФАЗА 3/3: Каскадное заражение.',wrongOptions:['Отключить всё','Игнорировать','Перезагрузить'],correctOption:'Разорвать цепочку поставок',hint:'Разрыв цепи.'}},
+  {id:'boss_ai',category:'boss',name:'AI-АВТОНОМНАЯ АТАКА',isBoss:true,bossHp:240,description:'ФАЗА 1/3: AI ищет уязвимости.',wrongOptions:['Отключить ИИ','Игнорировать','Продолжить'],correctOption:'Изолировать AI-периметр',damage:52,reward:170,hint:'Изоляция.',phase2:{description:'ФАЗА 2/3: AI обходит защиту.',wrongOptions:['Перезагрузить','Игнорировать','Продолжить'],correctOption:'Ручной режим и аудит',hint:'Ручной режим.'},phase3:{description:'ФАЗА 3/3: AI адаптируется.',wrongOptions:['Удалить AI','Игнорировать','Перезагрузить'],correctOption:'Полная изоляция и откат',hint:'Полная изоляция.'}}
+];
+
+const SKILLS=[
+  {id:'reaction',name:'РЕАКЦИЯ',desc:'+2 сек к таймеру',maxLevel:5,costs:[100,250,500,1000,2000]},
+  {id:'analysis',name:'АНАЛИЗ',desc:'+10% к очкам',maxLevel:5,costs:[100,250,500,1000,2000]},
+  {id:'shield',name:'КИБЕРЩИТ',desc:'−10% урона',maxLevel:5,costs:[150,300,600,1200,2500]},
+  {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]}
+];
+
+const BRANCHES={
+  turbines:{name:'МЕЛЬНИЦЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:10,costs:[100,200,400,800,1600,3200,6400,12800,25600,50000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₡/сек`},
+  defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:10,costs:[50,100,200,400,800,1500,3000,6000,12000,25000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
+  staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:10,costs:[50,100,200,400,800,1500,3000,6000,12000,25000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`}
+};
+
+const OPERATORS={
+  analyst:{name:'Аналитик',role:'SOC • Разведка',icon:'🔍',desc:'Видит подсказку бесплатно.',bonus:{freeHints:1},perks:[{lvl:3,name:'Острый глаз',desc:'Подсказка убирает 2 варианта'},{lvl:6,name:'Глубокий анализ',desc:'Подсказка бесплатна'},{lvl:9,name:'Предвидение',desc:'+50% за ответ < 3 сек'}]},
+  engineer:{name:'Инженер',role:'Защита • Оборона',icon:'🔧',desc:'Играет на выдержку.',bonus:{timeBonus:3},perks:[{lvl:3,name:'Крепкий щит',desc:'−20% урона'},{lvl:6,name:'Резервный контур',desc:'+3 сек'},{lvl:9,name:'Неубиваемый',desc:'−40% урона'}]},
+  hacker:{name:'Хакер',role:'Red Team',icon:'💀',desc:'Рискует, но может отменить атаку.',bonus:{autoSkip:1},perks:[{lvl:3,name:'Двойной пропуск',desc:'+1 автопропуск'},{lvl:6,name:'Свободный пропуск',desc:'Не тратит ход'},{lvl:9,name:'Масс-пропуск',desc:'+2 автопропуска'}]},
+  dispatcher:{name:'Диспетчер',role:'Универсал',icon:'🎛️',desc:'Риск — но награда.',bonus:{scoreBonus:0.20},perks:[{lvl:3,name:'Управление',desc:'+30% очков'},{lvl:6,name:'Синхронизация',desc:'Без штрафа времени'},{lvl:9,name:'Мастер-пульт',desc:'+50% на боссах'}]},
+  forensic:{name:'Форензик',role:'Анализ',icon:'🔬',desc:'Точный удар и расследование.',bonus:{freeHints:0,canEliminate:2},perks:[{lvl:3,name:'Глубокий скан',desc:'Анализ убирает 2'},{lvl:6,name:'Бесплатный скан',desc:'1 бесплатный анализ'},{lvl:9,name:'Точный удар',desc:'× 1.5 очков'}]}
+};
+
+const ACHIEVEMENTS=[
+  {id:'first_blood',name:'ПЕРВАЯ КРОВЬ',desc:'Отрази атаку',icon:'🎯'},
+  {id:'survivor',name:'ВЫЖИВШИЙ',desc:'5 уровня',icon:'🛡️'},
+  {id:'veteran',name:'ВЕТЕРАН',desc:'10 уровня',icon:'⚔️'},
+  {id:'boss_slayer',name:'УБИЙЦА БОССОВ',desc:'Отрази босса',icon:'👺'},
+  {id:'legend',name:'ЛЕГЕНДА',desc:'5000 очков',icon:'👑'},
+  {id:'perfect',name:'БЕЗУПРЕЧНО',desc:'10 подряд',icon:'💎'},
+  {id:'combo_master',name:'КОМБО-МАСТЕР',desc:'Комбо x5',icon:'🔥'},
+  {id:'risk_taker',name:'РИСКЁР',desc:'Ответ при <20% времени',icon:'⚡'},
+  {id:'persistent',name:'УПОРНЫЙ',desc:'10 игр',icon:'🔁'},
+  {id:'scholar',name:'УЧЁНЫЙ',desc:'Навык до макс',icon:'🎓'},
+  {id:'rich',name:'БОГАЧ',desc:'10000 XP',icon:'💰'},
+  {id:'tycoon',name:'МАГНАТ',desc:'5000 кредитов',icon:'💎'},
+  {id:'builder',name:'СТРОИТЕЛЬ',desc:'Мельницы 5',icon:'🏗️'},
+  {id:'shooter',name:'СТРЕЛОК',desc:'10 мини-игр',icon:'🎯'},
+  {id:'op_master',name:'МАСТЕР',desc:'Оператор 5 ур.',icon:'⭐'}
+];
+
+const CONTRACTS=[
+  {id:'c_repel',name:'Отрази 5 атак',target:5,reward:100,stat:'repel'},
+  {id:'c_level',name:'Дойди до 3 ур.',target:3,reward:150,stat:'level'},
+  {id:'c_score',name:'500 очков',target:500,reward:120,stat:'score'},
+  {id:'c_combo',name:'Комбо x3',target:3,reward:200,stat:'combo'}
+];
+
+const TUTORIAL=[
+  {icon:'🛡️',title:'ДОБРО ПОЖАЛОВАТЬ',text:'WPPDef — Wind Power Plant Defense. Защищайте турбины от кибератак в реальном времени.'},
+  {icon:'🔥',title:'КОМБО-СИСТЕМА',text:'Серия правильных ответов даёт множитель x2, x3, x5! Промах — комбо сбрасывается.'},
+  {icon:'⚡',title:'РИСК / НАГРАДА',text:'Чем меньше времени — тем выше множитель очков. Рискуйте!'},
+  {icon:'⚔️',title:'ТРИ ТАКТИКИ',text:'АТАКА (100%), ЗАЩИТА (Файрвол-мини-игра), АНАЛИЗ (убирает варианты + INTEL).'},
+  {icon:'🎲',title:'СОБЫТИЯ',text:'Мини-игры на память, логику и реакцию.'},
+  {icon:'🏭',title:'ЖИВАЯ ВЭС',text:'Турбины вверху — ваши. При уроне ломаются и искрят.'},
+  {icon:'💀',title:'БОССЫ',text:'3 фазы, лечится при ошибках, блокирует действия!'},
+  {icon:'🚀',title:'УДАЧИ!',text:'Не дайте угрозе достичь 100%. Станьте легендой!'}
+];
+
+const state={
+  highScore:STORE.get('highScore',0),gamesPlayed:STORE.get('gamesPlayed',0),
+  skills:STORE.get('skills',{}),achievements:STORE.get('achievements',[]),
+  stats:STORE.get('stats',{}),
+  xp:STORE.get('xp',0),tutorialSeen:STORE.get('tutorialSeen',false),
+  theme:STORE.get('theme','cyber'),soundOn:STORE.get('soundOn',true),vibeOn:STORE.get('vibeOn',true),
+  credits:STORE.get('credits',0),lastIncomeTick:STORE.get('lastIncomeTick',Date.now()),
+  branches:STORE.get('branches',{turbines:0,defense:0,staff:0}),
+  recentAttacks:STORE.get('recentAttacks',[]),operator:STORE.get('operator',null),
+  mapShields:STORE.get('mapShields',{}),contracts:STORE.get('contracts',{date:null,progress:{},claimed:[]}),
+  shooterWins:STORE.get('shooterWins',0),
+  operatorXP:STORE.get('operatorXP',{analyst:0,engineer:0,hacker:0,dispatcher:0,forensic:0}),
+  permanentBonuses:STORE.get('permanentBonuses',{scoreBonus:0,timeBonus:0}),
+  turbineHealth:STORE.get('turbineHealth',{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100})
+};
+['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated'].forEach(k=>{state.stats[k]=state.stats[k]||0;});
+
+const TURBINES=['ВЭУ-1','ВЭУ-2','ВЭУ-3','ВЭУ-4','ВЭУ-5'];
+const RECENT_LIMIT=7;
+let game={};
+let selectedOperator=null;
+let selectedShields={};
+let shuffleTimer=null;
+
+const $=id=>document.getElementById(id);
+const ui={
+  statScore:$('statScore'),statLevel:$('statLevel'),statThreat:$('statThreat'),statCredits:$('statCredits'),
+  menuHighScore:$('menuHighScore'),menuGamesPlayed:$('menuGamesPlayed'),menuCredits:$('menuCredits'),menuIncome:$('menuIncome'),
+  screenMenu:$('screenMenu'),screenOperator:$('screenOperator'),screenMap:$('screenMap'),
+  screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),
+  attackLabel:$('attackLabel'),attackName:$('attackName'),attackDesc:$('attackDesc'),timerValue:$('timerValue'),
+  optionsGrid:$('optionsGrid'),hintsLeft:$('hintsLeft'),btnHint:$('btnHint'),actionBar:$('actionBar'),
+  finalScore:$('finalScore'),finalLevel:$('finalLevel'),finalRepelled:$('finalRepelled'),finalCombo:$('finalCombo'),
+  xpGained:$('xpGained'),creditsGained:$('creditsGained'),
+  toastContainer:$('toastContainer'),
+  modalOverlay:$('modalOverlay'),modalTitle:$('modalTitle'),modalBody:$('modalBody'),modalClose:$('modalClose'),
+  pauseOverlay:$('pauseOverlay'),tutorialOverlay:$('tutorialOverlay'),
+  tutorialSlide:$('tutorialSlide'),tutorialDots:$('tutorialDots'),tutNext:$('tutNext'),tutSkip:$('tutSkip'),
+  themeMeta:$('themeMeta'),mapGrid:$('mapGrid'),shieldsLeft:$('shieldsLeft'),
+  shooterField:$('shooterField'),shooterTimer:$('shooterTimer'),dronesLeft:$('dronesLeft'),
+  operatorList:$('operatorList'),
+  vesScene:$('vesScene'),bossHpContainer:$('bossHpContainer'),
+  riskIndicator:$('riskIndicator'),comboDisplay:$('comboDisplay')
+};
+
+function spawnFloatingNumber(x, y, text, color){
+  const el = document.createElement('div');
+  el.className = 'floating-number';
+  el.textContent = text;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  el.style.color = color;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1300);
+}
+
+function triggerScreenShake(intensity=10){
+  const container = document.querySelector('.container');
+  if(!container) return;
+  container.style.setProperty('--shake-intensity', intensity+'px');
+  container.classList.remove('screen-shake');
+  void container.offsetWidth;
+  container.classList.add('screen-shake');
+  setTimeout(()=>container.classList.remove('screen-shake'), 350);
+}
+
+function renderVesScene(){
+  ui.vesScene.innerHTML='';
+  TURBINES.forEach(t=>{
+    const health=state.turbineHealth[t]??100;
+    const shielded=!!state.mapShields[t];
+    const damaged=health<70;
+    const el=document.createElement('div');
+    el.className='turbine-live'+(damaged?' damaged':'')+(shielded?' shielded':'');
+    el.innerHTML=`<div class="turbine-tower"><div class="turbine-blades"><div class="b3"></div></div></div><div class="turbine-label">${t}</div>${shielded?'<div class="turbine-shield-indicator">🛡️</div>':''}`;
+    ui.vesScene.appendChild(el);
+  });
+  ui.vesScene.classList.toggle('emergency',game.threat>=80&&game.running);
+}
+function spawnSparks(turbineName){
+  const idx=TURBINES.indexOf(turbineName);if(idx<0)return;
+  const scene=ui.vesScene;const turbines=scene.querySelectorAll('.turbine-live');const tEl=turbines[idx];if(!tEl)return;
+  const rect=tEl.getBoundingClientRect();const sceneRect=scene.getBoundingClientRect();
+  const cx=rect.left-sceneRect.left+rect.width/2;const cy=rect.top-sceneRect.top+rect.height/2;
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');s.className='spark-particle';s.style.left=cx+'px';s.style.top=cy+'px';
+    s.style.setProperty('--sx',(Math.random()*60-30)+'px');s.style.setProperty('--sy',(Math.random()*-40-20)+'px');
+    scene.appendChild(s);setTimeout(()=>s.remove(),600);
+  }
+}
+function damageTurbine(name,dmg){
+  state.turbineHealth[name]=Math.max(0,(state.turbineHealth[name]??100)-dmg);
+  STORE.set('turbineHealth',state.turbineHealth);
+  spawnSparks(name);
+  renderVesScene();
+  triggerScreenShake(8);
+  const idx=TURBINES.indexOf(name);
+  const turbineEl=document.querySelectorAll('.turbine-live')[idx];
+  if(turbineEl){
+    const rect=turbineEl.getBoundingClientRect();
+    spawnFloatingNumber(rect.left+rect.width/2, rect.top+20, '-'+dmg+'%', '#ff3366');
+  }
+}
+function repairTurbines(){TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+5);});STORE.set('turbineHealth',state.turbineHealth);renderVesScene();}
+
+function showCombo(mult){
+  ui.comboDisplay.textContent='COMBO x'+mult+'!';
+  ui.comboDisplay.classList.remove('active');void ui.comboDisplay.offsetWidth;ui.comboDisplay.classList.add('active');
+  if(mult>=5)playFanfare();else if(mult>=3)playSuccess();else beep(880,80,0.1);
+}
+function comboMultiplier(streak){if(streak>=10)return 5;if(streak>=7)return 3;if(streak>=4)return 2;return 1;}
+
+function updateRiskIndicator(){
+  if(!game.running||!game.timeLeft){ui.riskIndicator.textContent='';return;}
+  const maxTime=game.maxTime||15;const ratio=game.timeLeft/maxTime;
+  if(ratio<=0.2){ui.riskIndicator.textContent='⚡ КРИТИЧЕСКИЙ РИСК • x3 ОЧКОВ';ui.riskIndicator.className='risk-indicator hot';}
+  else if(ratio<=0.4){ui.riskIndicator.textContent='⚠️ ВЫСОКИЙ РИСК • x2 ОЧКОВ';ui.riskIndicator.className='risk-indicator';}
+  else{ui.riskIndicator.textContent='';ui.riskIndicator.className='risk-indicator';}
+}
+function riskMultiplier(){if(!game.maxTime||!game.timeLeft)return 1;const ratio=game.timeLeft/game.maxTime;if(ratio<=0.2)return 3;if(ratio<=0.4)return 2;return 1;}
+
+function incomePerSec(){return state.branches.turbines*0.1;}
+function tickIncome(){
+  const lvl=state.branches.turbines;if(lvl<=0){state.lastIncomeTick=Date.now();return;}
+  const perSec=lvl*0.1;const now=Date.now();const elapsed=(now-state.lastIncomeTick)/1000;
+  const gained=Math.min(elapsed,4*3600)*perSec;
+  if(gained>=0.01){state.credits+=gained;state.lastIncomeTick=now;STORE.set('credits',state.credits);STORE.set('lastIncomeTick',now);updateCreditsUI();}
+  else{state.lastIncomeTick=now;STORE.set('lastIncomeTick',now);}
+}
+function effects(){
+  const d=state.branches.defense,s=state.branches.staff;const opBonus=state.operator?(OPERATORS[state.operator]?.bonus||{}):{};
+  return{damageReduction:Math.min(0.7,d*0.05+getSkillDR()),timeBonus:d+getTimeBonus()+(opBonus.timeBonus||0)+(state.permanentBonuses?.timeBonus||0),scoreBonus:s*0.10+(getRewardMult()-1)+(state.permanentBonuses?.scoreBonus||0),xpBonus:s*0.05};
+}
+function updateCreditsUI(){const cr=Math.floor(state.credits);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₡';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₡/с';}
+
+let audioCtx=null,ambientTimer=null,sirenTimer=null;
+function ensureAudio(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch{}}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();}
+document.addEventListener('click',ensureAudio,{once:true});document.addEventListener('touchstart',ensureAudio,{once:true});
+
+function beep(f,d,v=0.1,t='sine'){
+  if(!audioCtx||!state.soundOn)return;
+  try{
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    const filter=audioCtx.createBiquadFilter();
+    filter.type='lowpass';
+    filter.frequency.value=1800;
+    filter.Q.value=0.7;
+    o.type=t;
+    o.frequency.value=f;
+    const now=audioCtx.currentTime;
+    const dur=d/1000;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(v,now+0.008);
+    g.gain.linearRampToValueAtTime(v*0.7,now+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,now+dur);
+    o.connect(filter);
+    filter.connect(g);
+    g.connect(audioCtx.destination);
+    o.start(now);
+    o.stop(now+dur+0.05);
+  }catch{}
+}
+function playAttackSound(c){if(c==='boss'){beep(200,300,.15,'sawtooth');setTimeout(()=>beep(150,300,.15,'sawtooth'),200);}else if(c==='hard')beep(300,200,.12,'square');else if(c==='medium')beep(500,150,.1);else beep(700,100,.08);}
+function playSuccess(){beep(800,100,.12);setTimeout(()=>beep(1200,100,.12),120);}
+function playError(){beep(200,400,.15,'sawtooth');}
+function playTick(){beep(1200,40,.04);}
+function playFanfare(){beep(523,100,.12);setTimeout(()=>beep(659,100,.12),120);setTimeout(()=>beep(784,100,.12),240);setTimeout(()=>beep(1047,200,.12),360);}
+function playAchievement(){beep(1047,100,.12);setTimeout(()=>beep(1319,100,.12),100);setTimeout(()=>beep(1568,200,.12),200);}
+function playSiren(){if(!audioCtx||!state.soundOn)return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain(),f=audioCtx.createBiquadFilter();f.type='lowpass';f.frequency.value=1500;o.type='sawtooth';o.frequency.setValueAtTime(400,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(800,audioCtx.currentTime+0.3);o.frequency.exponentialRampToValueAtTime(400,audioCtx.currentTime+0.6);g.gain.setValueAtTime(0.06,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.6);o.connect(f);f.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+0.6);}catch{}}
+function vibe(p){if(!state.vibeOn||!navigator.vibrate)return;try{navigator.vibrate(p);}catch{}}
+function startAmbient(){if(!state.soundOn||ambientTimer)return;ambientTimer=setInterval(()=>{if(!game.running||game.paused)return;beep(220,60,.015);},4000);}
+function stopAmbient(){if(ambientTimer){clearInterval(ambientTimer);ambientTimer=null;}}
+function startSiren(){if(sirenTimer)return;sirenTimer=setInterval(()=>{if(!game.running||game.paused||game.threat<80){stopSiren();return;}playSiren();},1500);}
+function stopSiren(){if(sirenTimer){clearInterval(sirenTimer);sirenTimer=null;}}
+
+function toast(m,t='info',d=2500){
+  const el=document.createElement('div');el.className='toast '+t;el.textContent=m;ui.toastContainer.appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='translateY(20px)';setTimeout(()=>el.remove(),300);},d);
+}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);ui.themeMeta.content=t==='alarm'?'#0a0000':'#0a0e1a';state.theme=t;STORE.set('theme',t);}
+
+function getSkillLevel(id){return state.skills[id]||0;}
+function getTimeBonus(){return getSkillLevel('reaction')*2;}
+function getRewardMult(){return 1+getSkillLevel('analysis')*0.10;}
+function getSkillDR(){return Math.min(0.5,getSkillLevel('shield')*0.10);}
+function getFreeHints(){return getSkillLevel('intuition');}
+function opLevel(opId){const xp=state.operatorXP[opId]||0;return Math.min(10,1+Math.floor(Math.sqrt(xp/100)));}
+function opPerks(opId){const lvl=opLevel(opId);const op=OPERATORS[opId];if(!op||!op.perks)return[];return op.perks.map(p=>({...p,unlocked:lvl>=p.lvl}));}
+function opAddXP(opId,amount){if(!state.operatorXP[opId])state.operatorXP[opId]=0;state.operatorXP[opId]+=amount;STORE.set('operatorXP',state.operatorXP);}
+function unlock(id){if(state.achievements.includes(id))return;const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a)return;state.achievements.push(id);STORE.set('achievements',state.achievements);toast('🏆 '+a.name+': '+a.desc,'achievement',4000);playAchievement();}
+function checkAch(){
+  if(game.attacksRepelled>=1)unlock('first_blood');if(game.level>=5)unlock('survivor');if(game.level>=10)unlock('veteran');
+  if(game.score>=5000)unlock('legend');if(game.streakRepelled>=10)unlock('perfect');if(game.maxCombo>=5)unlock('combo_master');
+  if(game.riskAnswered)unlock('risk_taker');if(state.gamesPlayed>=10)unlock('persistent');if(state.xp>=10000)unlock('rich');
+  if(state.credits>=5000)unlock('tycoon');if(state.branches.turbines>=5)unlock('builder');if(state.shooterWins>=10)unlock('shooter');
+  for(const s of SKILLS){if(getSkillLevel(s.id)>=s.maxLevel){unlock('scholar');break;}}
+  if(state.operator&&opLevel(state.operator)>=5)unlock('op_master');
+}
+function updateStats(){
+  ui.statScore.textContent=game.score;ui.statLevel.textContent=game.level;ui.statThreat.textContent=game.threat+'%';
+  ui.statThreat.className='stat-value'+(game.threat>=80?' danger':game.threat>=50?' warning':'');
+  if(game.threat>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
+}
+function showScreen(n){
+  ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver'].forEach(id=>$(id).classList.remove('active'));
+  const map={menu:'screenMenu',operator:'screenOperator',map:'screenMap',shooter:'screenShooter',attack:'screenAttack',gameover:'screenGameOver'};
+  $(map[n]).classList.add('active');
+}
+function updateMenu(){ui.menuHighScore.textContent=state.highScore;ui.menuGamesPlayed.textContent=state.gamesPlayed;updateCreditsUI();}
+function pushRecent(id){state.recentAttacks.push(id);if(state.recentAttacks.length>RECENT_LIMIT)state.recentAttacks=state.recentAttacks.slice(-RECENT_LIMIT);STORE.set('recentAttacks',state.recentAttacks);}
+function pickAttack(){
+  if(game.level>0&&game.level%5===0&&game.attacksRepelled>0&&game.attacksRepelled===(game.level-1)*5){
+    const avail=BOSSES.filter(b=>!state.recentAttacks.includes(b.id));const pool=avail.length>0?avail:BOSSES;
+    const b=pool[Math.floor(Math.random()*pool.length)];pushRecent(b.id);return b;
+  }
+  let pool;
+  if(game.level<=3)pool=ATTACKS.filter(a=>a.category==='easy');
+  else if(game.level<=7)pool=ATTACKS.filter(a=>a.category==='easy'||a.category==='medium');
+  else pool=ATTACKS.filter(a=>a.category==='hard');
+  let f=pool.filter(a=>!state.recentAttacks.includes(a.id));
+  if(f.length===0){state.recentAttacks=state.recentAttacks.slice(-Math.floor(RECENT_LIMIT/2));STORE.set('recentAttacks',state.recentAttacks);f=pool.filter(a=>!state.recentAttacks.includes(a.id));if(f.length===0)f=pool;}
+  const a=f[Math.floor(Math.random()*f.length)];pushRecent(a.id);return a;
+}
+
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function checkContracts(){if(state.contracts.date!==todayKey()){state.contracts={date:todayKey(),progress:{},claimed:[]};STORE.set('contracts',state.contracts);}}
+function updateContract(stat,val,abs=false){for(const c of CONTRACTS){if(c.stat!==stat||state.contracts.claimed.includes(c.id))continue;const cur=state.contracts.progress[c.id]||0;state.contracts.progress[c.id]=abs?Math.max(cur,val):cur+val;}STORE.set('contracts',state.contracts);}
+function openContracts(){
+  checkContracts();ui.modalTitle.textContent='📜 КОНТРАКТЫ ДНЯ';let html='<div style="text-align:center;font-size:11px;color:var(--dim);margin-bottom:12px">Сброс в 00:00</div>';
+  for(const c of CONTRACTS){const prog=Math.min(state.contracts.progress[c.id]||0,c.target);const claimed=state.contracts.claimed.includes(c.id);const done=prog>=c.target;const pct=(prog/c.target)*100;
+    html+=`<div class="contract-card ${done?'done':''} ${claimed?'claimed':''}"><div class="contract-header"><div class="contract-name">${c.name}</div><div class="contract-reward">+${c.reward} ₡</div></div><div class="contract-desc">${prog}/${c.target}</div><div class="contract-progress"><div class="contract-bar" style="width:${pct}%"></div></div><button class="contract-claim" data-c="${c.id}" ${!done||claimed?'disabled':''}>${claimed?'✓ ПОЛУЧЕНО':done?'ЗАБРАТЬ':'В ПРОЦЕССЕ'}</button></div>`;
+  }
+  ui.modalBody.innerHTML=html;
+  ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
+  ui.modalOverlay.classList.add('active');
+}
+function openUpgrade(){
+  ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
+  for(const key of ['turbines','defense','staff']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
+    html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₡`}</button></div>`;
+  }
+  ui.modalBody.innerHTML=html;
+  ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if(state.credits<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
+  ui.modalOverlay.classList.add('active');
+}
+function openSkills(){
+  ui.modalTitle.textContent='🎓 НАВЫКИ';let html='<div class="xp-badge">XP: '+state.xp+'</div>';
+  for(const s of SKILLS){const lvl=getSkillLevel(s.id),maxed=lvl>=s.maxLevel;const cost=maxed?0:s.costs[lvl];const can=!maxed&&state.xp>=cost;const pips=Array.from({length:s.maxLevel},(_,i)=>'<div class="skill-pip '+(i<lvl?'filled':'')+'"></div>').join('');
+    html+=`<div class="skill-card"><div class="skill-name">${s.name}</div><div class="skill-desc">${s.desc}</div><div class="skill-progress">${pips}</div><div class="skill-footer"><div class="skill-level">${lvl}/${s.maxLevel}</div><button class="skill-buy" data-s="${s.id}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`${cost} XP`}</button></div></div>`;
+  }
+  ui.modalBody.innerHTML=html;
+  ui.modalBody.querySelectorAll('.skill-buy').forEach(btn=>{btn.onclick=()=>{const s=SKILLS.find(x=>x.id===btn.dataset.s),lvl=getSkillLevel(s.id);if(lvl>=s.maxLevel||state.xp<s.costs[lvl])return;state.xp-=s.costs[lvl];state.skills[s.id]=lvl+1;STORE.set('xp',state.xp);STORE.set('skills',state.skills);beep(880,120,0.12);toast('✅ '+s.name+' → '+(lvl+1),'success');openSkills();};});
+  ui.modalOverlay.classList.add('active');
+}
+
+function openAchievements(){
+  ui.modalTitle.textContent='🏆 ДОСТИЖЕНИЯ';
+  let html='';
+  for(const a of ACHIEVEMENTS){
+    const un=state.achievements.includes(a.id);
+    html+=`<div class="ach-card ${un?'unlocked':''}"><div class="ach-icon">${un?a.icon:'🔒'}</div><div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div></div>`;
+  }
+  ui.modalBody.innerHTML=html;
+  ui.modalOverlay.classList.add('active');
+}
+
+function openStats(){
+  ui.modalTitle.textContent='📊 СТАТИСТИКА';
+  const s=state.stats;
+  const acc=(s.totalRepelled+s.totalMissed)>0?Math.round(s.totalRepelled/(s.totalRepelled+s.totalMissed)*100):0;
+  const h=Math.floor(s.totalTime/3600),m=Math.floor((s.totalTime%3600)/60);
+  ui.modalBody.innerHTML=`<div class="stats-grid">
+    <div class="stat-item"><div class="stat-item-label">Игр</div><div class="stat-item-value">${state.gamesPlayed}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Рекорд</div><div class="stat-item-value">${state.highScore}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Лучший ур.</div><div class="stat-item-value">${s.bestLevel}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Макс комбо</div><div class="stat-item-value">x${s.maxCombo}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Отражено</div><div class="stat-item-value">${s.totalRepelled}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Пропущено</div><div class="stat-item-value">${s.totalMissed}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Точность</div><div class="stat-item-value">${acc}%</div></div>
+    <div class="stat-item"><div class="stat-item-label">Боссов</div><div class="stat-item-value">${s.bossesDefeated}</div></div>
+    <div class="stat-item"><div class="stat-item-label">В игре</div><div class="stat-item-value">${h}ч ${m}м</div></div>
+    <div class="stat-item"><div class="stat-item-label">XP</div><div class="stat-item-value">${state.xp}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Кредиты</div><div class="stat-item-value">${Math.floor(state.credits)}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
+  </div>`;
+  ui.modalOverlay.classList.add('active');
+}
+function openSettings(){
+  ui.modalTitle.textContent='⚙️ НАСТРОЙКИ';
+  ui.modalBody.innerHTML=`
+    <div class="settings-row"><div><div class="settings-label">Тема</div></div><button class="btn ghost small" id="themeToggle">${state.theme==='cyber'?'🟢 Киберпанк':'🔴 Тревога'}</button></div>
+    <div class="settings-row"><div><div class="settings-label">Звуки</div></div><div class="toggle ${state.soundOn?'on':''}" id="soundToggle"></div></div>
+    <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
+    <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖</button></div>
+    <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️</button></div>`;
+  ui.modalOverlay.classList.add('active');
+  $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
+  $('soundToggle').onclick=()=>{state.soundOn=!state.soundOn;STORE.set('soundOn',state.soundOn);openSettings();};
+  $('vibeToggle').onclick=()=>{state.vibeOn=!state.vibeOn;STORE.set('vibeOn',state.vibeOn);openSettings();};
+  $('replayTut').onclick=()=>{ui.modalOverlay.classList.remove('active');startTutorial(true);};
+  $('resetBtn').onclick=()=>{
+    if(!confirm('Удалить весь прогресс?'))return;
+    SAVE_KEYS.forEach(k=>{localStorage.removeItem('shieldVes_'+k);localStorage.removeItem('shieldVes__sig_'+k);});
+    localStorage.removeItem('shieldVes_schemaVersion');
+    location.reload();
+  };
+}
+
+function renderOperators(){
+  ui.operatorList.innerHTML='';
+  Object.values(OPERATORS).forEach(op=>{
+    const card=document.createElement('div');
+    card.className='operator-card'+(selectedOperator===op.id||(selectedOperator===null&&state.operator===op.id)?' selected':'');
+    const lvl=opLevel(op.id);
+    const perks=opPerks(op.id);
+    const perksHTML=perks.map(p=>`<span class="perk ${p.unlocked?'unlocked':'locked'}">${p.unlocked?'✅':'🔒'} Ур.${p.lvl}: ${p.name} — ${p.desc}</span>`).join('');
+    card.innerHTML=`<div class="operator-header"><div class="operator-icon">${op.icon}</div><div style="flex:1"><div class="operator-name">${op.name}</div><div class="operator-role">Ур. ${lvl}/10 • ${op.role}</div></div></div><div class="operator-desc">${op.desc}</div><div class="operator-perks">${perksHTML}</div>`;
+    card.onclick=()=>{
+      selectedOperator=op.id;
+      document.querySelectorAll('.operator-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      $('btnToMap').disabled=false;
+      beep(800,80,0.08);
+    };
+    ui.operatorList.appendChild(card);
+  });
+  $('btnToMap').disabled=!selectedOperator&&!state.operator;
+}
+function openOperatorSelect(){renderOperators();showScreen('operator');}
+
+function openMap(){
+  selectedShields={...state.mapShields};
+  const MAX=3;
+  function render(){
+    const used=Object.values(selectedShields).filter(Boolean).length;
+    ui.shieldsLeft.textContent=MAX-used;
+    ui.mapGrid.innerHTML='';
+    TURBINES.forEach(t=>{
+      const cell=document.createElement('div');
+      cell.className='turbine-cell'+(selectedShields[t]?' shielded':'');
+      cell.innerHTML=`<div class="turbine-icon">🌬️</div><div class="turbine-name">${t}</div>${selectedShields[t]?'<div class="turbine-shield">🛡️</div>':''}`;
+      cell.onclick=()=>{
+        if(selectedShields[t]){delete selectedShields[t];beep(500,80,0.08);}
+        else if(used<MAX){selectedShields[t]=true;beep(900,80,0.08);}
+        else{toast('Все щиты распределены','warning',1500);return;}
+        render();
+      };
+      ui.mapGrid.appendChild(cell);
+    });
+  }
+  render();
+  showScreen('map');
+}
+
+let shooterState={active:false,drones:0,timer:null,startTime:0,total:5};
+function startShooter(){
+  return new Promise(resolve=>{
+    showScreen('shooter');
+    shooterState.active=true;
+    shooterState.drones=shooterState.total;
+    shooterState.startTime=Date.now();
+    ui.shooterField.innerHTML='';
+    ui.dronesLeft.textContent=shooterState.drones;
+    ui.shooterField.classList.remove('shake');
+    ui.shooterTimer.textContent='5.0';
+    const W=ui.shooterField.offsetWidth||320,H=ui.shooterField.offsetHeight||280;
+    for(let i=0;i<shooterState.total;i++){
+      const d=document.createElement('div');
+      d.className='drone';d.textContent='🛸';
+      d.style.left=(20+Math.random()*(W-80))+'px';
+      d.style.top=(20+Math.random()*(H-80))+'px';
+      d.style.setProperty('--dx',((Math.random()-0.5)*100)+'px');
+      d.style.setProperty('--dy',((Math.random()-0.5)*100)+'px');
+      d.style.animation=`droneMove ${2+Math.random()*2}s ease-in-out infinite alternate`;
+      d.onclick=e=>{
+        if(!shooterState.active||d.classList.contains('hit'))return;
+        e.stopPropagation();
+        d.classList.add('hit');
+        beep(1200,50,0.08);vibe(20);
+        shooterState.drones--;
+        ui.dronesLeft.textContent=shooterState.drones;
+        if(shooterState.drones<=0){
+          clearInterval(shooterState.timer);
+          shooterState.active=false;
+          state.shooterWins++;STORE.set('shooterWins',state.shooterWins);
+          toast('✅ Дроны уничтожены!','success',2000);
+          setTimeout(()=>resolve(true),900);
+        }
+      };
+      ui.shooterField.appendChild(d);
+    }
+    shooterState.timer=setInterval(()=>{
+      const elapsed=(Date.now()-shooterState.startTime)/1000;
+      const remaining=Math.max(0,5-elapsed);
+      ui.shooterTimer.textContent=remaining.toFixed(1);
+      if(remaining<=0){
+        clearInterval(shooterState.timer);
+        shooterState.active=false;
+        ui.shooterField.classList.add('shake');
+        playError();
+        toast('❌ Время вышло!','error',2000);
+        setTimeout(()=>resolve(false),900);
+      }
+    },50);
+  });
+}
+
+const CFG = {
+  optCount:    l => l<=3 ? 4 : l<=7 ? 4 : l<=12 ? 5 : 6,
+  expertRate:  l => l<=3 ? 0 : l<=7 ? .5 : l<=12 ? .85 : 1,
+  baseTime:    l => Math.max(6, 16 - l*0.6),
+  analyzeCost: 3,
+  intelPerScan: 34,
+  firewallTime: 4.5,
+  runLength: 15
+};
+
+const MUTATORS = [
+  {id:'none',  name:'ШТИЛЬ',       desc:'Обычные условия'},
+  {id:'storm', name:'ШТОРМ',       desc:'Варианты перемешиваются каждые 3 сек'},
+  {id:'blind', name:'РАДИОТИШИНА', desc:'Таймер скрыт'},
+  {id:'jam',   name:'ГЛУШИЛКА',    desc:'Подсказки отключены, урон −25%'},
+  {id:'surge', name:'ПЕРЕГРУЗ',    desc:'Время −30%, очки ×1.6'}
+];
+function sectorOf(l){return Math.min(4,Math.floor((l-1)/5));}
+function mutator(){return MUTATORS[game.mutIdx||0];}
+
+const EXPERT_POOL = ATTACKS.map(a=>a.correctOption).filter(Boolean);
+
+function buildOptions(phase){
+  const lvl=game.level||1;
+  const total=CFG.optCount(lvl);
+  const need=total-1;
+  const rate=CFG.expertRate(lvl);
+  const dumb=[...(phase.wrongOptions||[])].sort(()=>Math.random()-.5);
+  const expert=EXPERT_POOL.filter(o=>o!==phase.correctOption).sort(()=>Math.random()-.5);
+  const picked=[];
+  for(let i=0;i<need;i++){
+    const useExpert=Math.random()<rate&&expert.length;
+    const src=useExpert?expert:(dumb.length?dumb:expert);
+    const v=src.pop();
+    if(v&&!picked.includes(v))picked.push(v);
+  }
+  while(picked.length<need&&expert.length){
+    const v=expert.pop();
+    if(v!==phase.correctOption&&!picked.includes(v))picked.push(v);
+  }
+  return [...picked,phase.correctOption].sort(()=>Math.random()-.5);
+}
+
+function renderIntel(){
+  const v=Math.min(100,game.intel||0);
+  const fill=$('intelFill');
+  const btn=$('empBtn');
+  if(fill)fill.style.width=v+'%';
+  if(btn)btn.disabled=v<100||!game.running;
+}
+function initIntelBar(){
+  const inner=document.querySelector('.attack-screen-inner');
+  if(!inner||document.getElementById('intelFill'))return;
+  const intelWrap=document.createElement('div');
+  intelWrap.className='intel-wrap';
+  intelWrap.innerHTML='<span class="intel-label">INTEL</span><div class="intel-bar"><div class="intel-fill" id="intelFill"></div></div><button class="emp-btn" id="empBtn" disabled>⚡ EMP</button>';
+  const optionsGrid=ui.optionsGrid;
+  inner.insertBefore(intelWrap,optionsGrid);
+  document.getElementById('empBtn').onclick=()=>{
+    if((game.intel||0)<100||!game.running||!game.activeAttack||game.resolving)return;
+    game.intel=0;renderIntel();
+    beep(1400,300,.15,'square');vibe([40,40,120]);
+    triggerScreenShake(20);
+    toast('⚡ EMP-ИМПУЛЬС: атака нейтрализована','success',2500);
+    handleAnswer(true,null,true);
+  };
+}
+
+const mg=document.createElement('div');
+mg.className='mg-overlay';
+mg.innerHTML='<div class="mg-title" id="mgTitle"></div><div class="mg-sub" id="mgSub"></div><div class="mg-timer" id="mgTimer"></div><div id="mgBody"></div>';
+document.body.appendChild(mg);
+
+const banner=document.createElement('div');
+banner.className='sector-banner';
+banner.innerHTML='<div class="n"></div><div class="d"></div>';
+document.body.appendChild(banner);
+
+const $mg=id=>document.getElementById(id);
+function showBanner(n,d){
+  banner.querySelector('.n').textContent=n;
+  banner.querySelector('.d').textContent=d;
+  banner.classList.add('on');
+  playFanfare();
+  setTimeout(()=>banner.classList.remove('on'),2200);
+}
+
+function mgFirewall(){
+  return new Promise(res=>{
+    mg.classList.add('on');
+    $mg('mgTitle').textContent='🛡️ ФАЙРВОЛ';
+    $mg('mgSub').textContent='Блокируй ВРЕДОНОСНЫЕ соединения. Легитимные (зелёные) не трогай!';
+    $mg('mgBody').innerHTML='<div class="mg-area" id="mgArea"></div>';
+    const area=$mg('mgArea');
+    const total=6+Math.min(6,Math.floor((game.level||1)/2));
+    let badLeft=0,mistakes=0,done=false;
+    for(let i=0;i<total;i++){
+      const bad=Math.random()<.6;
+      if(bad)badLeft++;
+      const n=document.createElement('div');
+      n.className='mg-node '+(bad?'bad':'good');
+      n.textContent=bad?'⚠ '+(1000+Math.floor(Math.random()*8999)):'✓ '+(1000+Math.floor(Math.random()*8999));
+      n.style.left=(8+Math.random()*62)+'%';
+      n.style.top=(6+Math.random()*78)+'%';
+      n.onclick=()=>{
+        if(done||n.classList.contains('dead'))return;
+        n.classList.add('dead');
+        if(bad){badLeft--;beep(1100,50,.08);vibe(15);}
+        else{mistakes++;beep(200,150,.12,'sawtooth');vibe(60);}
+        if(badLeft<=0)finish(true);
+      };
+      area.appendChild(n);
+    }
+    if(badLeft===0)finish(true);
+    let left=CFG.firewallTime;
+    $mg('mgTimer').textContent=left.toFixed(1);
+    const t=setInterval(()=>{
+      left-=.1;
+      $mg('mgTimer').textContent=Math.max(0,left).toFixed(1);
+      if(left<=0)finish(false);
+    },100);
+    function finish(ok){
+      if(done)return;done=true;
+      clearInterval(t);
+      const clean=ok&&mistakes===0;
+      setTimeout(()=>{mg.classList.remove('on');res({ok,clean,mistakes});},350);
+    }
+  });
+}
+
+function mgSequence(){
+  return new Promise(res=>{
+    mg.classList.add('on');
+    $mg('mgTitle').textContent='🔐 ПЕРЕХВАТ УПРАВЛЕНИЯ';
+    $mg('mgSub').textContent='Запомни последовательность портов и повтори её';
+    const len=3+Math.min(3,Math.floor((game.level||1)/4));
+    const ports=[22,80,443,3389,502,8080];
+    const seq=Array.from({length:len},()=>ports[Math.floor(Math.random()*ports.length)]);
+    $mg('mgBody').innerHTML='<div class="mg-seq" id="mgSeq">'+ports.map(p=>`<button class="mg-port" data-p="${p}">${p}</button>`).join('')+'</div>';
+    $mg('mgTimer').textContent='ЗАПОМИНАЙ';
+    const btns=[...$mg('mgSeq').children];
+    btns.forEach(b=>b.disabled=true);
+    let i=0;
+    const show=setInterval(()=>{
+      if(i>0)btns.find(b=>+b.dataset.p===seq[i-1])?.classList.remove('flash');
+      if(i>=seq.length){
+        clearInterval(show);
+        $mg('mgTimer').textContent='ПОВТОРИ';
+        btns.forEach(b=>b.disabled=false);
+        let step=0,done=false;
+        btns.forEach(b=>b.onclick=()=>{
+          if(done)return;
+          if(+b.dataset.p===seq[step]){
+            b.classList.add('flash');setTimeout(()=>b.classList.remove('flash'),150);
+            beep(900+step*100,60,.08);step++;
+            if(step>=seq.length){done=true;setTimeout(()=>{mg.classList.remove('on');res({ok:true});},400);}
+          }else{
+            done=true;b.classList.add('err');playError();
+            setTimeout(()=>{mg.classList.remove('on');res({ok:false});},600);
+          }
+        });
+        let tl=8;
+        const tt=setInterval(()=>{
+          if(done){clearInterval(tt);return;}
+          tl-=.1;$mg('mgTimer').textContent='ПОВТОРИ '+tl.toFixed(1);
+          if(tl<=0){clearInterval(tt);done=true;mg.classList.remove('on');res({ok:false});}
+        },100);
+        return;
+      }
+      btns.find(b=>+b.dataset.p===seq[i])?.classList.add('flash');
+      beep(700+i*80,120,.1);
+      i++;
+    },650);
+  });
+}
+
+function mgWires(){
+  return new Promise(res=>{
+    mg.classList.add('on');
+    $mg('mgTitle').textContent='✂️ ЛОГИЧЕСКАЯ БОМБА';
+    $mg('mgSub').textContent='Найди провод злоумышленника по уликам';
+    const colors=['КРАСНЫЙ','СИНИЙ','ЗЕЛЁНЫЙ','ЖЁЛТЫЙ','БЕЛЫЙ','ЧЁРНЫЙ'];
+    const target=Math.floor(Math.random()*6);
+    const c=colors[target];
+    const clues=[
+      'Он НЕ '+colors[(target+1)%6].toLowerCase()+' и НЕ '+colors[(target+2)%6].toLowerCase()+'.',
+      'Его название из '+c.length+' букв.',
+      'Он '+(target%2===0?'в левой колонке':'в правой колонке')+'.'
+    ];
+    $mg('mgBody').innerHTML=
+      clues.map(x=>`<div class="mg-clue">🔎 ${x}</div>`).join('')+
+      '<div class="mg-wires" id="mgW">'+colors.map((x,i)=>`<button class="mg-wire" data-i="${i}">${x}</button>`).join('')+'</div>';
+    let tl=12,done=false;
+    $mg('mgTimer').textContent=tl.toFixed(1);
+    const t=setInterval(()=>{
+      if(done)return;
+      tl-=.1;$mg('mgTimer').textContent=Math.max(0,tl).toFixed(1);
+      if(tl<=0){done=true;clearInterval(t);mg.classList.remove('on');res({ok:false});}
+    },100);
+    [...$mg('mgW').children].forEach(b=>b.onclick=()=>{
+      if(done)return;done=true;clearInterval(t);
+      const ok=+b.dataset.i===target;
+      b.style.borderColor=ok?'var(--accent)':'var(--danger)';
+      ok?playSuccess():playError();
+      setTimeout(()=>{mg.classList.remove('on');res({ok});},600);
+    });
+  });
+}
+
+async function showRandomEvent(){
+  const roll=Math.random();
+  const r=roll<.4?await mgSequence():roll<.75?await mgWires():await mgFirewall();
+  state.stats.eventsCount=(state.stats.eventsCount||0)+1;
+  STORE.set('stats',state.stats);
+  if(r.ok){
+    const cr=80+(game.level||1)*15;
+    state.credits+=cr;STORE.set('credits',state.credits);updateCreditsUI();
+    game.intel=Math.min(100,(game.intel||0)+40);
+    game.threat=Math.max(0,game.threat-6);
+    toast('✅ Инцидент закрыт: +'+cr+' ₡, +40 INTEL, −6% угрозы','coin',3000);
+    playSuccess();
+  }else{
+    game.threat=Math.min(100,game.threat+9);
+    game.hintsLeft=Math.max(0,game.hintsLeft-1);
+    ui.hintsLeft.textContent=game.hintsLeft;
+    toast('💀 Провал: +9% угрозы, −1 подсказка','error',3000);
+    playError();
+  }
+  renderIntel();
+  updateStats();
+  showScreen('attack');
+  if(game.threat>=100)endGame();
+}
+
+async function startGame(){
+  ensureAudio();startAmbient();tickIncome();checkContracts();
+  state.operator=selectedOperator||state.operator||'engineer';
+  state.mapShields={...selectedShields};
+  STORE.set('operator',state.operator);
+  STORE.set('mapShields',state.mapShields);
+  
+  TURBINES.forEach(t=>{state.turbineHealth[t]=100;});
+  STORE.set('turbineHealth',state.turbineHealth);
+  
+  const opBonus=(OPERATORS[state.operator]?.bonus)||{};
+  
+  // Хакер: автопропуск зависит от уровня
+  let hackerSkips = 0;
+  if(state.operator==='hacker'){
+    const hLvl = opLevel('hacker');
+    if(hLvl>=9) hackerSkips = 2;
+    else if(hLvl>=3) hackerSkips = 2; // ур.3 тоже даёт +1 (итого 2)
+    else hackerSkips = 1;
+  }
+  
+  game={
+    score:0,level:1,threat:0,
+    activeAttack:null,activePhase:null,phaseIndex:0,
+    timer:null,timeLeft:0,maxTime:15,
+    attacksRepelled:0,attacksMissed:0,streakRepelled:0,
+    running:true,paused:false,nextAttackTimer:null,
+    hintsLeft:3+getFreeHints()+(opBonus.freeHints||0),
+    hintUsed:false,
+    autoSkipLeft: hackerSkips,
+    gameStartTime:Date.now(),totalTime:0,
+    attackCounter:0,shooterBonus:0,tempScoreBonus:0,eventTimeBonus:0,
+    action:'attack',combo:0,maxCombo:0,bossHp:0,riskAnswered:false,
+    sector:0,mutIdx:0,resolving:false,analyzed:false,
+    bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
+    lastAnsweredBtn:null,
+    forensicFreeUsed: false
+  };
+  updateStats();
+  showScreen('attack');
+  ui.hintsLeft.textContent=game.hintsLeft;
+  ui.btnHint.disabled=false;
+  ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
+  renderVesScene();
+  renderIntel();
+  toast('🎮 Оператор: '+OPERATORS[state.operator].name,'success');
+  game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
+}
+
+async function spawnAttack(){
+  if(!game.running||game.paused)return;
+  game.attackCounter++;
+  if(game.attackCounter%3===0&&game.attackCounter>1){
+    const ok=await startShooter();
+    if(!game.running)return;
+    if(ok){game.score+=50;game.shooterBonus=2;toast('🎯 +50 очков за дронов!','success',2000);playSuccess();updateStats();}
+    else{game.threat=Math.min(100,game.threat+10);game.shooterBonus=-2;toast('💥 Дроны прорвались! +10% угрозы','error',2000);playError();updateStats();if(game.threat>=100){endGame();return;}}
+  }else{
+    game.shooterBonus=0;
+  }
+
+  if(game.attackCounter>1&&Math.random()<0.15){
+    await showRandomEvent();
+    if(!game.running)return;
+  }
+
+  const attack=pickAttack();
+  game.activeAttack=attack;
+  game.phaseIndex=0;
+  game.hintUsed=false;
+  game.action='attack';
+  game.analyzed=false;
+  game.usedShield=false;
+
+  if(attack.isBoss){
+    game.bossPhases=3;
+    game.bossMaxHp=(attack.bossHp||100)+game.level*8;
+    game.bossHp=game.bossMaxHp;
+    game.blockedAct=['shield','analyze'][Math.floor(Math.random()*2)];
+  }
+
+  showScreen('attack');
+  renderPhase();
+  renderVesScene();
+  playAttackSound(attack.category);
+  vibe([40,40,40]);
+  toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2000);
+}
+
+function renderPhase(){
+  const a=game.activeAttack;
+  if(!a)return;
+
+  let phase;
+  if(game.phaseIndex===0)phase=a;
+  else if(game.phaseIndex===1)phase=a.phase2;
+  else phase=a.phase3||{description:'ФАЗА 3/3: ДОБИВАНИЕ.',wrongOptions:EXPERT_POOL.filter(o=>o!==a.correctOption).slice(0,5),correctOption:a.correctOption,hint:'Финальный удар.'};
+  
+  game.activePhase=phase;
+
+  const boss=!!a.isBoss;
+  ui.attackLabel.textContent=boss?'👺 БОСС • ФАЗА '+(game.phaseIndex+1)+'/'+(game.bossPhases||3):'⚠️ АТАКА • '+a.category.toUpperCase();
+  ui.attackLabel.classList.toggle('boss',boss);
+  ui.attackName.textContent=a.name;
+  ui.attackDesc.textContent=phase.description;
+  ui.attackDesc.classList.toggle('boss',boss);
+
+  ui.optionsGrid.innerHTML='';
+  buildOptions(phase).forEach(o=>{
+    const b=document.createElement('button');
+    b.className='option-btn';
+    b.textContent=o;
+    b.onclick=()=>handleAnswer(o===phase.correctOption,b);
+    ui.optionsGrid.appendChild(b);
+  });
+
+  let sec=CFG.baseTime(game.level)+effects().timeBonus+(game.shooterBonus||0)+(game.eventTimeBonus||0);
+  if(mutator().id==='surge')sec*=.7;
+  if(boss)sec=Math.max(7,sec-2-game.phaseIndex*1.5);
+  sec=Math.max(5,Math.round(sec));
+  game.timeLeft=sec;
+  game.maxTime=sec;
+  ui.timerValue.textContent=mutator().id==='blind'?'??':sec;
+  ui.timerValue.className='timer-value';
+
+  const acts=[...ui.actionBar.querySelectorAll('.action-btn')];
+  acts.forEach(b=>{b.classList.remove('blocked');b.disabled=false;b.classList.toggle('active',b.dataset.act==='attack');});
+  game.action='attack';
+
+  if(boss&&game.blockedAct){
+    const b=acts.find(x=>x.dataset.act===game.blockedAct);
+    if(b){b.classList.add('blocked');b.disabled=true;}
+  }
+  
+  ui.btnHint.disabled=false;
+  if(mutator().id==='jam'){
+    ui.btnHint.disabled=true;
+  }
+  if(game.hintsLeft<=0){
+    ui.btnHint.disabled=true;
+  }
+
+  // Показ/скрытие кнопки пропуска (Хакер)
+  const btnSkip=$('btnSkip');
+  if(btnSkip){
+    if(state.operator==='hacker' && game.autoSkipLeft>0){
+      btnSkip.style.display='inline-block';
+      $('skipsLeft').textContent=game.autoSkipLeft;
+    } else {
+      btnSkip.style.display='none';
+    }
+  }
+
+  if(boss&&ui.bossHpContainer){
+    const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
+    ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+  } else if(ui.bossHpContainer){
+    ui.bossHpContainer.innerHTML='';
+  }
+
+  clearInterval(game.timer);
+  let ticked=5;
+  game.timer=setInterval(()=>{
+    if(game.paused)return;
+    game.timeLeft--;
+    ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
+    updateRiskIndicator();
+    if(game.timeLeft<=5){
+      ui.timerValue.className='timer-value critical';
+      if(game.timeLeft===ticked){playTick();ticked--;}
+    }
+    if(game.timeLeft<=0){
+      clearInterval(game.timer);
+      handleAnswer(false,null);
+    }
+  },1000);
+
+  clearInterval(shuffleTimer);
+  if(mutator().id==='storm'){
+    shuffleTimer=setInterval(()=>{
+      if(game.paused||!game.activePhase)return;
+      const kids=[...ui.optionsGrid.children].filter(b=>!b.classList.contains('eliminated'));
+      kids.sort(()=>Math.random()-.5).forEach(k=>ui.optionsGrid.appendChild(k));
+      beep(400,40,.03);
+    },3000);
+  }
+  renderIntel();
+  renderVesScene();
+}
+
+ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
+  btn.onclick=async()=>{
+    if(!game.running||game.paused||game.resolving||!game.activeAttack)return;
+    const act=btn.dataset.act;
+
+    if(act==='attack'){
+      ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      game.action='attack';
+      beep(500,50,.06);
+      return;
+    }
+
+    if(act==='shield'){
+      game.resolving=true;
+      clearInterval(game.timer);
+      clearInterval(shuffleTimer);
+      const r=await mgFirewall();
+      game.resolving=false;
+      game.usedShield=true;
+      if(r.ok){
+        const bonus=r.clean?60:30;
+        game.score+=bonus;
+        game.intel=Math.min(100,(game.intel||0)+15);
+        toast(r.clean?'🛡️ ИДЕАЛЬНЫЙ БЛОК! +'+bonus:'🛡️ Отбито. +'+bonus,'success',2000);
+        resolveRound(true,{shield:true,noScore:true});
+      }else{
+        toast('🛡️ Файрвол пробит — урон снижен вдвое','warning',2000);
+        resolveRound(false,{shield:true});
+      }
+      return;
+    }
+
+    if(act==='analyze'){
+      if(game.analyzed){toast('Уже проанализировано','warning',1200);return;}
+      game.analyzed=true;
+      
+      // Форензик ур.6: первый анализ за игру бесплатный (не тратит время)
+      const freeAnalyze = state.operator==='forensic' && opLevel('forensic')>=6 && !game.forensicFreeUsed;
+      if(!freeAnalyze){
+        game.timeLeft=Math.max(1,game.timeLeft-CFG.analyzeCost);
+      } else {
+        game.forensicFreeUsed=true;
+        toast('🔬 Бесплатный анализ (Форензик ур.6) — без потери времени!','info',2000);
+      }
+      
+      ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
+
+      const phase=game.activePhase;
+      if(!phase)return;
+
+      const wrong=[...ui.optionsGrid.children].filter(b=>b.textContent!==phase.correctOption&&!b.classList.contains('eliminated'));
+      const n=(state.operator==='forensic'||state.operator==='analyst')?2:1;
+      for(let i=0;i<n&&wrong.length;i++){
+        const k=Math.floor(Math.random()*wrong.length);
+        wrong[k].classList.add('eliminated');
+        wrong.splice(k,1);
+      }
+      game.intel=Math.min(100,(game.intel||0)+CFG.intelPerScan);
+      renderIntel();
+      beep(1200,120,.1,'triangle');
+      if(!freeAnalyze){
+        toast('🔍 −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+CFG.intelPerScan+' INTEL','info',2200);
+      }
+      return;
+    }
+  };
+});
+
+ui.btnHint.onclick=function(){
+  if(mutator().id==='jam'){toast('🚫 Глушилка: подсказки недоступны','error',1800);return;}
+  if(game.hintsLeft<=0||game.hintUsed||!game.activeAttack||game.resolving)return;
+
+  const phase=game.activePhase;
+  if(!phase)return;
+
+  const wrongBtns=Array.from(ui.optionsGrid.querySelectorAll('.option-btn')).filter(b=>b.textContent!==phase.correctOption&&!b.classList.contains('eliminated'));
+  if(wrongBtns.length===0)return;
+  let toEliminate=1;
+  if(state.operator==='analyst'&&opLevel('analyst')>=3)toEliminate=2;
+  if(state.operator==='forensic'&&opLevel('forensic')>=3)toEliminate=2;
+  toEliminate=Math.min(toEliminate,wrongBtns.length);
+  for(let i=0;i<toEliminate;i++){
+    const idx=Math.floor(Math.random()*wrongBtns.length);
+    wrongBtns[idx].classList.add('eliminated');
+    wrongBtns.splice(idx,1);
+  }
+  toast('💡 '+phase.hint,'info',5000);
+  beep(1000,100,0.08);
+
+  // Аналитик ур.6: подсказка бесплатна (не тратит заряд)
+  const freeHint = state.operator==='analyst' && opLevel('analyst')>=6;
+  if(!freeHint){
+    game.hintsLeft--;
+  } else {
+    toast('🔍 Бесплатная подсказка (Аналитик ур.6)','info',1500);
+  }
+  
+  game.hintUsed=true;
+  ui.hintsLeft.textContent=game.hintsLeft;
+  if(game.hintsLeft<=0)ui.btnHint.disabled=true;
+};
+
+// Обработчик кнопки пропуска (Хакер)
+$('btnSkip').onclick=function(){
+  if(!game.running||game.paused||game.resolving||!game.activeAttack)return;
+  if(game.autoSkipLeft<=0)return;
+  
+  game.autoSkipLeft--;
+  $('skipsLeft').textContent=game.autoSkipLeft;
+  if(game.autoSkipLeft<=0)$('btnSkip').style.display='none';
+  
+  clearInterval(game.timer);
+  clearInterval(shuffleTimer);
+  game.resolving=true;
+  
+  beep(600,150,0.1,'triangle');
+  vibe([30,30,30]);
+  toast('⏭️ Атака пропущена без урона','info',2000);
+  
+  setTimeout(()=>{
+    game.resolving=false;
+    game.activeAttack=null;
+    game.activePhase=null;
+    game.hintUsed=false;
+    game.analyzed=false;
+    game.usedShield=false;
+    game.blockedAct=null;
+    game.lastAnsweredBtn=null;
+    game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
+  },800);
+};
+
+function handleAnswer(correct,btn,emp){
+  if(game.resolving)return;
+  clearInterval(game.timer);
+  clearInterval(shuffleTimer);
+  const ph=game.activePhase;
+  game.lastAnsweredBtn=btn;
+  
+  // Рискёр: ответ на последних 20% времени
+  if(game.maxTime && game.timeLeft/game.maxTime <= 0.2){
+    game.riskAnswered = true;
+  }
+  
+  if(btn){
+    btn.classList.add(correct?'correct':'wrong');
+  }
+  [...ui.optionsGrid.children].forEach(b=>{
+    b.disabled=true;
+    if(ph&&b.textContent===ph.correctOption)b.classList.add('correct');
+  });
+  resolveRound(correct,{emp:!!emp});
+}
+
+function resolveRound(correct,opt){
+  opt=opt||{};
+  game.resolving=true;
+  const a=game.activeAttack;
+  if(!a){game.resolving=false;return;}
+  const boss=!!a.isBoss;
+
+  if(boss){
+    if(correct){
+      const dmg=(game.bossMaxHp||100)/(game.bossPhases||3);
+      game.bossHp=Math.max(0,(game.bossHp||0)-dmg);
+      if(ui.bossHpContainer){
+        const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
+        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+      }
+      playSuccess();vibe([30,30,30]);
+      toast('💥 Удар по ядру! −'+Math.round(dmg)+' HP','success',1400);
+    }else{
+      game.bossHp=Math.min(game.bossMaxHp,(game.bossHp||0)+15);
+      if(ui.bossHpContainer){
+        const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
+        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+      }
+      playError();vibe(200);
+      toast('😈 Босс восстановил +15 HP','error',1800);
+    }
+    if(game.phaseIndex<(game.bossPhases-1)){
+      setTimeout(()=>{
+        game.phaseIndex++;
+        game.analyzed=false;
+        game.blockedAct=['shield','analyze'][Math.floor(Math.random()*2)];
+        game.resolving=false;
+        renderPhase();
+        toast('⚠️ ФАЗА '+(game.phaseIndex+1)+' • босс блокирует '+(game.blockedAct==='shield'?'ЗАЩИТУ':'АНАЛИЗ'),'warning',2600);
+      },1200);
+      return;
+    }
+    const win=(game.bossHp||0)<=0;
+    setTimeout(()=>finishRound(win,a,{boss:true,emp:opt.emp}),700);
+    return;
+  }
+  setTimeout(()=>finishRound(correct,a,opt),550);
+}
+
+function finishRound(correct,a,opt){
+  const eff=effects();
+  const isBoss=!!opt.boss;
+  let rM=1+eff.scoreBonus+(game.tempScoreBonus||0);
+  let dM=1-eff.damageReduction;
+  
+  // ИНЖЕНЕР: ур.3 −20% урона, ур.9 −40% урона
+  if(state.operator==='engineer'){
+    if(opLevel('engineer')>=9) dM*=0.6;
+    else if(opLevel('engineer')>=3) dM*=0.8;
+  }
+  
+  if(game.hintUsed)rM*=.85;
+  if(mutator().id==='surge')rM*=1.6;
+  if(mutator().id==='jam')dM*=.75;
+  if(opt.shield)dM*=.5;
+  rM*=riskMultiplier();
+  
+  // АНАЛИТИК ур.9: +50% награды за быстрый ответ (>70% времени)
+  if(state.operator==='analyst' && opLevel('analyst')>=9){
+    if(game.maxTime && game.timeLeft/game.maxTime > 0.7){
+      rM *= 1.5;
+    }
+  }
+  
+  if(state.operator==='dispatcher'){
+    rM*=1.2;
+    if(opLevel('dispatcher')>=3)rM*=1.3;
+    if(isBoss&&opLevel('dispatcher')>=9)rM*=1.5;
+  }
+
+  if(correct){
+    let pts=opt.noScore?0:Math.round(a.reward*rM*(isBoss?2.2:1));
+    if(opt.emp)pts=Math.round(pts*1.2);
+    game.combo=(game.combo||0)+1;
+    game.streakRepelled=(game.streakRepelled||0)+1;
+    game.maxCombo=Math.max(game.maxCombo||0,game.combo);
+    const cm=game.combo>=10?5:game.combo>=7?3:game.combo>=4?2:1;
+    if(cm>1&&pts>0){pts=Math.round(pts*cm);showCombo(cm);}
+    game.score+=pts;
+    game.threat=Math.max(0,game.threat-(isBoss?18:8));
+    game.attacksRepelled++;
+    game.intel=Math.min(100,(game.intel||0)+8);
+    if(state.operator)opAddXP(state.operator,Math.floor(pts/2)+10);
+    repairTurbines();
+    
+    if(pts>0 && game.lastAnsweredBtn){
+      const rect=game.lastAnsweredBtn.getBoundingClientRect();
+      spawnFloatingNumber(rect.left+rect.width/2, rect.top, '+'+pts, '#00ff88');
+    }
+    
+    if(isBoss){
+      unlock('boss_slayer');playFanfare();
+      triggerScreenShake(18);
+      toast('🏆 БОСС УНИЧТОЖЕН! +'+pts,'success',4000);
+      state.stats.bossesDefeated=(state.stats.bossesDefeated||0)+1;
+      STORE.set('stats',state.stats);
+    }else if(pts>0){
+      toast('✅ +'+pts+(cm>1?' (x'+cm+')':''),'success',1500);
+    }
+    updateContract('repel',1);
+    updateContract('combo',game.combo,true);
+  }else{
+    let dmg=Math.round(a.damage*dM*(isBoss?1.5:1)*(1+(game.level-1)*0.04));
+    dmg=Math.max(2,dmg);
+    const t=TURBINES[Math.floor(Math.random()*5)];
+    if(state.mapShields[t])dmg=Math.round(dmg*.7);
+    game.threat=Math.min(100,game.threat+dmg);
+    game.attacksMissed++;
+    game.combo=0;
+    game.streakRepelled=0;
+    damageTurbine(t,Math.round(dmg/2));
+    playError();
+    toast('💥 +'+dmg+'% угрозы','error',2000);
+  }
+
+  game.tempScoreBonus=0;
+  game.eventTimeBonus=0;
+  game.hintUsed=false;
+  game.analyzed=false;
+  game.usedShield=false;
+  game.blockedAct=null;
+  game.resolving=false;
+  game.activeAttack=null;
+  game.activePhase=null;
+  game.lastAnsweredBtn=null;
+
+  const nl=1+Math.floor(game.attacksRepelled/5);
+  if(nl>game.level){
+    game.level=nl;
+    updateContract('level',nl,true);
+    const s=sectorOf(nl);
+    if(s!==game.sector){
+      game.sector=s;
+      game.mutIdx=s%MUTATORS.length;
+      const m=MUTATORS[game.mutIdx];
+      showBanner('СЕКТОР '+(s+1),m.name+' — '+m.desc);
+    }else{
+      playFanfare();
+      toast('🎯 УРОВЕНЬ '+nl,'success',2200);
+    }
+  }
+
+  updateContract('score',game.score,true);
+  updateStats();
+  checkAch();
+  renderIntel();
+
+  if(game.threat>=100){endGame();return;}
+  if(game.level>CFG.runLength){
+    const bonus=500+game.score*0.25;
+    state.credits+=Math.round(bonus);
+    STORE.set('credits',state.credits);
+    showBanner('СМЕНА СДАНА','Бонус +'+Math.round(bonus)+' ₡');
+    toast('🏅 ВЭС устояла все 15 уровней!','achievement',5000);
+    setTimeout(()=>endGame(),2400);
+    return;
+  }
+  game.nextAttackTimer=setTimeout(()=>spawnAttack(),Math.max(1400,4200-game.level*180));
+}
+
+function endGame(){
+  if(!game.running)return;
+  game.running=false;
+  game.paused=false;
+  clearInterval(game.timer);
+  clearInterval(shuffleTimer);
+  clearTimeout(game.nextAttackTimer);
+  stopAmbient();
+  stopSiren();
+  game.totalTime=Math.round((Date.now()-game.gameStartTime)/1000);
+
+  const eff=effects();
+  const xp=Math.round((game.score/2)*(1+eff.xpBonus));
+  const cr=Math.round(game.score/10)+game.level*20;
+
+  if(game.score>state.highScore){
+    state.highScore=game.score;
+    STORE.set('highScore',state.highScore);
+  }
+  state.gamesPlayed++;
+  STORE.set('gamesPlayed',state.gamesPlayed);
+  state.xp+=xp;
+  state.credits+=cr;
+  STORE.set('xp',state.xp);
+  STORE.set('credits',state.credits);
+  state.lastIncomeTick=Date.now();
+  STORE.set('lastIncomeTick',state.lastIncomeTick);
+
+  state.stats.totalScore+=game.score;
+  state.stats.totalRepelled+=game.attacksRepelled;
+  state.stats.totalMissed+=game.attacksMissed;
+  state.stats.totalTime+=game.totalTime;
+  if(game.level>state.stats.bestLevel)state.stats.bestLevel=game.level;
+  if(game.maxCombo>state.stats.maxCombo)state.stats.maxCombo=game.maxCombo;
+  STORE.set('stats',state.stats);
+
+  updateContract('games',1);
+  updateContract('level',game.level,true);
+  updateContract('score',game.score,true);
+  updateContract('combo',game.maxCombo,true);
+  checkAch();
+
+  ui.finalScore.textContent=game.score;
+  ui.finalLevel.textContent=game.level;
+  ui.finalRepelled.textContent=game.attacksRepelled;
+  ui.finalCombo.textContent='x'+game.maxCombo;
+  ui.xpGained.textContent='+'+xp+' XP';
+  ui.creditsGained.textContent='+'+cr+' ₡';
+  updateCreditsUI();
+  showScreen('gameover');
+  playError();
+  vibe([200,100,200,100,400]);
+}
+
+function pauseGame(){
+  if(!game.running||game.paused)return;
+  game.paused=true;
+  clearInterval(game.timer);
+  clearInterval(shuffleTimer);
+  clearTimeout(game.nextAttackTimer);
+  ui.pauseOverlay.classList.add('active');
+}
+function resumeGame(){
+  if(!game.running||!game.paused)return;
+  game.paused=false;
+  ui.pauseOverlay.classList.remove('active');
+  if(game.activeAttack&&game.timeLeft>0){
+    let t=5;
+    game.timer=setInterval(()=>{
+      if(game.paused)return;
+      game.timeLeft--;
+      ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
+      updateRiskIndicator();
+      if(game.timeLeft<=5){
+        ui.timerValue.className='timer-value critical';
+        if(game.timeLeft===t){playTick();t--;}
+      }
+      if(game.timeLeft<=0){
+        clearInterval(game.timer);
+        handleAnswer(false,null);
+      }
+    },1000);
+  }else if(game.timeLeft>0){
+    spawnAttack();
+  }
+}
+function quitToMenu(){
+  game.running=false;
+  game.paused=false;
+  clearInterval(game.timer);
+  clearInterval(shuffleTimer);
+  clearTimeout(game.nextAttackTimer);
+  stopAmbient();
+  stopSiren();
+  ui.pauseOverlay.classList.remove('active');
+  showScreen('menu');
+  updateMenu();
+}
+
+let tutIndex=0;
+function renderTutorial(){
+  const s=TUTORIAL[tutIndex];
+  ui.tutorialSlide.innerHTML=`<div class="tutorial-icon">${s.icon}</div><div class="tutorial-title">${s.title}</div><div class="tutorial-text">${s.text}</div>`;
+  ui.tutorialDots.innerHTML=TUTORIAL.map((_,i)=>`<div class="tutorial-dot ${i===tutIndex?'active':''}"></div>`).join('');
+  ui.tutNext.textContent=tutIndex===TUTORIAL.length-1?'🎮 Начать!':'Далее →';
+}
+function startTutorial(force){
+  if(!force&&state.tutorialSeen)return;
+  tutIndex=0;
+  renderTutorial();
+  ui.tutorialOverlay.classList.add('active');
+}
+function closeTutorial(){
+  state.tutorialSeen=true;
+  STORE.set('tutorialSeen',true);
+  ui.tutorialOverlay.classList.remove('active');
+}
+
+$('btnStart').onclick=openOperatorSelect;
+$('btnBackMenu').onclick=()=>showScreen('menu');
+$('btnToMap').onclick=()=>openMap();
+$('btnBackOp').onclick=()=>openOperatorSelect();
+$('btnStartGame').onclick=startGame;
+$('btnRestart').onclick=()=>{showScreen('menu');updateMenu();};
+$('btnUpgrade').onclick=openUpgrade;
+$('btnSkills').onclick=openSkills;
+$('btnContracts').onclick=openContracts;
+$('btnAchievements').onclick=openAchievements;
+$('btnStats').onclick=openStats;
+$('btnSettings').onclick=openSettings;
+$('btnTutorial').onclick=()=>startTutorial(true);
+
+ui.modalClose.onclick=()=>ui.modalOverlay.classList.remove('active');
+ui.modalOverlay.onclick=e=>{if(e.target===ui.modalOverlay)ui.modalOverlay.classList.remove('active');};
+
+$('btnPause').onclick=pauseGame;
+$('btnResume').onclick=resumeGame;
+$('btnQuitGame').onclick=quitToMenu;
+
+ui.tutNext.onclick=()=>{
+  if(tutIndex>=TUTORIAL.length-1){closeTutorial();return;}
+  tutIndex++;
+  renderTutorial();
+  beep(800,60,0.06);
+};
+ui.tutSkip.onclick=closeTutorial;
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&game.running&&!game.paused)pauseGame();
+  if(!document.hidden)tickIncome();
+});
+window.addEventListener('beforeunload',()=>{
+  STORE.set('lastIncomeTick',Date.now());
+  STORE.set('credits',state.credits);
+  STORE.set('xp',state.xp);
+});
+
+function init(){
+  applyTheme(state.theme);
+  tickIncome();
+  checkContracts();
+  updateMenu();
+  updateStats();
+  setInterval(tickIncome,3000);
+  if(!state.tutorialSeen)setTimeout(()=>startTutorial(),400);
+  initIntelBar();
+}
+init();
+
+console.log('%c⚡ WPPDef v0.8.1','color:#00ff88;font-size:20px;font-weight:bold;text-shadow:0 0 10px #00ff88');
+console.log('%cLiving Perks Update','color:#6b7280;font-size:12px');
+</script>
+</body>
+</html>
