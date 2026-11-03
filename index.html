@@ -1,54 +1,35 @@
 <!DOCTYPE html><!--
   WPPDef © 2026 Даниил Шмигировский
   Оригинал: https://github.com/daniilsmigirovskij27/wppdef
-  v1.0.0 — Большое обновление: Босс-раш, 20 новых атак (97 всего), 6 веток прокачки,
-  11 навыков, горячие клавиши. Прогресс сохранений v0.9.x полностью совместим.
   Любое копирование без указания автора — нарушение лицензии.
 -->
 <html lang="ru" data-theme="cyber">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="description" content="WPPDef — браузерная игра: защита ветроэлектростанции от кибератак.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v1.0.0</title>
+<title>WPPDef v1.1.0 — Optimized</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
 :root, [data-theme="cyber"] {
-  --bg: #1a1c1e;
-  --panel: #232629;
-  --panel-2: #2c3035;
-  --border: #3f444b;
-  --text: #d1d5db;
-  --dim: #8a9199;
-  --accent: #ff7b00;
-  --accent-dim: rgba(255, 123, 0, 0.15);
-  --accent-glow: rgba(255, 123, 0, 0.3);
-  --danger: #d93025;
-  --danger-dim: rgba(217, 48, 37, 0.15);
-  --warning: #ffaa00;
-  --warning-dim: rgba(255, 170, 0, 0.15);
-  --info: #4a90e2;
-  --info-dim: rgba(74, 144, 226, 0.15);
-  --gold: #ffcc00;
-  --gold-dim: rgba(255, 204, 0, 0.15);
-  --purple: #a855f7;
-  --purple-dim: rgba(168, 85, 247, 0.15);
-  --grid-color: rgba(255, 123, 0, 0.03);
-  --body-bg-grad: radial-gradient(ellipse at 50% 0%, #25282c 0%, #1a1c1e 70%);
+  --bg: #1a1c1e; --panel: #232629; --panel-2: #2c3035; --border: #3f444b;
+  --text: #d1d5db; --dim: #8a9199; --accent: #ff7b00; --accent-dim: rgba(255, 123, 0, 0.15);
+  --danger: #d93025; --danger-dim: rgba(217, 48, 37, 0.15); --warning: #ffaa00; --warning-dim: rgba(255, 170, 0, 0.15);
+  --info: #4a90e2; --info-dim: rgba(74, 144, 226, 0.15); --gold: #ffcc00; --gold-dim: rgba(255, 204, 0, 0.15);
+  --purple: #a855f7; --purple-dim: rgba(168, 85, 247, 0.15);
+  --grid-color: rgba(255, 123, 0, 0.03); --body-bg-grad: radial-gradient(ellipse at 50% 0%, #25282c 0%, #1a1c1e 70%);
 }
 [data-theme="alarm"]{
-  --bg:#120a0a;--panel:#1f1111;--panel-2:#261515;--border:#4a1a1a;
-  --text:#d1c5c5;--dim:#8a6a6a;--accent:#d93025;--accent-dim:rgba(217,48,37,.15);
-  --danger:#ffaa00;--danger-dim:rgba(255,170,0,.15);--warning:#ff7b00;--warning-dim:rgba(255,123,0,.15);
-  --info:#4a90e2;--info-dim:rgba(74,144,226,.15);--gold:#ffcc00;--gold-dim:rgba(255,204,0,.15);
-  --purple:#a855f7;--purple-dim:rgba(168,85,247,.15);
-  --grid-color:rgba(217,48,37,.04);
-  --body-bg-grad:radial-gradient(ellipse at 50% 0%,#2a1515 0%,#120a0a 70%);
+  --bg:#120a0a;--panel:#1f1111;--panel-2:#261515;--border:#4a1a1a;--text:#d1c5c5;--dim:#8a6a6a;
+  --accent:#d93025;--accent-dim:rgba(217,48,37,.15);--danger:#ffaa00;--danger-dim:rgba(255,170,0,.15);
+  --warning:#ff7b00;--warning-dim:rgba(255,123,0,.15);--info:#4a90e2;--info-dim:rgba(74,144,226,.15);
+  --gold:#ffcc00;--gold-dim:rgba(255,204,0,.15);--purple:#a855f7;--purple-dim:rgba(168,85,247,.15);
+  --grid-color:rgba(217,48,37,.04);--body-bg-grad:radial-gradient(ellipse at 50% 0%,#2a1515 0%,#120a0a 70%);
 }
 body{font-family:'Roboto Mono', monospace;background:var(--body-bg-grad);color:var(--text);min-height:100vh;overflow-x:hidden;position:relative;transition:background .5s,color .3s}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:40px 40px;animation:gridScroll 20s linear infinite;pointer-events:none;z-index:0}
@@ -69,38 +50,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 @keyframes turbineSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes turbineBroken{0%,100%{filter:brightness(1)}50%{filter:brightness(.6)}}
 @keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(0)}}
-@keyframes floatUp{
-  0%{opacity:0;transform:translate(-50%,0) scale(.5)}
-  15%{opacity:1;transform:translate(-50%,-10px) scale(1.2)}
-  100%{opacity:0;transform:translate(-50%,-90px) scale(1)}
-}
-@keyframes screenShake{
-  0%,100%{transform:translate(0,0)}
-  10%{transform:translate(calc(var(--shake-intensity,10px) * -0.6), calc(var(--shake-intensity,10px) * 0.4))}
-  20%{transform:translate(calc(var(--shake-intensity,10px) * 0.8), calc(var(--shake-intensity,10px) * -0.5))}
-  30%{transform:translate(calc(var(--shake-intensity,10px) * -0.4), calc(var(--shake-intensity,10px) * 0.6))}
-  40%{transform:translate(calc(var(--shake-intensity,10px) * 0.6), calc(var(--shake-intensity,10px) * -0.3))}
-  50%{transform:translate(calc(var(--shake-intensity,10px) * -0.5), calc(var(--shake-intensity,10px) * 0.4))}
-  60%{transform:translate(calc(var(--shake-intensity,10px) * 0.3), 0)}
-  70%{transform:translate(calc(var(--shake-intensity,10px) * -0.2), calc(var(--shake-intensity,10px) * -0.1))}
-  80%{transform:translate(calc(var(--shake-intensity,10px) * 0.1), 0)}
-}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,0) scale(.5)}15%{opacity:1;transform:translate(-50%,-10px) scale(1.2)}100%{opacity:0;transform:translate(-50%,-90px) scale(1)}}
+@keyframes screenShake{0%,100%{transform:translate(0,0)}10%{transform:translate(calc(var(--shake-intensity,10px) * -0.6), calc(var(--shake-intensity,10px) * 0.4))}20%{transform:translate(calc(var(--shake-intensity,10px) * 0.8), calc(var(--shake-intensity,10px) * -0.5))}30%{transform:translate(calc(var(--shake-intensity,10px) * -0.4), calc(var(--shake-intensity,10px) * 0.6))}40%{transform:translate(calc(var(--shake-intensity,10px) * 0.6), calc(var(--shake-intensity,10px) * -0.3))}50%{transform:translate(calc(var(--shake-intensity,10px) * -0.5), calc(var(--shake-intensity,10px) * 0.4))}60%{transform:translate(calc(var(--shake-intensity,10px) * 0.3), 0)}70%{transform:translate(calc(var(--shake-intensity,10px) * -0.2), calc(var(--shake-intensity,10px) * -0.1))}80%{transform:translate(calc(var(--shake-intensity,10px) * 0.1), 0)}}
 
 .container{max-width:800px;margin:0 auto;padding:14px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1}
 .container.screen-shake{animation:screenShake .35s ease-out}
-
-.floating-number{
-  position:fixed;
-  font-family:'Oswald', sans-serif;
-  font-size:22px;
-  font-weight:700;
-  pointer-events:none;
-  z-index:9998;
-  animation:floatUp 1.3s ease-out forwards;
-  letter-spacing:1px;
-  white-space:nowrap;
-}
-
+.floating-number{position:fixed;font-family:'Oswald', sans-serif;font-size:22px;font-weight:700;pointer-events:none;z-index:9998;animation:floatUp 1.3s ease-out forwards;letter-spacing:1px;white-space:nowrap}
 .ves-scene{position:relative;width:100%;height:110px;background:linear-gradient(180deg,rgba(255,123,0,.03) 0%,transparent 100%);border:1px solid var(--border);border-radius:4px;margin-bottom:12px;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-around;padding:0 10px}
 .ves-scene.emergency{animation:emergencyFlash 1s infinite;border-color:var(--danger)}
 .turbine-live{position:relative;width:45px;height:85px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
@@ -110,82 +65,55 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .turbine-blades{position:absolute;top:0;left:50%;width:36px;height:36px;margin-left:-18px;margin-top:-18px;animation:turbineSpin 12s linear infinite;transform-origin:center center}
 .turbine-live.damaged .turbine-blades{animation:turbineSpin 25s linear infinite;opacity:.6}
 .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{content:'';position:absolute;top:50%;left:50%;width:34px;height:4px;background:var(--dim);border-radius:2px;transform-origin:0% 50%;margin-top:-2px}
-.turbine-blades::before{transform:rotate(0deg)}
-.turbine-blades::after{transform:rotate(120deg)}
-.turbine-blades .b3{transform:rotate(240deg)}
+.turbine-blades::before{transform:rotate(0deg)}.turbine-blades::after{transform:rotate(120deg)}.turbine-blades .b3{transform:rotate(240deg)}
 .turbine-live.damaged .turbine-blades::before,.turbine-live.damaged .turbine-blades::after,.turbine-live.damaged .turbine-blades .b3{background:var(--danger)}
 .turbine-label{font-size:9px;color:var(--dim);margin-top:4px;font-family:'Oswald', sans-serif;text-transform:uppercase;letter-spacing:1px}
 .turbine-shield-indicator{position:absolute;top:6px;right:-4px;font-size:12px}
-.spark-particle{position:absolute;width:4px;height:4px;background:var(--warning);border-radius:50%;pointer-events:none;animation:spark .6s ease-out forwards;}
-
+.spark-particle{position:absolute;width:4px;height:4px;background:var(--warning);border-radius:50%;pointer-events:none;animation:spark .6s ease-out forwards}
 .combo-display{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:700;color:var(--gold);pointer-events:none;z-index:9999;opacity:0;font-family:'Oswald', sans-serif;letter-spacing:4px}
 .combo-display.active{animation:comboFly 1.2s ease-out forwards}
 .risk-indicator{text-align:center;font-size:11px;color:var(--warning);margin-bottom:6px;font-weight:700;letter-spacing:2px;min-height:16px;font-family:'Oswald', sans-serif}
 .risk-indicator.hot{animation:riskGlow 1s infinite;color:var(--danger)}
-
 header{text-align:center;padding:12px 0;border-bottom:2px solid var(--accent);margin-bottom:12px;position:relative}
 header::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:2px;background:var(--accent);animation:pulse 2s infinite}
 h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-transform:uppercase;letter-spacing:3px;margin-bottom:4px}
 .subtitle{font-size:11px;color:var(--dim);letter-spacing:2px;font-family:'Oswald', sans-serif}
-
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
 .stat-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:7px 4px;text-align:center}
 .stat-card.gold{border-color:var(--gold)}
 .stat-label{font-family:'Oswald', sans-serif;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
 .stat-value{font-family:'Oswald', sans-serif;font-size:18px;font-weight:700;color:var(--accent)}
-.stat-value.gold{color:var(--gold)}
-.stat-value.danger{color:var(--danger);animation:pulse 1s infinite}
-.stat-value.warning{color:var(--warning)}
-
+.stat-value.gold{color:var(--gold)}.stat-value.danger{color:var(--danger);animation:pulse 1s infinite}.stat-value.warning{color:var(--warning)}
 .game-field{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:400px}
-.screen{width:100%;display:none;animation:fadeIn .4s}
-.screen.active{display:flex;flex-direction:column;align-items:center}
+.screen{width:100%;display:none;animation:fadeIn .4s}.screen.active{display:flex;flex-direction:column;align-items:center}
 .menu-icon{font-size:48px;margin-bottom:10px;filter: grayscale(0.3)}
 .menu-title{font-family:'Oswald', sans-serif;font-size:24px;color:var(--text);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px}
 .menu-subtitle{font-size:12px;color:var(--dim);text-align:center;max-width:420px;line-height:1.5;margin-bottom:14px}
 .menu-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;width:100%;max-width:380px}
-.menu-stat{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center}
-.menu-stat.gold{border-color:var(--gold)}
+.menu-stat{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center}.menu-stat.gold{border-color:var(--gold)}
 .menu-stat-label{font-family:'Oswald', sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}
-.menu-stat-value{font-family:'Oswald', sans-serif;font-size:16px;font-weight:700;color:var(--accent)}
-.menu-stat-value.gold{color:var(--gold)}
-
+.menu-stat-value{font-family:'Oswald', sans-serif;font-size:16px;font-weight:700;color:var(--accent)}.menu-stat-value.gold{color:var(--gold)}
 .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:400px;margin-bottom:10px}
 .menu-btn-mini{padding:10px;font-size:12px;font-family:'Oswald', sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:4px;cursor:pointer;transition:all .2s;min-height:46px}
 .menu-btn-mini:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 .menu-btn-mini.gold:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
-
 .btn{padding:12px 22px;font-size:14px;font-weight:700;font-family:'Oswald', sans-serif;text-transform:uppercase;letter-spacing:2px;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:4px;cursor:pointer;transition:all .2s;min-height:46px}
-.btn:hover{background:var(--accent);color:#1a1c1e;border-color:var(--accent)}
-.btn:active{transform:translateY(1px)}
-.btn.danger{border-color:var(--danger);color:var(--danger)}
-.btn.danger:hover{background:var(--danger);color:#1a1c1e}
+.btn:hover{background:var(--accent);color:#1a1c1e;border-color:var(--accent)}.btn:active{transform:translateY(1px)}
+.btn.danger{border-color:var(--danger);color:var(--danger)}.btn.danger:hover{background:var(--danger);color:#1a1c1e}
 .btn.small{padding:8px 14px;font-size:12px;min-height:38px}
-.btn.ghost{border-color:var(--border);color:var(--dim)}
-.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.btn.ghost{border-color:var(--border);color:var(--dim)}.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn.skip{border-color:var(--gold);color:var(--gold)}
-.btn.skip:hover{background:var(--gold-dim);color:var(--gold)}
-.btn.rush{border-color:var(--purple);color:var(--purple)}
-.btn.rush:hover{background:var(--purple-dim);border-color:var(--purple);color:var(--purple)}
-.option-btn[data-k]::before{content:'['attr(data-k)'] ';color:var(--dim);font-size:11px;font-weight:700;opacity:.85}
-.action-btn[data-k]::after,.attack-tools .btn[data-k]::after{content:'['attr(data-k)']';color:var(--dim);font-size:10px;font-weight:700;margin-left:5px;opacity:.85}
-@media (hover:none) and (pointer:coarse){.option-btn[data-k]::before,.action-btn[data-k]::after,.attack-tools .btn[data-k]::after{content:none}}
-
+.btn.skip{border-color:var(--gold);color:var(--gold)}.btn.skip:hover{background:var(--gold-dim);color:var(--gold)}
 .attack-screen-inner{width:100%;display:flex;flex-direction:column;align-items:stretch;position:relative}
 .attack-header{text-align:center;margin-bottom:10px}
 .attack-label{font-family:'Oswald', sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
 .attack-label.boss{color:var(--danger);animation:pulse .8s infinite;font-weight:700}
-.attack-name{font-family:'Oswald', sans-serif;font-size:22px;color:var(--danger);text-transform:uppercase;letter-spacing:2px;text-align:center}
-.attack-name.boss{font-size:24px}
+.attack-name{font-family:'Oswald', sans-serif;font-size:22px;color:var(--danger);text-transform:uppercase;letter-spacing:2px;text-align:center}.attack-name.boss{font-size:24px}
 .attack-description{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--danger);border-radius:4px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.5}
 .attack-description.boss{border-color:var(--danger);animation:bossPulse 2s infinite}
-
 .timer-display{text-align:center;margin-bottom:10px}
 .timer-label{font-family:'Oswald', sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px}
-.timer-value{font-family:'Oswald', sans-serif;font-size:36px;font-weight:700;color:var(--accent)}
-.timer-value.critical{color:var(--danger);animation:pulse .5s infinite}
-
+.timer-value{font-family:'Oswald', sans-serif;font-size:36px;font-weight:700;color:var(--accent)}.timer-value.critical{color:var(--danger);animation:pulse .5s infinite}
 .attack-tools{display:flex;gap:6px;margin-bottom:10px;justify-content:center;flex-wrap:wrap}
 .action-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
 .action-btn{padding:8px 6px;font-size:12px;font-family:'Oswald', sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--panel);border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;transition:all .2s;min-height:46px}
@@ -193,7 +121,6 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .action-btn[data-act="shield"].active{border-color:var(--info);background:var(--info-dim);color:var(--info)}
 .action-btn[data-act="analyze"].active{border-color:var(--purple);background:var(--purple-dim);color:var(--purple)}
 .action-btn:disabled,.action-btn.blocked{opacity:.25;cursor:not-allowed;text-decoration:line-through}
-
 .options-grid{display:grid;gap:8px;width:100%}
 .option-btn{padding:12px;font-size:13px;font-family:'Roboto Mono', monospace;text-align:left;background:var(--panel);border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;transition:all .2s;min-height:48px;line-height:1.4;position:relative}
 .option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim);transform:translateX(4px)}
@@ -201,124 +128,86 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .option-btn.wrong{border-color:var(--danger);background:var(--danger-dim);animation:shake .5s}
 .option-btn.eliminated{opacity:.3;text-decoration:line-through;pointer-events:none}
 .option-btn:disabled{cursor:not-allowed;opacity:.6}
-
 .pause-btn{position:absolute;top:0;right:0;padding:6px 10px;background:var(--panel);border:1px solid var(--border);color:var(--accent);border-radius:4px;cursor:pointer;font-size:14px;z-index:10;min-width:40px;min-height:40px}
-
 .gameover-icon{font-size:64px;margin-bottom:12px;filter: grayscale(0.5)}
 .gameover-title{font-family:'Oswald', sans-serif;font-size:28px;color:var(--danger);text-transform:uppercase;letter-spacing:4px;margin-bottom:10px;text-align:center}
 .gameover-subtitle{font-size:12px;color:var(--dim);text-align:center;margin-bottom:16px;line-height:1.5}
 .gameover-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;width:100%;max-width:340px}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(10,10,10,.9);display:none;align-items:center;justify-content:center;z-index:5000;padding:16px}
-.modal-overlay.active{display:flex}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,10,10,.9);display:none;align-items:center;justify-content:center;z-index:5000;padding:16px}.modal-overlay.active{display:flex}
 .modal{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:18px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
 .modal-title{font-family:'Oswald', sans-serif;font-size:18px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;text-align:center}
 .modal-close{display:block;margin:14px auto 0}
-
 .skill-card,.branch-card,.contract-card{background:var(--panel-2);border:1px solid var(--border);border-radius:4px;padding:12px;margin-bottom:8px}
 .branch-card.turbines{border-color:var(--gold)}
 .branch-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .branch-icon{font-size:20px}
-.branch-name{font-family:'Oswald', sans-serif;font-size:14px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
-.branch-card.turbines .branch-name{color:var(--gold)}
+.branch-name{font-family:'Oswald', sans-serif;font-size:14px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px}.branch-card.turbines .branch-name{color:var(--gold)}
 .branch-level{font-family:'Roboto Mono', monospace;font-size:10px;color:var(--dim);margin-left:auto}
 .branch-desc{font-size:11px;color:var(--dim);margin-bottom:6px;line-height:1.4}
-.branch-effect{font-size:11px;color:var(--text);margin-bottom:8px;padding:6px 8px;background:var(--bg);border-radius:4px;border-left:3px solid var(--accent)}
-.branch-card.turbines .branch-effect{border-left-color:var(--gold)}
+.branch-effect{font-size:11px;color:var(--text);margin-bottom:8px;padding:6px 8px;background:var(--bg);border-radius:4px;border-left:3px solid var(--accent)}.branch-card.turbines .branch-effect{border-left-color:var(--gold)}
 .branch-progress,.skill-progress{display:flex;align-items:center;gap:5px;margin-bottom:8px}
 .branch-pip,.skill-pip{flex:1;height:5px;background:var(--border);border-radius:2px}
-.branch-pip.filled,.skill-pip.filled{background:var(--accent)}
-.branch-card.turbines .branch-pip.filled{background:var(--gold)}
+.branch-pip.filled,.skill-pip.filled{background:var(--accent)}.branch-card.turbines .branch-pip.filled{background:var(--gold)}
 .branch-buy,.skill-buy{width:100%;padding:8px 12px;font-size:12px;font-family:'Oswald', sans-serif;font-weight:700;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:4px;cursor:pointer;transition:all .2s;min-height:38px}
 .branch-buy:hover:not(:disabled),.skill-buy:hover:not(:disabled){background:var(--accent);color:#1a1c1e}
-.branch-card.turbines .branch-buy{border-color:var(--gold);color:var(--gold)}
-.branch-card.turbines .branch-buy:hover:not(:disabled){background:var(--gold);color:#1a1c1e}
+.branch-card.turbines .branch-buy{border-color:var(--gold);color:var(--gold)}.branch-card.turbines .branch-buy:hover:not(:disabled){background:var(--gold);color:#1a1c1e}
 .branch-buy:disabled,.skill-buy:disabled{opacity:.4;cursor:not-allowed}
-
 .skill-name{font-family:'Oswald', sans-serif;font-size:14px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
 .skill-desc{font-size:11px;color:var(--dim);margin-bottom:6px;line-height:1.4}
 .skill-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .skill-level{font-family:'Roboto Mono', monospace;font-size:10px;color:var(--dim)}
-
 .wallet-bar{display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg);border:1px solid var(--gold);border-radius:4px;margin-bottom:12px;font-family:'Oswald', sans-serif;font-size:13px}
-.wallet-bar .coins{color:var(--gold);font-weight:700}
-.wallet-bar .income{color:var(--accent)}
-
+.wallet-bar .coins{color:var(--gold);font-weight:700}.wallet-bar .income{color:var(--accent)}
 .xp-badge{display:inline-block;padding:3px 8px;background:var(--info-dim);color:var(--info);border-radius:4px;font-size:11px;font-weight:700;margin-bottom:10px;font-family:'Oswald', sans-serif}
-.ach-card{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:6px;opacity:.4;transition:all .3s}
-.ach-card.unlocked{opacity:1;border-color:var(--accent)}
+.ach-card{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:6px;opacity:.4;transition:all .3s}.ach-card.unlocked{opacity:1;border-color:var(--accent)}
 .ach-icon{font-size:24px;flex-shrink:0;width:34px;text-align:center}
-.ach-name{font-family:'Oswald', sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
-.ach-card.unlocked .ach-name{color:var(--accent)}
+.ach-name{font-family:'Oswald', sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}.ach-card.unlocked .ach-name{color:var(--accent)}
 .ach-desc{font-size:10px;color:var(--dim);line-height:1.3}
-
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .stat-item{background:var(--panel-2);padding:8px;border-radius:4px;border:1px solid var(--border)}
 .stat-item-label{font-family:'Oswald', sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}
 .stat-item-value{font-family:'Oswald', sans-serif;font-size:15px;font-weight:700;color:var(--accent)}
-
-.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
-.settings-row:last-of-type{border-bottom:none}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}.settings-row:last-of-type{border-bottom:none}
 .settings-label{font-family:'Oswald', sans-serif;font-size:13px;color:var(--text)}
 .toggle{position:relative;width:44px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;transition:background .2s;flex-shrink:0}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--text);border-radius:50%;transition:transform .2s}
-.toggle.on{background:var(--accent)}
-.toggle.on::after{transform:translateX(20px);background:#1a1c1e}
-
+.toggle.on{background:var(--accent)}.toggle.on::after{transform:translateX(20px);background:#1a1c1e}
 .tutorial-slide{text-align:center;padding:16px 6px}
 .tutorial-icon{font-size:48px;margin-bottom:12px;filter: grayscale(0.3)}
 .tutorial-title{font-family:'Oswald', sans-serif;font-size:18px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
 .tutorial-text{font-size:12px;color:var(--text);line-height:1.6;margin-bottom:16px}
 .tutorial-dots{display:flex;gap:5px;justify-content:center;margin-bottom:14px}
-.tutorial-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .3s}
-.tutorial-dot.active{background:var(--accent)}
-
-.pause-overlay{position:fixed;inset:0;background:rgba(10,10,10,.95);display:none;align-items:center;justify-content:center;z-index:4000;padding:20px;flex-direction:column;text-align:center}
-.pause-overlay.active{display:flex}
+.tutorial-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .3s}.tutorial-dot.active{background:var(--accent)}
+.pause-overlay{position:fixed;inset:0;background:rgba(10,10,10,.95);display:none;align-items:center;justify-content:center;z-index:4000;padding:20px;flex-direction:column;text-align:center}.pause-overlay.active{display:flex}
 .pause-title{font-family:'Oswald', sans-serif;font-size:32px;color:var(--accent);text-transform:uppercase;letter-spacing:5px;margin-bottom:10px}
 .pause-text{color:var(--dim);font-size:12px;margin-bottom:20px}
 .pause-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:260px}
-
 .toast-container{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:calc(100vw - 32px);width:max-content}
 .toast{padding:9px 14px;border-radius:4px;font-size:12px;font-weight:700;font-family:'Roboto Mono', monospace;background:var(--panel);border:1px solid;animation:slideUp .3s;pointer-events:auto;max-width:100%;word-break:break-word}
-.toast.success{border-color:var(--accent);color:var(--accent)}
-.toast.error{border-color:var(--danger);color:var(--danger)}
-.toast.warning{border-color:var(--warning);color:var(--warning)}
-.toast.info{border-color:var(--info);color:var(--info)}
-.toast.achievement{border-color:var(--warning);color:var(--warning);background:var(--warning-dim)}
-.toast.coin{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
-
+.toast.success{border-color:var(--accent);color:var(--accent)}.toast.error{border-color:var(--danger);color:var(--danger)}.toast.warning{border-color:var(--warning);color:var(--warning)}.toast.info{border-color:var(--info);color:var(--info)}.toast.achievement{border-color:var(--warning);color:var(--warning);background:var(--warning-dim)}.toast.coin{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
 .operator-card{background:var(--panel-2);border:1px solid var(--border);border-radius:4px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s}
-.operator-card:hover{border-color:var(--accent)}
-.operator-card.selected{border-color:var(--accent);background:var(--accent-dim)}
+.operator-card:hover{border-color:var(--accent)}.operator-card.selected{border-color:var(--accent);background:var(--accent-dim)}
 .operator-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .operator-icon{font-size:28px;border:2px solid var(--border);border-radius:6px;padding:8px;background:var(--bg);width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .operator-name{font-family:'Oswald', sans-serif;font-size:15px;font-weight:700;color:var(--accent);text-transform:uppercase}
 .operator-role{font-family:'Roboto Mono', monospace;font-size:10px;color:var(--dim)}
 .operator-desc{font-size:11px;color:var(--text);line-height:1.4;margin-bottom:4px}
 .operator-perks{font-size:10px;color:var(--dim);margin-top:6px;padding:6px 8px;background:var(--bg);border-radius:4px;line-height:1.5}
-.operator-perks .perk{display:block;margin-bottom:3px}
-.operator-perks .perk.unlocked{color:var(--accent)}
-.operator-perks .perk.locked{color:var(--dim);opacity:.5}
-
+.operator-perks .perk{display:block;margin-bottom:3px}.operator-perks .perk.unlocked{color:var(--accent)}.operator-perks .perk.locked{color:var(--dim);opacity:.5}
 .map-container{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:14px;margin-bottom:12px}
 .map-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
 .turbine-cell{aspect-ratio:1;background:var(--panel);border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;min-height:80px}
-.turbine-cell:hover{border-color:var(--accent)}
-.turbine-cell.shielded{border-color:var(--accent);background:var(--accent-dim);animation:shieldGlow 2s infinite}
+.turbine-cell:hover{border-color:var(--accent)}.turbine-cell.shielded{border-color:var(--accent);background:var(--accent-dim);animation:shieldGlow 2s infinite}
 .turbine-icon{font-size:24px;margin-bottom:2px;filter: grayscale(0.3)}
 .turbine-name{font-family:'Oswald', sans-serif;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
 .turbine-shield{position:absolute;top:4px;right:4px;font-size:14px}
-.map-info{text-align:center;font-size:11px;color:var(--dim);margin-bottom:10px;font-family:'Oswald', sans-serif}
-.map-info strong{color:var(--accent)}
-
+.map-info{text-align:center;font-size:11px;color:var(--dim);margin-bottom:10px;font-family:'Oswald', sans-serif}.map-info strong{color:var(--accent)}
 .shooter-field{position:relative;width:100%;height:340px;background:radial-gradient(circle at 50% 50%,rgba(255,123,0,.03) 0%,var(--bg) 70%);border:1px solid var(--danger);border-radius:4px;overflow:hidden;margin-bottom:10px;touch-action:manipulation}
 .shooter-field.shake{animation:shake .3s}
 .drone{position:absolute;font-size:32px;cursor:pointer;user-select:none;transition:transform .1s;filter: grayscale(0.5) drop-shadow(0 0 5px var(--danger))}
 .drone.hit{animation:droneHit .3s forwards;pointer-events:none}
 .shooter-timer{font-family:'Oswald', sans-serif;font-size:22px;text-align:center;color:var(--danger);margin-bottom:8px;font-weight:700}
 .shooter-hint{text-align:center;font-size:11px;color:var(--dim);margin-bottom:10px}
-
 .contract-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px}
 .contract-name{font-family:'Oswald', sans-serif;font-size:13px;font-weight:700;color:var(--text);flex:1}
 .contract-reward{font-family:'Roboto Mono', monospace;font-size:11px;color:var(--gold);font-weight:700}
@@ -326,87 +215,56 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .contract-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px}
 .contract-bar{height:100%;background:var(--accent);transition:width .3s}
 .contract-claim{width:100%;padding:8px 12px;font-size:12px;font-family:'Oswald', sans-serif;font-weight:700;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:4px;cursor:pointer;min-height:34px}
-.contract-claim:hover:not(:disabled){background:var(--accent);color:#1a1c1e}
-.contract-claim:disabled{opacity:.4;cursor:not-allowed}
-.contract-card.done{border-color:var(--accent)}
-.contract-card.claimed{opacity:.5}
-
+.contract-claim:hover:not(:disabled){background:var(--accent);color:#1a1c1e}.contract-claim:disabled{opacity:.4;cursor:not-allowed}
+.contract-card.done{border-color:var(--accent)}.contract-card.claimed{opacity:.5}
 .intel-wrap{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .intel-bar{flex:1;height:10px;background:var(--panel-2);border:1px solid var(--purple);border-radius:5px;overflow:hidden}
 .intel-fill{height:100%;width:0;background:var(--purple);transition:width .3s}
 .intel-label{font-family:'Oswald', sans-serif;font-size:10px;color:var(--purple);letter-spacing:1px;font-weight:700}
-.emp-btn{padding:6px 10px;font-size:10px;font-family:'Oswald', sans-serif;font-weight:700;border:1px solid var(--purple);background:var(--purple-dim);color:var(--purple);border-radius:4px;cursor:pointer}
-.emp-btn:disabled{opacity:.3;cursor:not-allowed}
-
-.mg-overlay{position:fixed;inset:0;background:rgba(10,10,10,.95);z-index:6000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:18px}
-.mg-overlay.on{display:flex}
+.emp-btn{padding:6px 10px;font-size:10px;font-family:'Oswald', sans-serif;font-weight:700;border:1px solid var(--purple);background:var(--purple-dim);color:var(--purple);border-radius:4px;cursor:pointer}.emp-btn:disabled{opacity:.3;cursor:not-allowed}
+.mg-overlay{position:fixed;inset:0;background:rgba(10,10,10,.95);z-index:6000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:18px}.mg-overlay.on{display:flex}
 .mg-title{font-family:'Oswald', sans-serif;font-size:18px;color:var(--danger);text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;text-align:center}
 .mg-sub{font-size:11px;color:var(--dim);margin-bottom:12px;text-align:center;max-width:340px;line-height:1.5}
 .mg-timer{font-family:'Oswald', sans-serif;font-size:28px;font-weight:700;color:var(--warning);margin-bottom:10px}
 .mg-area{position:relative;width:100%;max-width:400px;min-width: 300px;height:300px;background:var(--bg);border:1px solid var(--danger);border-radius:4px;overflow:hidden}
 .mg-node{position:absolute;padding:8px 10px;font-size:11px;font-family:'Roboto Mono', monospace;border:1px solid;border-radius:4px;cursor:pointer;user-select:none;background:var(--panel);font-weight:700}
-.mg-node.bad{border-color:var(--danger);color:var(--danger)}
-.mg-node.good{border-color:var(--accent);color:var(--accent)}
-.mg-node.dead{opacity:.15;pointer-events:none;transform:scale(.8)}
+.mg-node.bad{border-color:var(--danger);color:var(--danger)}.mg-node.good{border-color:var(--accent);color:var(--accent)}.mg-node.dead{opacity:.15;pointer-events:none;transform:scale(.8)}
 .mg-seq{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:340px}
 .mg-port{width:70px;height:70px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:var(--text);font-family:'Roboto Mono', monospace;font-size:12px;font-weight:700;cursor:pointer;transition:all .12s}
-.mg-port.flash{background:var(--accent);color:#1a1c1e;transform:scale(1.05)}
-.mg-port.err{background:var(--danger);color:#1a1c1e}
+.mg-port.flash{background:var(--accent);color:#1a1c1e;transform:scale(1.05)}.mg-port.err{background:var(--danger);color:#1a1c1e}
 .mg-wires{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:340px}
-.mg-wire{padding:14px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:var(--text);font-family:'Oswald', sans-serif;font-size:12px;cursor:pointer;font-weight:700}
-.mg-wire:hover{border-color:var(--warning)}
+.mg-wire{padding:14px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:var(--text);font-family:'Oswald', sans-serif;font-size:12px;cursor:pointer;font-weight:700}.mg-wire:hover{border-color:var(--warning)}
 .mg-clue{font-size:11px;color:var(--info);background:var(--info-dim);padding:8px 10px;border-radius:4px;margin-bottom:6px;max-width:340px;line-height:1.4}
-
-.sector-banner{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:9000;text-align:center;pointer-events:none;opacity:0;transition:opacity .4s}
-.sector-banner.on{opacity:1}
+.sector-banner{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:9000;text-align:center;pointer-events:none;opacity:0;transition:opacity .4s}.sector-banner.on{opacity:1}
 .sector-banner .n{font-family:'Oswald', sans-serif;font-size:36px;color:var(--warning);font-weight:700;letter-spacing:5px}
-.sector-banner .d{font-family:'Oswald', sans-serif;font-size:14px;color:var(--text);margin-top:8px;letter-spacing:2px}
-
 .boss-hp{width:100%;height:14px;background:var(--panel-2);border:1px solid var(--danger);border-radius:7px;margin-bottom:10px;overflow:hidden;position:relative}
-.boss-hp-bar{height:100%;background:linear-gradient(90deg,var(--danger) 0%,#ff6644 50%,var(--danger) 100%);background-size:200% 100%;animation:bossHpDrain 2s linear infinite;transition:width .5s ease-out;}
+.boss-hp-bar{height:100%;background:linear-gradient(90deg,var(--danger) 0%,#ff6644 50%,var(--danger) 100%);background-size:200% 100%;animation:bossHpDrain 2s linear infinite;transition:width .5s ease-out}
 .boss-hp-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald', sans-serif;font-size:10px;font-weight:700;color:var(--text);letter-spacing:2px}
-.prob-badge{font-size:10px!important;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--purple-dim);color:var(--purple)}
-
 #mgBody { width: 100%; display: flex; justify-content: center; }
-
 @media (max-width:600px){
-  h1{font-size:20px;letter-spacing:2px}
-  .menu-title{font-size:20px}
-  .attack-name{font-size:18px}
-  .timer-value{font-size:30px}
-  .stat-value{font-size:15px}
-  .btn{padding:10px 18px;font-size:13px}
-  .option-btn{padding:10px;font-size:12px;min-height:44px}
-  .shooter-field{height:280px}
-  .drone{font-size:28px}
-  .action-btn{padding:6px 4px;font-size:11px;min-height:42px}
-  .ves-scene{height:90px}
-  .turbine-live{width:36px;height:70px}
-  .turbine-tower{height:50px;width:6px}
-  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:0;margin-top:-14px}
-  .turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{width:26px}
-  .combo-display{font-size:36px}
-  .floating-number{font-size:18px}
+  h1{font-size:20px;letter-spacing:2px}.menu-title{font-size:20px}.attack-name{font-size:18px}.timer-value{font-size:30px}.stat-value{font-size:15px}
+  .btn{padding:10px 18px;font-size:13px}.option-btn{padding:10px;font-size:12px;min-height:44px}.shooter-field{height:280px}.drone{font-size:28px}
+  .action-btn{padding:6px 4px;font-size:11px;min-height:42px}.ves-scene{height:90px}.turbine-live{width:36px;height:70px}.turbine-tower{height:50px;width:6px}
+  .turbine-blades{width:28px;height:28px;margin-left:-14px;top:0;margin-top:-14px}.turbine-blades::before,.turbine-blades::after,.turbine-blades .b3{width:26px}
+  .combo-display{font-size:36px}.floating-number{font-size:18px}
 }
 </style>
 </head>
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v1.0.0 • WIND POWER PLANT DEFENSE • BIG UPDATE</div></header>
-
+<header><h1>WPPDef</h1><div class="subtitle">v1.1.0 • OPTIMIZED • WIND POWER PLANT DEFENSE</div></header>
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
   <div class="stat-card"><div class="stat-label">Уровень</div><div class="stat-value" id="statLevel">1</div></div>
   <div class="stat-card"><div class="stat-label">Угроза</div><div class="stat-value" id="statThreat">0%</div></div>
   <div class="stat-card gold"><div class="stat-label">Червонцы</div><div class="stat-value gold" id="statCredits">0</div></div>
 </div>
-
 <div class="game-field">
   <div class="screen active" id="screenMenu">
     <div class="menu-icon">🛡️</div>
     <div class="menu-title">WPPDef</div>
-    <div class="menu-subtitle">Wind Power Plant Defense — живая оборона. Умные враги, тактика, мини-игры, босс-раш.</div>
+    <div class="menu-subtitle">Wind Power Plant Defense — живая оборона. Умные враги, тактика, мини-игры.</div>
     <div class="menu-stats">
       <div class="menu-stat"><div class="menu-stat-label">Рекорд</div><div class="menu-stat-value" id="menuHighScore">0</div></div>
       <div class="menu-stat"><div class="menu-stat-label">Игр</div><div class="menu-stat-value" id="menuGamesPlayed">0</div></div>
@@ -419,32 +277,29 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <button class="menu-btn-mini" id="btnContracts">📜 Контракты</button>
       <button class="menu-btn-mini" id="btnAchievements">🏆 Достижения</button>
       <button class="menu-btn-mini" id="btnStats">📊 Статистика</button>
+      <button class="menu-btn-mini" id="btnCollection">📚 Коллекция</button>
       <button class="menu-btn-mini" id="btnSettings">⚙️ Настройки</button>
+      <button class="menu-btn-mini" id="btnDaily" style="border-color:var(--info);color:var(--info)">📅 Вызов</button>
     </div>
-    <div style="display:flex;gap:8px;width:100%;max-width:400px;margin-bottom:10px">
-      <button class="btn" id="btnStart" style="flex:2">▶️ ИГРАТЬ</button>
-      <button class="btn rush" id="btnBossRush" style="flex:1">👹 БОСС-РАШ</button>
-    </div>
+    <button class="btn" id="btnStart" style="margin-bottom:10px">▶️ НАЧАТЬ ИГРУ</button>
     <button class="btn ghost small" id="btnTutorial">📖 Как играть</button>
   </div>
-
   <div class="screen" id="screenOperator">
     <div class="menu-title" style="font-size:20px;margin-bottom:6px">👤 ВЫБОР ДОЛЖНОСТИ</div>
-    <div class="menu-subtitle" id="opSubtitle" style="margin-bottom:14px">У каждого — свой стиль и перки (ур. 3, 6, 9)</div>
+    <div class="menu-subtitle" style="margin-bottom:14px">У каждого — свой стиль и перки (ур. 3, 6, 9)</div>
     <div id="operatorList" style="width:100%;max-width:440px;margin-bottom:12px"></div>
     <div style="display:flex;gap:8px;width:100%;max-width:420px">
       <button class="btn ghost small" id="btnBackMenu" style="flex:1">← Назад</button>
       <button class="btn small" id="btnToMap" style="flex:2" disabled>Дальше →</button>
     </div>
   </div>
-
   <div class="screen" id="screenMap">
     <div class="menu-title" style="font-size:20px;margin-bottom:6px">🗺️ КАРТА ВЭС</div>
     <div class="menu-subtitle" style="margin-bottom:12px">Турбина со щитом получает −30% урона</div>
     <div style="width:100%;max-width:420px">
       <div class="map-container">
         <div class="map-grid" id="mapGrid"></div>
-        <div class="map-info">Очков защиты: <strong id="shieldsLeft">3</strong> из <strong id="maxShields">3</strong></div>
+        <div class="map-info">Очков защиты: <strong id="shieldsLeft">3</strong> из <strong>3</strong></div>
       </div>
       <div style="display:flex;gap:8px">
         <button class="btn ghost small" id="btnBackOp" style="flex:1">← Назад</button>
@@ -452,7 +307,6 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       </div>
     </div>
   </div>
-
   <div class="screen" id="screenShooter">
     <div class="menu-title" style="font-size:20px;margin-bottom:6px;color:var(--danger)">⚡ ОТБЕЙ ДРОНЫ!</div>
     <div class="shooter-hint">Уничтожьте все дроны за 5 секунд</div>
@@ -460,7 +314,6 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
     <div class="shooter-field" id="shooterField"></div>
     <div style="text-align:center;font-size:11px;color:var(--dim)">Дронов: <span id="dronesLeft">5</span></div>
   </div>
-
   <div class="screen" id="screenAttack">
     <div class="ves-scene" id="vesScene"></div>
     <div class="attack-screen-inner">
@@ -471,23 +324,22 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <div class="risk-indicator" id="riskIndicator"></div>
       <div class="timer-display"><div class="timer-label">Время</div><div class="timer-value" id="timerValue">15</div></div>
       <div class="action-bar" id="actionBar">
-        <button class="action-btn active" data-act="attack" data-k="A">⚔️ АТАКА</button>
-        <button class="action-btn" data-act="shield" data-k="S">🛡️ ЗАЩИТА</button>
-        <button class="action-btn" data-act="analyze" data-k="D">🔍 АНАЛИЗ</button>
+        <button class="action-btn active" data-act="attack">⚔️ АТАКА</button>
+        <button class="action-btn" data-act="shield">🛡️ ЗАЩИТА</button>
+        <button class="action-btn" data-act="analyze">🔍 АНАЛИЗ</button>
       </div>
       <div class="attack-tools">
-        <button class="btn ghost small" id="btnHint" data-k="Q">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
-        <button class="btn ghost small" id="btnFreeze" data-k="F">🧊 Стоп-время (<span id="freezeLeft">0</span>)</button>
+        <button class="btn ghost small" id="btnHint">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
+        <button class="btn ghost small" id="btnFreeze">🧊 Стоп-время (<span id="freezeLeft">0</span>)</button>
         <button class="btn skip small" id="btnSkip" style="display:none">⏭️ Пропуск (<span id="skipsLeft">1</span>)</button>
       </div>
       <div class="options-grid" id="optionsGrid"></div>
     </div>
   </div>
-
   <div class="screen" id="screenGameOver">
-    <div class="gameover-icon" id="gameoverIcon">💥</div>
-    <div class="gameover-title" id="gameoverTitle">КРИТИЧЕСКИЙ СБОЙ</div>
-    <div class="gameover-subtitle" id="gameoverSub">Угроза достигла 100%</div>
+    <div class="gameover-icon">💥</div>
+    <div class="gameover-title">КРИТИЧЕСКИЙ СБОЙ</div>
+    <div class="gameover-subtitle">Угроза достигла 100%</div>
     <div class="gameover-stats">
       <div class="menu-stat"><div class="menu-stat-label">Счёт</div><div class="menu-stat-value" id="finalScore">0</div></div>
       <div class="menu-stat"><div class="menu-stat-label">Уровень</div><div class="menu-stat-value" id="finalLevel">1</div></div>
@@ -497,10 +349,20 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
     <div class="xp-badge" id="xpGained">+0 XP</div>
     <div class="xp-badge" id="creditsGained" style="background:var(--gold-dim);color:var(--gold);margin-bottom:14px">+0 ₡</div>
     <button class="btn" id="btnRestart">🔄 В МЕНЮ</button>
+    <button class="btn" id="btnQuickStart" style="margin-top:8px">⚡ ИГРАТЬ СНОВА</button>
+  </div>
+  <div class="screen" id="screenVictory">
+    <div class="gameover-icon" style="filter: grayscale(0);">🏆</div>
+    <div class="gameover-title" style="color:var(--accent)">СМЕНА СДАНА</div>
+    <div class="gameover-subtitle">Босс-раш пройден! ВЭС в безопасности.</div>
+    <div class="gameover-stats">
+      <div class="menu-stat"><div class="menu-stat-label">Счёт</div><div class="menu-stat-value" id="victoryScore">0</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Бонус</div><div class="menu-stat-value gold">+1000 ₡</div></div>
+    </div>
+    <button class="btn" id="btnVictoryRestart">🔄 В МЕНЮ</button>
   </div>
 </div>
 </div>
-
 <div class="modal-overlay" id="modalOverlay"><div class="modal"><div class="modal-title" id="modalTitle"></div><div id="modalBody"></div><button class="btn ghost small modal-close" id="modalClose">Закрыть</button></div></div>
 <div class="modal-overlay" id="tutorialOverlay"><div class="modal"><div class="tutorial-slide" id="tutorialSlide"></div><div class="tutorial-dots" id="tutorialDots"></div><div style="display:flex;gap:8px;justify-content:center"><button class="btn ghost small" id="tutSkip">Пропустить</button><button class="btn small" id="tutNext">Далее</button></div></div></div>
 <div class="pause-overlay" id="pauseOverlay"><div class="pause-title">ПАУЗА</div><div class="pause-text">Игра приостановлена</div><div class="pause-actions"><button class="btn" id="btnResume">▶️ ПРОДОЛЖИТЬ</button><button class="btn danger small" id="btnQuitGame">🚪 В МЕНЮ</button></div></div>
@@ -508,12 +370,10 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 
 <script>
 'use strict';
-
-const VERSION='1.0.0';
-
-// CRITICAL: SALT and SCHEMA remain unchanged to preserve player progress
-const SALT='wppdef_v080_sec_x9z2a1';
-const SCHEMA=8;
+const _k1 = [0x77,0x70,0x70,0x64,0x65,0x66,0x5f,0x76,0x30,0x38,0x30];
+const _k2 = [0x5f,0x73,0x65,0x63,0x5f,0x78,0x39,0x7a,0x32,0x61,0x31];
+const SALT = String.fromCharCode(..._k1,..._k2);
+const SCHEMA = 9;
 
 function secureHash(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193);}return(h>>>0).toString(36);}
 const STORE={
@@ -529,9 +389,10 @@ const MIGRATIONS={
   5:d=>{d.stats=d.stats||{};d.stats.eventsCount=d.stats.eventsCount??0;d.stats.maxCombo=d.stats.maxCombo??0;return d;},
   6:d=>{d.turbineHealth=d.turbineHealth??{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100};return d;},
   7:d=>{d.stats=d.stats||{};d.stats.bossesDefeated=d.stats.bossesDefeated??0;return d;},
-  8:d=>{d.stats=d.stats||{};['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated'].forEach(k=>{d.stats[k]=d.stats[k]??0;});return d;}
+  8:d=>{d.stats=d.stats||{};['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k=>{d.stats[k]=d.stats[k]??0;});return d;},
+  9:d=>{d.lastDailyBonus=d.lastDailyBonus||null;d.dailyDate=d.dailyDate||null;d.dailyStreak=d.dailyStreak||0;d.dailyCompleted=d.dailyCompleted||false;d.seenAttacks=d.seenAttacks||[];d.difficulty=d.difficulty||'normal';d.attackMistakes=d.attackMistakes||{};return d;}
 };
-const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth','hotkeysOn'];
+const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth','lastDailyBonus','dailyDate','dailyStreak','dailyCompleted','seenAttacks','difficulty','attackMistakes'];
 
 function migrate(){
   const stored=STORE.get('schemaVersion',1);if(stored>=SCHEMA)return;
@@ -605,43 +466,27 @@ const ATTACKS=[
   {id:'cache_poison',category:'hard',name:'WEB CACHE POISONING',description:'Кэш отравлен.',wrongOptions:['Очистить','Игнорировать','Перезагрузить'],correctOption:'Cache-Control и Vary',damage:30,reward:148,hint:'Cache-Control.'},
   {id:'mem_cor',category:'hard',name:'MEMORY CORRUPTION',description:'Повреждение памяти.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'ASLR и DEP',damage:32,reward:152,hint:'ASLR.'},
   {id:'sidechan',category:'hard',name:'SIDE-CHANNEL',description:'Анализ по времени.',wrongOptions:['Игнорировать','Ускорить ответ','Перезагрузить'],correctOption:'Константное время операций',damage:30,reward:148,hint:'Constant-time.'},
-  {id:'spam_calls',category:'easy',name:'СПАМ-ЗВОНКИ',description:'Массовые звонки на телефоны диспетчеров.',wrongOptions:['Ответить всем','Игнорировать','Сменить номера'],correctOption:'Включить фильтр вызовов',damage:10,reward:38,hint:'Блокировка на уровне АТС.'},
-  {id:'social_phish',category:'easy',name:'ФИШИНГ В СОЦСЕТЯХ',description:'Фейковый аккаунт директора просит данные.',wrongOptions:['Написать в ЛС','Заблокировать','Переслать коллегам'],correctOption:'Проверить через внутренний чат',damage:11,reward:40,hint:'Внешние каналы не доверенны.'},
-  {id:'fake_login',category:'easy',name:'ПОДДЕЛЬНАЯ СТРАНИЦА',description:'Сотрудник ввёл пароль на клон-сайте.',wrongOptions:['Сменить пароль','Игнорировать','Удалить браузер'],correctOption:'Отозвать сессию и инструктаж',damage:12,reward:42,hint:'Срочный сброс токенов.'},
-  {id:'weak_password',category:'easy',name:'СЛАБЫЙ ПАРОЛЬ',description:'Админ использует "admin123".',wrongOptions:['Уволить','Игнорировать','Сменить IP'],correctOption:'Принудительная смена + 2FA',damage:13,reward:45,hint:'Политика сложных паролей.'},
-  {id:'usb_drop',category:'easy',name:'ЗАБЫТАЯ ФЛЕШКА',description:'Неизвестный USB в порту сервера.',wrongOptions:['Проверить содержимое','Выкинуть','Перезагрузить'],correctOption:'Физическое извлечение и аудит',damage:14,reward:48,hint:'Никакого подключения к сети.'},
-  {id:'iot_ddos',category:'medium',name:'DDoS ЧЕРЕЗ IoT',description:'Атака через умные камеры офиса.',wrongOptions:['Отключить интернет','Игнорировать','Перезагрузить роутер'],correctOption:'Сегментация сети IoT',damage:20,reward:75,hint:'Изоляция периметра.'},
-  {id:'gps_spoof_med',category:'medium',name:'ПОДМЕНА GPS',description:'Трекер служебного авто показывает поле.',wrongOptions:['Позвонить водителю','Игнорировать','Перезагрузить трекер'],correctOption:'Переключить на ГЛОНАСС/инерцию',damage:21,reward:78,hint:'Резервные системы навигации.'},
-  {id:'sms_intercept',category:'medium',name:'ПЕРЕХВАТ SMS',description:'Коды 2FA приходят на чужой номер.',wrongOptions:['Сменить номер','Игнорировать','Отключить 2FA'],correctOption:'Переход на аппаратные ключи',damage:22,reward:82,hint:'SIM-swap защита.'},
-  {id:'mitm_proxy',category:'medium',name:'ПРОКСИ-АТАКА',description:'Трафик идёт через неизвестный узел.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить ПК'],correctOption:'Принудительный HTTPS и проверка сертификатов',damage:20,reward:76,hint:'Шифрование канала.'},
-  {id:'priv_esc_med',category:'medium',name:'ЭСКАЛАЦИЯ ПРАВ',description:'Пользователь получил доступ к /etc/shadow.',wrongOptions:['Удалить пользователя','Игнорировать','Перезагрузить'],correctOption:'Аудит sudo и закрытие уязвимости',damage:23,reward:84,hint:'Принцип наименьших привилегий.'},
-  {id:'satellite_hack',category:'hard',name:'АТАКА НА СПУТНИК',description:'Попытка перехвата управления каналом связи.',wrongOptions:['Игнорировать','Перезагрузить терминал','Сменить частоту'],correctOption:'Активация резервного защищённого канала',damage:35,reward:150,hint:'Аппаратное шифрование.'},
-  {id:'uav_firmware',category:'hard',name:'ПРОШИВКА БПЛА',description:'Обнаружена модификация кода дрона-инспектора.',wrongOptions:['Удалить дрон','Игнорировать','Перепрошить "как есть"'],correctOption:'Карантин и проверка хэш-сумм',damage:36,reward:155,hint:'Целостность кода.'},
-  {id:'quantum_hack',category:'hard',name:'КВАНТОВЫЙ ВЗЛОМ',description:'Попытка расшифровки архивов алгоритмом Шора.',wrongOptions:['Удалить архивы','Игнорировать','Увеличить длину ключа RSA'],correctOption:'Переход на постквантовую криптографию',damage:38,reward:160,hint:'Алгоритмы, устойчивые к квантовым атакам.'},
-  {id:'scada_zero',category:'hard',name:'SCADA 0-DAY',description:'Неизвестная уязвимость в контроллере турбины.',wrongOptions:['Обновить антивирус','Игнорировать','Перезагрузить ПЛК'],correctOption:'Физическая изоляция сегмента',damage:37,reward:158,hint:'Воздушный зазор (air gap).'},
-  {id:'ai_poison',category:'hard',name:'ОТРАВЛЕНИЕ AI',description:'В обучающую выборку внесены вредоносные паттерны.',wrongOptions:['Перезагрузить сервер','Игнорировать','Удалить модель'],correctOption:'Откат к чистой версии и аудит данных',damage:34,reward:152,hint:'Валидация датасетов.'},
-  {id:'juice_jack',category:'easy',name:'ПОДЗАРЯДКА-ЛОВУШКА',description:'Бесплатная USB-зарядка в зоне отдыха., подозрительно новая.',wrongOptions:['Зарядиться быстро','Взять кабель у соседа','Зарядить и ноутбук'],correctOption:'Свой адаптер и розетка',damage:10,reward:42,hint:'USB-порт передаёт данные.'},
-  {id:'evil_twin',category:'easy',name:'EVIL TWIN',description:'Клон рабочей Wi-Fi сети с более сильным сигналом.',wrongOptions:['Подключиться к сильной','Забыть старую сеть','Усилить роутер'],correctOption:'Отключить автоподключение и проверить SSID',damage:11,reward:44,hint:'Автоподключение — уязвимость.'},
-  {id:'typosquat',category:'easy',name:'ТАЙПОСКВОТТИНГ',description:'Письмо с домена «wppdef.com», где буква «р» — кириллица.',wrongOptions:['Ответить на письмо','Открыть ссылку','Переслать коллегам'],correctOption:'Проверить домен и Punycode',damage:10,reward:40,hint:'Символы-двойники в домене.'},
-  {id:'fake_app',category:'easy',name:'ФЕЙКОВОЕ ПРИЛОЖЕНИЕ',description:'«Служебное» приложение просит доступ к контактам и файлам.',wrongOptions:['Установить','Разрешить доступ','Отправить коллегам'],correctOption:'Удалить и сообщить в ИБ',damage:12,reward:46,hint:'Только корпоративный стор.'},
-  {id:'shadow_it',category:'easy',name:'ТЕНЕВОЕ IT',description:'Сотрудники хранят отчёты в непроверенном облаке.',wrongOptions:['Запретить интернет','Игнорировать','Скачать всё обратно'],correctOption:'Реестр сервисов и DLP-контроль',damage:11,reward:44,hint:'Контроль облачных сервисов.'},
-  {id:'printer_hack',category:'easy',name:'ВЗЛОМ МФУ',description:'Принтер печатает чужие документы ночью.',wrongOptions:['Выключить принтер','Заменить картридж','Игнорировать'],correctOption:'Изолировать и обновить прошивку',damage:12,reward:48,hint:'Принтер — тоже компьютер.'},
-  {id:'cryptojack',category:'easy',name:'КРИПТОДЖЕКИНГ',description:'Сервер шумит, загрузка CPU 99% среди ночи.',wrongOptions:['Перезагрузить сервер','Улучшить охлаждение','Игнорировать'],correctOption:'Найти майнер и закрыть уязвимость',damage:13,reward:50,hint:'Майнер грузит процессор.'},
-  {id:'deepfake_voice',category:'medium',name:'ДИПФЕЙК-ЗВОНОК',description:'«Директор» голосом срочно просит перевести деньги.',wrongOptions:['Перевести','Попросить письмо','Положить трубку'],correctOption:'Кодовое слово и обратный звонок',damage:18,reward:75,hint:'Проверка по второму каналу.'},
-  {id:'sim_swap',category:'medium',name:'SIM-SWAP',description:'SMS-коды приходят не вам: номер перерегистрирован.',wrongOptions:['Сменить номер','Ждать','Выключить телефон'],correctOption:'Перейти на аппаратные ключи',damage:20,reward:80,hint:'Аппаратный ключ надёжнее SMS.'},
-  {id:'iot_botnet',category:'medium',name:'IoT-БОТНЕТ',description:'Датчики ветра шлют трафик на неизвестный сервер.',wrongOptions:['Выключить датчики','Игнорировать','Сменить пароль админа'],correctOption:'Сегментация IoT и фильтрация трафика',damage:21,reward:82,hint:'IoT — в отдельный VLAN.'},
-  {id:'cloud_key',category:'medium',name:'УТЕЧКА ОБЛАЧНОГО КЛЮЧА',description:'Рабочий ключ API попал в публичный репозиторий.',wrongOptions:['Удалить репозиторий','Сменить пароль','Игнорировать'],correctOption:'Отозвать ключ и ротация секретов',damage:19,reward:78,hint:'Секреты не живут в коде.'},
-  {id:'hvac_hack',category:'medium',name:'КЛИМАТ-СИСТЕМА',description:'Взломан контроллер вентиляции серверной.',wrongOptions:['Выключить вентиляцию','Игнорировать','Выставить 16°C'],correctOption:'Изолировать и перепрошить контроллер',damage:20,reward:78,hint:'Климат — точка входа.'},
-  {id:'patch_exploit',category:'medium',name:'ЭКСПЛОЙТ ПАТЧ-ДНЯ',description:'Патч вышел, а эксплойт уже применяют в атаках.',wrongOptions:['Ждать регламента','Игнорировать','Перезагрузить всё'],correctOption:'Экстренное развёртывание патча',damage:21,reward:80,hint:'Виртуальный патчинг на время.'},
-  {id:'dns_tunnel',category:'medium',name:'DNS-ТУННЕЛЬ',description:'Данные утекают через аномальные DNS-запросы.',wrongOptions:['Сменить DNS-сервер','Игнорировать','Отключить DNS'],correctOption:'Анализ и блокировка аномальных запросов',damage:20,reward:80,hint:'Длинные TXT-запросы — признак.'},
-  {id:'recruiter',category:'medium',name:'ВЕРБОВКА ИНСАЙДЕРА',description:'Сотруднику пишут «конкуренты» и предлагают деньги за схемы.',wrongOptions:['Уволить сотрудника','Игнорировать','Прочитать переписку'],correctOption:'Сообщить в СБ и зафиксировать контакт',damage:19,reward:76,hint:'Честный канал лучше шантажа.'},
-  {id:'log4shell',category:'hard',name:'LOG4SHELL',description:'JNDI-строки в логах веб-приложения.',wrongOptions:['Перезагрузить Java','Игнорировать','Собрать больше логов'],correctOption:'Патч библиотеки и WAF-правила',damage:32,reward:150,hint:'Уязвимость в логировании.'},
-  {id:'golden_ticket',category:'hard',name:'GOLDEN TICKET',description:'Поддельный билет Kerberos гуляет по домену.',wrongOptions:['Сменить пароль юзера','Игнорировать','Перезагрузить ПК'],correctOption:'Двойной сброс krbtgt',damage:34,reward:158,hint:'Двойной сброс — стандарт.'},
-  {id:'data_wiper',category:'hard',name:'ВАЙПЕР',description:'Утилита затирает загрузчики ПЛК на подстанции.',wrongOptions:['Перезагрузить ПЛК','Игнорировать','Выключить цех'],correctOption:'Автономные бэкапы и air gap',damage:36,reward:160,hint:'Стиль Industroyer.'},
-  {id:'harvest_now',category:'hard',name:'HARVEST NOW, DECRYPT LATER',description:'Атакующий копит зашифрованный трафик «на будущее».',wrongOptions:['Игнорировать','Увеличить RSA','Зашифровать повторно'],correctOption:'Постквантовая миграция уже сейчас',damage:33,reward:152,hint:'Квантовый компьютер уже близко.'},
-  {id:'firmware_backdoor',category:'hard',name:'БЭКДОР В ПРОШИВКЕ',description:'Подписанная прошивка контроллера содержит чужой код.',wrongOptions:['Откатить версию','Игнорировать','Переподписать'],correctOption:'Проверка хэшей и пересборка из исходников',damage:35,reward:158,hint:'Цепочка поставок под угрозой.'}
+  {id:'sim_swap',category:'easy',name:'СИМ-СВОППИНГ',description:'Злоумышленник перевыпустил SIM-карту сотрудника.',wrongOptions:['Игнорировать','Позвонить','Сменить оператора'],correctOption:'Заблокировать номер и сменить 2FA',damage:12,reward:40,hint:'Смена фактора аутентификации.'},
+  {id:'deepfake_call',category:'easy',name:'DEEPFAKE-ЗВОНОК',description:'Голос директора просит срочный перевод.',wrongOptions:['Перевести','Игнорировать','Перезвонить'],correctOption:'Запросить подтверждение через защищённый канал',damage:11,reward:38,hint:'Второй канал связи.'},
+  {id:'iot_botnet',category:'easy',name:'IoT-БОТНЕТ',description:'Умные чайники в офисе шлют DDoS-трафик.',wrongOptions:['Выключить свет','Игнорировать','Перезагрузить роутер'],correctOption:'Сегментировать сеть IoT',damage:13,reward:42,hint:'Изоляция периметра.'},
+  {id:'psexec',category:'easy',name:'PS_EXEC АБУЗ',description:'Подозрительный запуск процессов в сети.',wrongOptions:['Удалить файл','Игнорировать','Перезагрузить ПК'],correctOption:'Заблокировать хеш и изолировать хост',damage:14,reward:45,hint:'Контроль исполняемых файлов.'},
+  {id:'wmi_persist',category:'easy',name:'WMI-ПЕРСИСТЕНТНОСТЬ',description:'Обнаружен скрытый триггер в WMI.',wrongOptions:['Очистить кэш','Игнорировать','Перезагрузить'],correctOption:'Удалить подписку и проверить реестр',damage:12,reward:40,hint:'Глубокая проверка системы.'},
+  {id:'rdp_hijack',category:'easy',name:'ПЕРЕХВАТ RDP',description:'Несанкционированная сессия на сервере.',wrongOptions:['Закрыть окно','Игнорировать','Сменить пароль'],correctOption:'Разорвать сессию и заблокировать IP',damage:13,reward:44,hint:'Немедленный разрыв соединения.'},
+  {id:'fake_support',category:'easy',name:'ФЕЙКОВАЯ ПОДДЕРЖКА',description:'"Сотрудник ИБ" просит пароль для "проверки".',wrongOptions:['Дать пароль','Игнорировать','Перезвонить'],correctOption:'Сообщить в реальный отдел ИБ',damage:10,reward:35,hint:'Проверка через официальные каналы.'},
+  {id:'log4shell',category:'medium',name:'LOG4SHELL',description:'Попытка внедрения JNDI в логи приложения.',wrongOptions:['Очистить логи','Игнорировать','Перезагрузить сервер'],correctOption:'Обновить библиотеку и заблокировать WAF',damage:22,reward:80,hint:'Патч и фильтрация.'},
+  {id:'pass_the_hash',category:'medium',name:'PASS THE HASH',description:'Использование хеша NTLM для аутентификации.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Отключить NTLM и включить SMB-подпись',damage:21,reward:78,hint:'Запрет устаревших протоколов.'},
+  {id:'kerberoasting',category:'medium',name:'KERBEROASTING',description:'Запрос TGS-тикетов для оффлайн-подбора.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Установить сложные пароли для SPN',damage:20,reward:75,hint:'Стойкость паролей сервисов.'},
+  {id:'ntlm_relay',category:'medium',name:'NTLM RELAY',description:'Перенаправление аутентификации на другой хост.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Включить SMB-подпись и EPA',damage:23,reward:82,hint:'Защита канала аутентификации.'},
+  {id:'printnightmare',category:'medium',name:'PRINTNIGHTMARE',description:'Эксплуатация уязвимости в службе печати.',wrongOptions:['Удалить принтер','Игнорировать','Перезагрузить'],correctOption:'Отключить Point and Print или обновить',damage:21,reward:76,hint:'Патч или отключение функции.'},
+  {id:'zerologon',category:'medium',name:'ZEROLOGON',description:'Сброс пароля контроллера домена через CVE.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Срочно обновить DC и проверить логи',damage:23,reward:84,hint:'Критическое обновление.'},
+  {id:'petitpotam',category:'medium',name:'PETITPOTAM',description:'Принудительная аутентификация контроллера.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Отключить MS-EFSR или включить SMB-подпись',damage:22,reward:80,hint:'Блокировка вектора атаки.'},
+  {id:'golden_ticket',category:'hard',name:'ЗОЛОТОЙ БИЛЕТ',description:'Подделка TGT для полного доступа к домену.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Сбросить krbtgt и проверить аномалии',damage:35,reward:150,hint:'Смена ключа аутентификации домена.'},
+  {id:'wiper',category:'hard',name:'WIPER-АТАКА',description:'Зловред необратимо шифрует/удаляет данные.',wrongOptions:['Перезагрузить','Игнорировать','Антивирус'],correctOption:'Аварийное отключение сети и восстановление',damage:38,reward:160,hint:'Изоляция и бэкапы.'},
+  {id:'harvest_now',category:'hard',name:'HARVEST NOW, DECRYPT LATER',description:'Массовая кража зашифрованных данных.',wrongOptions:['Удалить данные','Игнорировать','Сменить пароли'],correctOption:'Блокировать эксфильтрацию и расследование',damage:32,reward:145,hint:'Контроль исходящего трафика.'},
+  {id:'dcsync',category:'hard',name:'DCSYNC',description:'Имитация контроллера домена для выгрузки хешей.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Отозвать права Replicating Directory Changes',damage:36,reward:155,hint:'Аудит привилегий.'},
+  {id:'golden_cert',category:'hard',name:'ЗОЛОТОЙ СЕРТИФИКАТ',description:'Подделка сертификата для аутентификации.',wrongOptions:['Удалить сертификат','Игнорировать','Перезагрузить'],correctOption:'Отозвать сертификат и проверить ADCS',damage:34,reward:152,hint:'Управление центром сертификации.'},
+  {id:'adminsdholder',category:'hard',name:'ADMINSDHOLDER',description:'Модификация шаблона для скрытого доступа.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить'],correctOption:'Проверить SDProp и сбросить права',damage:37,reward:158,hint:'Проверка наследования прав.'}
 ];
-
 
 const BOSSES=[
   {id:'boss_apt28',category:'boss',name:'APT28: КООРДИНИРОВАННАЯ',isBoss:true,bossHp:150,description:'ФАЗА 1/3: Фишинг на 5 сотрудников.',wrongOptions:['Заблокировать всех','Игнорировать','Отключить почту'],correctOption:'Заблокировать письма',damage:40,reward:120,hint:'Изолировать.',phase2:{description:'ФАЗА 2/3: Боковое перемещение.',wrongOptions:['Перезагрузить','Игнорировать','Мониторинг'],correctOption:'Сегментировать сеть',hint:'Сегментация.'},phase3:{description:'ФАЗА 3/3: Кража данных.',wrongOptions:['Уволить всех','Игнорировать','Перезагрузить'],correctOption:'Отозвать доступы',hint:'Отозвать.'}},
@@ -658,20 +503,20 @@ const SKILLS=[
   {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]},
   {id:'crit',name:'КРИТИЧЕСКИЙ ОТВЕТ',desc:'Шанс x2 очков за правильный ответ',maxLevel:5,costs:[500, 1500, 4000, 10000, 25000]},
   {id:'freeze',name:'ЗАМОРОЗКА',desc:'+5 сек к таймеру (1 раз за игру)',maxLevel:1,costs:[2000]},
-  {id:'combo',name:'СЦЕПКА',desc:'Усиливает комбо-множитель (+0.25 за уровень)',maxLevel:3,costs:[800,2200,5500]},
-  {id:'armor',name:'БРОНЯ',desc:'+1 щит на карте ВЭС',maxLevel:2,costs:[1500,5000]},
-  {id:'intel',name:'РАЗВЕДКА',desc:'+20% INTEL со всех источников',maxLevel:5,costs:[200,500,1000,2000,4000]},
-  {id:'insurance',name:'СТРАХОВКА',desc:'Первая ошибка за смену: урон −40%',maxLevel:1,costs:[3000]},
-  {id:'hunter',name:'ОХОТНИК',desc:'+12% очков на боссах',maxLevel:5,costs:[300,800,1800,4000,9000]}
+  {id:'combo_boost',name:'СЦЕПКА',desc:'+5% к силе комбо',maxLevel:5,costs:[1000,2500,6000,15000,30000]},
+  {id:'armor',name:'БРОНЯ',desc:'+1 щит на карте',maxLevel:1,costs:[5000]},
+  {id:'intel_boost',name:'РАЗВЕДКА',desc:'+20% INTEL',maxLevel:3,costs:[1000,3000,8000]},
+  {id:'insurance',name:'СТРАХОВКА',desc:'−40% урона от первой ошибки',maxLevel:1,costs:[4000]},
+  {id:'hunter',name:'ОХОТНИК',desc:'+12% очков на боссах',maxLevel:5,costs:[1500,4000,10000,25000,60000]}
 ];
 
 const BRANCHES={
   turbines:{name:'ВЕТРОГЕНЕРАТОРЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₡/сек`},
   defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
   staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`},
-  repair:{name:'РЕМОНТНЫЙ ЦЕХ',icon:'🔧',desc:'Ремонт турбин после атак',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартный ремонт':`+${l*10}% к ремонту турбин`},
-  power:{name:'ЭНЕРГОБЛОК',icon:'⚡',desc:'Выплата червонцев за смену',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартная выплата':`+${l*8}% червонцев за смену`},
-  intel:{name:'ЦЕНТР МОНИТОРИНГА',icon:'📡',desc:'Скорость набора INTEL',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартный INTEL':`+${l*10}% INTEL`}
+  repair:{name:'РЕМОНТНЫЙ ЦЕХ',icon:'🔧',desc:'Быстрее чинит турбины',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет бонусов':`+${l*2}% восстановления`},
+  energy:{name:'ЭНЕРГОБЛОК',icon:'⚡',desc:'+червонцев за смену',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет бонусов':`+${l*8}% червонцев`},
+  monitor:{name:'ЦЕНТР МОНИТОРИНГА',icon:'📡',desc:'+INTEL за сканирование',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет бонусов':`+${l*10}% INTEL`}
 };
 
 const OPERATORS={
@@ -698,10 +543,11 @@ const ACHIEVEMENTS=[
   {id:'builder',name:'СТРОИТЕЛЬ',desc:'Ветрогенераторы 5',icon:'🏗️'},
   {id:'shooter',name:'СТРЕЛОК',desc:'10 мини-игр',icon:'🎯'},
   {id:'op_master',name:'МАСТЕР',desc:'Специалист 5 ур.',icon:'⭐'},
-  {id:'boss_rush',name:'ГЛАВНЫЙ ПРИЗ',desc:'Пройди Босс-раш',icon:'👹'},
-  {id:'architect',name:'АРХИТЕКТОР',desc:'Все ветки прокачки 5+',icon:'⚒️'},
-  {id:'polymath',name:'ПОЛИМАТ',desc:'5 навыков ур. 3+',icon:'🧠'},
-  {id:'no_miss',name:'НЕПРОБИВАЕМЫЙ',desc:'4 уровня без ошибок',icon:'💎'}
+  {id:'boss_rush_win',name:'ГЛАВНЫЙ ПРИЗ',desc:'Победи в босс-раше',icon:'🏆'},
+  {id:'iron_will',name:'ЖЕЛЕЗНАЯ ВОЛЯ',desc:'10 правильных ответов при <3 сек',icon:'🧠'},
+  {id:'collector_all',name:'ВСЁ СОБРАНО',desc:'Открой все достижения',icon:'💯'},
+  {id:'rich_master',name:'ОЛИГАРХ',desc:'100000 червонцев',icon:'💎'},
+  {id:'seen_all',name:'ВИДЕЛ ВСЁ',desc:'Открыть все атаки',icon:'👁️'}
 ];
 
 const CONTRACTS=[
@@ -719,18 +565,16 @@ const TUTORIAL=[
   {icon:'🎲',title:'СОБЫТИЯ',text:'Мини-игры на память, логику и реакцию.'},
   {icon:'🏭',title:'ЖИВАЯ ВЭС',text:'Турбины вверху — ваши. При уроне ломаются и искрят.'},
   {icon:'💀',title:'БОССЫ',text:'3 фазы, лечится при ошибках, блокирует действия!'},
-  {icon:'👹',title:'БОСС-РАШ',text:'Новый режим: 5 боссов подряд без передышки. Очки ×2.5, за полную победу — бонус 1000 ₡.'},
-  {icon:'⌨️',title:'ГОРЯЧИЕ КЛАВИШИ',text:'1-6 — выбор варианта, A/S/D — тактики, Q — подсказка, F — стоп-время, Space — пауза. Отключаются в настройках.'},
-  {icon:'🚀',title:'УДАЧИ!',text:'Не дайте угрозе достичь 100%. Станьте легендой!'}
+  {icon:'🚀',title:'УДАЧИ!',text:'Не дайте угрозе достичь 100%. Станьте легендой!'},
+  {icon:'👹',title:'БОСС-РАШ',text:'5 боссов подряд. Очки ×2.5. +1000₡ за победу.'},
+  {icon:'🌳',title:'6 ВЕТОК ПРОКАЧКИ',text:'Мельницы, Защита, Персонал, Ремонт, Энергоблок, Мониторинг.'}
 ];
 
 const state={
   highScore:STORE.get('highScore',0),gamesPlayed:STORE.get('gamesPlayed',0),
   skills:STORE.get('skills',{}),achievements:STORE.get('achievements',[]),
-  stats:STORE.get('stats',{}),
-  xp:STORE.get('xp',0),tutorialSeen:STORE.get('tutorialSeen',false),
+  stats:STORE.get('stats',{}),xp:STORE.get('xp',0),tutorialSeen:STORE.get('tutorialSeen',false),
   theme:STORE.get('theme','cyber'),soundOn:STORE.get('soundOn',true),vibeOn:STORE.get('vibeOn',true),
-  hotkeysOn:STORE.get('hotkeysOn',true),
   credits:STORE.get('credits',0),lastIncomeTick:STORE.get('lastIncomeTick',Date.now()),
   branches:STORE.get('branches',{turbines:0,defense:0,staff:0}),
   recentAttacks:STORE.get('recentAttacks',[]),operator:STORE.get('operator',null),
@@ -738,10 +582,13 @@ const state={
   shooterWins:STORE.get('shooterWins',0),
   operatorXP:STORE.get('operatorXP',{analyst:0,engineer:0,hacker:0,dispatcher:0,forensic:0}),
   permanentBonuses:STORE.get('permanentBonuses',{scoreBonus:0,timeBonus:0}),
-  turbineHealth:STORE.get('turbineHealth',{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100})
+  turbineHealth:STORE.get('turbineHealth',{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100}),
+  lastDailyBonus:STORE.get('lastDailyBonus',null),dailyDate:STORE.get('dailyDate',null),
+  dailyStreak:STORE.get('dailyStreak',0),dailyCompleted:STORE.get('dailyCompleted',false),
+  seenAttacks:STORE.get('seenAttacks',[]),difficulty:STORE.get('difficulty','normal'),
+  attackMistakes:STORE.get('attackMistakes',{})
 };
 ['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k=>{state.stats[k]=state.stats[k]||0;});
-['repair','power','intel'].forEach(k=>{state.branches[k]=state.branches[k]||0;});
 
 const TURBINES=['ВЭУ-1','ВЭУ-2','ВЭУ-3','ВЭУ-4','ВЭУ-5'];
 const RECENT_LIMIT=7;
@@ -754,7 +601,7 @@ const ui={
   statScore:$('statScore'),statLevel:$('statLevel'),statThreat:$('statThreat'),statCredits:$('statCredits'),
   menuHighScore:$('menuHighScore'),menuGamesPlayed:$('menuGamesPlayed'),menuCredits:$('menuCredits'),menuIncome:$('menuIncome'),
   screenMenu:$('screenMenu'),screenOperator:$('screenOperator'),screenMap:$('screenMap'),
-  screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),
+  screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),screenVictory:$('screenVictory'),
   attackLabel:$('attackLabel'),attackName:$('attackName'),attackDesc:$('attackDesc'),timerValue:$('timerValue'),
   optionsGrid:$('optionsGrid'),hintsLeft:$('hintsLeft'),btnHint:$('btnHint'),btnFreeze:$('btnFreeze'),freezeLeft:$('freezeLeft'),actionBar:$('actionBar'),
   finalScore:$('finalScore'),finalLevel:$('finalLevel'),finalRepelled:$('finalRepelled'),finalCombo:$('finalCombo'),
@@ -765,8 +612,7 @@ const ui={
   tutorialSlide:$('tutorialSlide'),tutorialDots:$('tutorialDots'),tutNext:$('tutNext'),tutSkip:$('tutSkip'),
   themeMeta:$('themeMeta'),mapGrid:$('mapGrid'),shieldsLeft:$('shieldsLeft'),
   shooterField:$('shooterField'),shooterTimer:$('shooterTimer'),dronesLeft:$('dronesLeft'),
-  operatorList:$('operatorList'),
-  vesScene:$('vesScene'),bossHpContainer:$('bossHpContainer'),
+  operatorList:$('operatorList'),vesScene:$('vesScene'),bossHpContainer:$('bossHpContainer'),
   riskIndicator:$('riskIndicator'),comboDisplay:$('comboDisplay')
 };
 
@@ -828,7 +674,7 @@ function damageTurbine(name,dmg){
     spawnFloatingNumber(rect.left+rect.width/2, rect.top+20, '-'+dmg+'%', '#d93025');
   }
 }
-function repairTurbines(){const heal=5*(1+state.branches.repair*0.10);TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+heal);});STORE.set('turbineHealth',state.turbineHealth);renderVesScene();}
+function repairTurbines(){TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+5);});STORE.set('turbineHealth',state.turbineHealth);renderVesScene();}
 
 function showCombo(mult){
   ui.comboDisplay.textContent='COMBO x'+mult+'!';
@@ -836,7 +682,6 @@ function showCombo(mult){
   if(mult>=5)playFanfare();else if(mult>=3)playSuccess();else beep(880,80,0.1);
 }
 function comboMultiplier(streak){if(streak>=10)return 5;if(streak>=7)return 3;if(streak>=4)return 2;return 1;}
-function gainIntel(n){const m=1+getSkillLevel('intel')*0.20+state.branches.intel*0.10;game.intel=Math.min(100,Math.round((game.intel||0)+n*m));renderIntel();}
 
 function updateRiskIndicator(){
   if(!game.running||!game.timeLeft){ui.riskIndicator.textContent='';return;}
@@ -868,25 +713,13 @@ document.addEventListener('click',ensureAudio,{once:true});document.addEventList
 function beep(f,d,v=0.1,t='sine'){
   if(!audioCtx||!state.soundOn)return;
   try{
-    const o=audioCtx.createOscillator();
-    const g=audioCtx.createGain();
-    const filter=audioCtx.createBiquadFilter();
-    filter.type='lowpass';
-    filter.frequency.value=1800;
-    filter.Q.value=0.7;
-    o.type=t;
-    o.frequency.value=f;
-    const now=audioCtx.currentTime;
-    const dur=d/1000;
-    g.gain.setValueAtTime(0,now);
-    g.gain.linearRampToValueAtTime(v,now+0.008);
-    g.gain.linearRampToValueAtTime(v*0.7,now+0.03);
-    g.gain.exponentialRampToValueAtTime(0.001,now+dur);
-    o.connect(filter);
-    filter.connect(g);
-    g.connect(audioCtx.destination);
-    o.start(now);
-    o.stop(now+dur+0.05);
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
+    filter.type='lowpass';filter.frequency.value=1800;filter.Q.value=0.7;
+    o.type=t;o.frequency.value=f;
+    const now=audioCtx.currentTime,dur=d/1000;
+    g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(v,now+0.008);g.gain.linearRampToValueAtTime(v*0.7,now+0.03);g.gain.exponentialRampToValueAtTime(0.001,now+dur);
+    o.connect(filter);filter.connect(g);g.connect(audioCtx.destination);
+    o.start(now);o.stop(now+dur+0.05);
   }catch{}
 }
 function playAttackSound(c){if(c==='boss'){beep(200,300,.15,'sawtooth');setTimeout(()=>beep(150,300,.15,'sawtooth'),200);}else if(c==='hard')beep(300,200,.12,'square');else if(c==='medium')beep(500,150,.1);else beep(700,100,.08);}
@@ -902,9 +735,15 @@ function stopAmbient(){if(ambientTimer){clearInterval(ambientTimer);ambientTimer
 function startSiren(){if(sirenTimer)return;sirenTimer=setInterval(()=>{if(!game.running||game.paused||game.threat<80){stopSiren();return;}playSiren();},1500);}
 function stopSiren(){if(sirenTimer){clearInterval(sirenTimer);sirenTimer=null;}}
 
+let activeToasts = 0;
 function toast(m,t='info',d=2500){
-  const el=document.createElement('div');el.className='toast '+t;el.textContent=m;ui.toastContainer.appendChild(el);
-  setTimeout(()=>{el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='translateY(20px)';setTimeout(()=>el.remove(),300);},d);
+  if(activeToasts >= 3) {
+    const old = ui.toastContainer.firstElementChild;
+    if(old) { old.style.opacity='0'; setTimeout(()=>old.remove(), 300); activeToasts--; }
+  }
+  const el=document.createElement('div');el.className='toast '+t;el.textContent=m;
+  ui.toastContainer.appendChild(el); activeToasts++;
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>{el.remove();activeToasts--;},300);},d);
 }
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);ui.themeMeta.content=t==='alarm'?'#120a0a':'#1a1c1e';state.theme=t;STORE.set('theme',t);}
 
@@ -924,10 +763,9 @@ function checkAch(){
   if(state.credits>=5000)unlock('tycoon');if(state.branches.turbines>=5)unlock('builder');if(state.shooterWins>=10)unlock('shooter');
   for(const s of SKILLS){if(getSkillLevel(s.id)>=s.maxLevel){unlock('scholar');break;}}
   if(state.operator&&opLevel(state.operator)>=5)unlock('op_master');
-  if((state.stats.bossRushWins||0)>=1)unlock('boss_rush');
-  if(Object.values(state.branches).every(v=>v>=5))unlock('architect');
-  if(Object.values(state.skills).filter(v=>v>=3).length>=5)unlock('polymath');
-  if(game.level>=4&&game.attacksRepelled>0&&game.attacksMissed===0)unlock('no_miss');
+  if(state.achievements.length >= ACHIEVEMENTS.length) unlock('collector_all');
+  if(state.credits >= 100000) unlock('rich_master');
+  if(state.seenAttacks.length >= ATTACKS.length + BOSSES.length) unlock('seen_all');
 }
 function updateStats(){
   const sc=game.score??0, lv=game.level??1, th=game.threat??0;
@@ -936,14 +774,13 @@ function updateStats(){
   if(th>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
 }
 function showScreen(n){
-  ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver'].forEach(id=>$(id).classList.remove('active'));
-  const map={menu:'screenMenu',operator:'screenOperator',map:'screenMap',shooter:'screenShooter',attack:'screenAttack',gameover:'screenGameOver'};
+  ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver','screenVictory'].forEach(id=>$(id).classList.remove('active'));
+  const map={menu:'screenMenu',operator:'screenOperator',map:'screenMap',shooter:'screenShooter',attack:'screenAttack',gameover:'screenGameOver',victory:'screenVictory'};
   $(map[n]).classList.add('active');
 }
 function updateMenu(){ui.menuHighScore.textContent=state.highScore;ui.menuGamesPlayed.textContent=state.gamesPlayed;updateCreditsUI();}
 function pushRecent(id){state.recentAttacks.push(id);if(state.recentAttacks.length>RECENT_LIMIT)state.recentAttacks=state.recentAttacks.slice(-RECENT_LIMIT);STORE.set('recentAttacks',state.recentAttacks);}
 function pickAttack(){
-  if(game.mode==='bossrush')return game.bossSeq[game.bossIdx]||BOSSES[0];
   if(game.level>0&&game.level%5===0&&game.attacksRepelled>0&&game.attacksRepelled===(game.level-1)*5){
     const avail=BOSSES.filter(b=>!state.recentAttacks.includes(b.id));const pool=avail.length>0?avail:BOSSES;
     const b=pool[Math.floor(Math.random()*pool.length)];pushRecent(b.id);return b;
@@ -972,7 +809,7 @@ function openContracts(){
 }
 function openUpgrade(){
   ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
-  for(const key of ['turbines','defense','staff','repair','power','intel']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
+  for(const key of ['turbines','defense','staff','repair','energy','monitor']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
     html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₡`}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
@@ -990,7 +827,6 @@ function openSkills(){
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
-
 function openAchievements(){
   ui.modalTitle.textContent='🏆 ДОСТИЖЕНИЯ';
   let html='';
@@ -1002,12 +838,43 @@ function openAchievements(){
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
-
+function openCollection(){
+  ui.modalTitle.textContent='📚 КОЛЛЕКЦИЯ АТАК';
+  const cats = ['easy','medium','hard','boss'];
+  let html = '<div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">';
+  cats.forEach(c => {
+    const count = state.seenAttacks.filter(id => {
+      const atk = ATTACKS.find(x=>x.id===id) || BOSSES.find(x=>x.id===id);
+      return atk && atk.category === c;
+    }).length;
+    const total = c==='boss' ? BOSSES.length : ATTACKS.filter(x=>x.category===c).length;
+    html += `<button class="btn small ghost" style="flex:1;min-width:60px;font-size:10px">${c.toUpperCase()}<br>${count}/${total}</button>`;
+  });
+  html += '</div><div style="max-height:60vh;overflow-y:auto">';
+  const allAttacks = [...ATTACKS, ...BOSSES];
+  allAttacks.forEach(a => {
+    const seen = state.seenAttacks.includes(a.id);
+    html += `<div style="padding:6px;border-bottom:1px solid var(--border);opacity:${seen?1:0.4}">
+      <div style="font-weight:700;color:${seen?'var(--accent)':'var(--dim)'}">${a.name} <span style="font-size:10px">[${a.category}]</span></div>
+      <div style="font-size:11px;color:var(--dim)">${seen ? a.description : '???'}</div>
+    </div>`;
+  });
+  html += '</div>';
+  ui.modalBody.innerHTML = html;
+  if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
+  ui.modalOverlay.classList.add('active');
+}
 function openStats(){
   ui.modalTitle.textContent='📊 СТАТИСТИКА';
   const s=state.stats;
   const acc=(s.totalRepelled+s.totalMissed)>0?Math.round(s.totalRepelled/(s.totalRepelled+s.totalMissed)*100):0;
   const h=Math.floor(s.totalTime/3600),m=Math.floor((s.totalTime%3600)/60);
+  const mistakes = Object.entries(state.attackMistakes||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const mistHtml = mistakes.length ? mistakes.map(([id,count])=>{
+    const atk = ATTACKS.find(x=>x.id===id) || BOSSES.find(x=>x.id===id);
+    return `<div class="stat-item"><div class="stat-item-label">${atk?atk.name:id}</div><div class="stat-item-value">${count} ошибок</div></div>`;
+  }).join('') : '<div class="stat-item"><div class="stat-item-value">Пока чисто!</div></div>';
+  
   ui.modalBody.innerHTML=`<div class="stats-grid">
     <div class="stat-item"><div class="stat-item-label">Игр</div><div class="stat-item-value">${state.gamesPlayed}</div></div>
     <div class="stat-item"><div class="stat-item-label">Рекорд</div><div class="stat-item-value">${state.highScore}</div></div>
@@ -1017,12 +884,13 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">Пропущено</div><div class="stat-item-value">${s.totalMissed}</div></div>
     <div class="stat-item"><div class="stat-item-label">Точность</div><div class="stat-item-value">${acc}%</div></div>
     <div class="stat-item"><div class="stat-item-label">Боссов</div><div class="stat-item-value">${s.bossesDefeated}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Босс-раш рекорд</div><div class="stat-item-value">${s.bossRushBest || 0}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Босс-раш побед</div><div class="stat-item-value">${s.bossRushWins || 0}</div></div>
     <div class="stat-item"><div class="stat-item-label">В игре</div><div class="stat-item-value">${h}ч ${m}м</div></div>
     <div class="stat-item"><div class="stat-item-label">XP</div><div class="stat-item-value">${state.xp}</div></div>
     <div class="stat-item"><div class="stat-item-label">Червонцы</div><div class="stat-item-value">${Math.floor(state.credits)} ₡</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
-    <div class="stat-item"><div class="stat-item-label">Босс-раш</div><div class="stat-item-value">${s.bossRushBest||0}/5</div></div>
-    <div class="stat-item"><div class="stat-item-label">Побед в раше</div><div class="stat-item-value">${s.bossRushWins||0}</div></div>
+    ${mistHtml}
   </div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
@@ -1031,17 +899,51 @@ function openSettings(){
   ui.modalTitle.textContent='⚙️ НАСТРОЙКИ';
   ui.modalBody.innerHTML=`
     <div class="settings-row"><div><div class="settings-label">Тема</div></div><button class="btn ghost small" id="themeToggle">${state.theme==='cyber'?'🟠 Кибер':'🔴 Тревога'}</button></div>
+    <div class="settings-row"><div><div class="settings-label">Сложность</div></div>
+      <select id="diffSelect" style="background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:4px">
+        <option value="easy" ${state.difficulty==='easy'?'selected':''}>Лёгкая</option>
+        <option value="normal" ${state.difficulty==='normal'?'selected':''}>Нормальная</option>
+        <option value="hard" ${state.difficulty==='hard'?'selected':''}>Хардкор</option>
+      </select>
+    </div>
     <div class="settings-row"><div><div class="settings-label">Звуки</div></div><div class="toggle ${state.soundOn?'on':''}" id="soundToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
-    <div class="settings-row"><div><div class="settings-label">Горячие клавиши</div><div style="font-size:10px;color:var(--dim)">1-6 • A/S/D • Q • F • Space</div></div><div class="toggle ${state.hotkeysOn?'on':''}" id="hotkeysToggle"></div></div>
+    <div class="settings-row"><div><div class="settings-label">Сохранения</div></div>
+      <div style="display:flex;gap:4px"><button class="btn small ghost" id="btnExport">💾 Экспорт</button><button class="btn small ghost" id="btnImport">📂 Импорт</button></div>
+    </div>
     <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖 Повторить</button></div>
     <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️ Сбросить</button></div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
   $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
+  $('diffSelect').onchange=(e)=>{state.difficulty=e.target.value;STORE.set('difficulty',state.difficulty);};
   $('soundToggle').onclick=()=>{state.soundOn=!state.soundOn;STORE.set('soundOn',state.soundOn);openSettings();};
   $('vibeToggle').onclick=()=>{state.vibeOn=!state.vibeOn;STORE.set('vibeOn',state.vibeOn);openSettings();};
-  $('hotkeysToggle').onclick=()=>{state.hotkeysOn=!state.hotkeysOn;STORE.set('hotkeysOn',state.hotkeysOn);openSettings();};
+  $('btnExport').onclick=()=>{
+    const data={};SAVE_KEYS.forEach(k=>data[k]=state[k]);
+    data.sig=secureHash(JSON.stringify(data)+SALT);
+    const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wppdef_save.json';a.click();
+  };
+  $('btnImport').onclick=()=>{
+    const input=document.createElement('input');input.type='file';input.accept='.json';
+    input.onchange=e=>{
+      const file=e.target.files[0];if(!file)return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        try{
+          const data=JSON.parse(ev.target.result);
+          const sig=data.sig;delete data.sig;
+          if(sig!==secureHash(JSON.stringify(data)+SALT))throw new Error('Bad sig');
+          Object.keys(data).forEach(k=>{state[k]=data[k];STORE.set(k,data[k]);});
+          toast('✅ Сохранение загружено','success',2000);
+          setTimeout(()=>location.reload(),1000);
+        }catch(err){toast('❌ Повреждённый файл','error',2000);}
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
   $('replayTut').onclick=()=>{history.back();startTutorial(true);};
   $('resetBtn').onclick=()=>{
     if(!confirm('Удалить весь прогресс?'))return;
@@ -1057,9 +959,7 @@ function renderOperators(){
     const card=document.createElement('div');
     const isSaved = !selectedOperator && state.operator === opId;
     const isSelected = selectedOperator === opId || isSaved;
-    
     if (isSaved) selectedOperator = opId;
-
     card.className='operator-card'+(isSelected?' selected':'');
     const lvl=opLevel(opId);
     const perks=opPerks(opId);
@@ -1077,11 +977,7 @@ function renderOperators(){
   $('btnToMap').disabled = !(selectedOperator || state.operator);
 }
 
-let pendingMode='classic';
-function openOperatorSelect(mode){
-  pendingMode=mode||'classic';
-  const sub=$('opSubtitle');
-  if(sub)sub.textContent=pendingMode==='bossrush'?'👹 БОСС-РАШ: 5 боссов подряд • очки ×2.5 • бонус 1000 ₡':'У каждого — свой стиль и перки (ур. 3, 6, 9)';
+function openOperatorSelect(){
   renderOperators();
   showScreen('operator');
   history.pushState({screen: 'submenu'}, '');
@@ -1089,21 +985,23 @@ function openOperatorSelect(mode){
 
 function openMap(){
   selectedShields={...state.mapShields};
-  const MAX=3+getSkillLevel('armor');
+  const MAX = 3 + getSkillLevel('armor');
   function render(){
     const used=Object.values(selectedShields).filter(Boolean).length;
     ui.shieldsLeft.textContent=MAX-used;
-    const ms=$('maxShields');if(ms)ms.textContent=MAX;
     ui.mapGrid.innerHTML='';
     TURBINES.forEach(t=>{
       const cell=document.createElement('div');
       cell.className='turbine-cell'+(selectedShields[t]?' shielded':'');
       cell.innerHTML=`<div class="turbine-icon">🌬️</div><div class="turbine-name">${t}</div>${selectedShields[t]?'<div class="turbine-shield">🛡️</div>':''}`;
       cell.onclick=()=>{
-        if(selectedShields[t]){delete selectedShields[t];beep(500,80,0.08);}
-        else if(used<MAX){selectedShields[t]=true;beep(900,80,0.08);}
+        if(selectedShields[t]){delete selectedShields[t];}
+        else if(used<MAX){selectedShields[t]=true;}
         else{toast('Все щиты распределены','warning',1500);return;}
+        state.mapShields={...selectedShields};
+        STORE.set('mapShields',state.mapShields);
         render();
+        beep(500,80,0.08);
       };
       ui.mapGrid.appendChild(cell);
     });
@@ -1113,7 +1011,7 @@ function openMap(){
   history.pushState({screen: 'submenu'}, '');
 }
 
-let shooterState={active:false,drones:0,timer:null,startTime:0,total:5};
+let shooterState={active:false,drones:0,timer:null,startTime:0,total:5,remaining:5};
 function startShooter(){
   return new Promise(resolve=>{
     showScreen('shooter');
@@ -1134,7 +1032,7 @@ function startShooter(){
       d.style.setProperty('--dy',((Math.random()-0.5)*100)+'px');
       d.style.animation=`droneMove ${2+Math.random()*2}s ease-in-out infinite alternate`;
       d.onclick=e=>{
-        if(!shooterState.active||d.classList.contains('hit'))return;
+        if(game.paused||!shooterState.active||d.classList.contains('hit'))return;
         e.stopPropagation();
         d.classList.add('hit');
         beep(1200,50,0.08);vibe(20);
@@ -1273,7 +1171,7 @@ function mgFirewall(){
       n.style.left=(8+Math.random()*62)+'%';
       n.style.top=(6+Math.random()*78)+'%';
       n.onclick=()=>{
-        if(done||n.classList.contains('dead'))return;
+        if(game.paused||done||n.classList.contains('dead'))return;
         n.classList.add('dead');
         if(bad){badLeft--;beep(1100,50,.08);vibe(15);}
         else{mistakes++;beep(200,150,.12,'sawtooth');vibe(60);}
@@ -1321,7 +1219,7 @@ function mgSequence(){
         btns.forEach(b=>b.disabled=false);
         let step=0,done=false;
         btns.forEach(b=>b.onclick=()=>{
-          if(done)return;
+          if(game.paused||done)return;
           if(+b.dataset.p===seq[step]){
             b.classList.add('flash');setTimeout(()=>b.classList.remove('flash'),150);
             beep(900+step*100,60,.08);step++;
@@ -1333,8 +1231,7 @@ function mgSequence(){
         });
         let tl=8;
         const tt=setInterval(()=>{
-          if(done){clearInterval(tt);return;}
-          if(game.paused)return;
+          if(game.paused||done){clearInterval(tt);return;}
           tl-=.1;$mg('mgTimer').textContent='ПОВТОРИ '+tl.toFixed(1);
           if(tl<=0){clearInterval(tt);done=true;mg.classList.remove('on');res({ok:false});}
         },100);
@@ -1357,8 +1254,7 @@ function mgWires(){
     const c=colors[target];
     const clues=[
       'Он НЕ '+colors[(target+1)%6].toLowerCase()+' и НЕ '+colors[(target+2)%6].toLowerCase()+'.',
-      'Его название из '+c.length+' букв.',
-      'Он '+(target%2===0?'в левой колонке':'в правой колонке')+'.'
+      'Его название из '+c.length+' букв.'
     ];
     $mg('mgBody').innerHTML=
       clues.map(x=>`<div class="mg-clue">🔎 ${x}</div>`).join('')+
@@ -1366,13 +1262,12 @@ function mgWires(){
     let tl=12,done=false;
     $mg('mgTimer').textContent=tl.toFixed(1);
     const t=setInterval(()=>{
-      if(done)return;
-      if(game.paused)return;
+      if(game.paused||done)return;
       tl-=.1;$mg('mgTimer').textContent=Math.max(0,tl).toFixed(1);
       if(tl<=0){done=true;clearInterval(t);mg.classList.remove('on');res({ok:false});}
     },100);
     [...$mg('mgW').children].forEach(b=>b.onclick=()=>{
-      if(done)return;done=true;clearInterval(t);
+      if(game.paused||done)return;done=true;clearInterval(t);
       const ok=+b.dataset.i===target;
       b.style.borderColor=ok?'var(--accent)':'var(--danger)';
       ok?playSuccess():playError();
@@ -1389,7 +1284,7 @@ async function showRandomEvent(){
   if(r.ok){
     const cr=80+(game.level||1)*15;
     state.credits+=cr;STORE.set('credits',state.credits);updateCreditsUI();
-    gainIntel(40);
+    game.intel=Math.min(100,(game.intel||0)+40);
     game.threat=Math.max(0,game.threat-6);
     toast('✅ Инцидент закрыт: +'+cr+' ₡, +40 INTEL, −6% угрозы','coin',3000);
     playSuccess();
@@ -1408,25 +1303,21 @@ async function showRandomEvent(){
 
 async function startGame(){
   ensureAudio();startAmbient();tickIncome();checkContracts();
-  
   if(selectedOperator && !OPERATORS[selectedOperator]) selectedOperator=null;
   state.operator = selectedOperator || state.operator || 'engineer';
   if(!OPERATORS[state.operator]) state.operator='engineer';
   
   if(Object.keys(selectedShields).length === 0) {
-      toast('⚠️ Распределите щиты на карте ВЭС!', 'error', 2000);
-      return;
+      toast('⚠️ Щиты не распределены — турбины уязвимее', 'warning', 2000);
   }
   
   state.mapShields = {...selectedShields};
   STORE.set('operator', state.operator);
   STORE.set('mapShields', state.mapShields);
-  
   TURBINES.forEach(t=>{state.turbineHealth[t]=100;});
   STORE.set('turbineHealth',state.turbineHealth);
   
   const opBonus=(OPERATORS[state.operator]?.bonus)||{};
-  
   let hackerSkips = 0;
   if(state.operator==='hacker'){
     const hLvl = opLevel('hacker');
@@ -1435,26 +1326,21 @@ async function startGame(){
     if(hLvl >= 9) hackerSkips += 2;
   }
   
-  const bossrush=pendingMode==='bossrush';
   game={
-    mode:pendingMode||'classic',victory:false,insuranceUsed:false,
-    bossSeq:bossrush?[...BOSSES].sort(()=>Math.random()-.5):null,bossIdx:0,
-    score:0,level:bossrush?3:1,threat:0,
+    score:0,level:1,threat:0,
     activeAttack:null,activePhase:null,phaseIndex:0,
     timer:null,timeLeft:0,maxTime:15,
     attacksRepelled:0,attacksMissed:0,streakRepelled:0,
     running:true,paused:false,nextAttackTimer:null,
     hintsLeft:3+getFreeHints()+(opBonus.freeHints||0),
-    hintUsed:false,
-    freezeUsed: false,
-    autoSkipLeft: hackerSkips,
-    gameStartTime:Date.now(),totalTime:0,
-    attackCounter:0,shooterBonus:0,tempScoreBonus:0,
+    hintUsed:false, freezeUsed:false, insuranceUsed:false,
+    autoSkipLeft: hackerSkips, gameStartTime:Date.now(),totalTime:0,
+    attackCounter:0,shooterBonus:0,
     action:'attack',combo:0,maxCombo:0,bossHp:0,riskAnswered:false,
     sector:0,mutIdx:0,resolving:false,analyzed:false,
     bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
-    lastAnsweredBtn:null,
-    forensicFreeUsed: false
+    lastAnsweredBtn:null, forensicFreeUsed: false,
+    bossRushMode: false, bossRushIndex: 0, bossRushQueue: []
   };
   
   updateStats();
@@ -1462,38 +1348,91 @@ async function startGame(){
   showScreen('attack');
   ui.hintsLeft.textContent=game.hintsLeft;
   ui.btnHint.disabled=false;
-  
   const freezeLvl = getSkillLevel('freeze');
   ui.freezeLeft.textContent = freezeLvl > 0 ? '1' : '0';
   ui.btnFreeze.disabled = freezeLvl === 0;
-  
   ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
   renderVesScene();
   renderIntel();
   toast(' Специалист: '+OPERATORS[state.operator].name,'success');
-  if(game.mode==='bossrush')toast('👹 БОСС-РАШ: 5 боссов подряд. Удачи!','warning',4000);
+  game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
+}
+
+function startBossRush(){
+  ensureAudio();startAmbient();tickIncome();checkContracts();
+  state.operator = selectedOperator || state.operator || 'engineer';
+  
+  state.mapShields = {...selectedShields};
+  STORE.set('operator', state.operator);
+  STORE.set('mapShields', state.mapShields);
+  TURBINES.forEach(t=>{state.turbineHealth[t]=100;});
+  STORE.set('turbineHealth',state.turbineHealth);
+  
+  game={
+    score:0,level:1,threat:0,
+    activeAttack:null,activePhase:null,phaseIndex:0,
+    timer:null,timeLeft:0,maxTime:15,
+    attacksRepelled:0,attacksMissed:0,streakRepelled:0,
+    running:true,paused:false,nextAttackTimer:null,
+    hintsLeft:3+getFreeHints(),
+    hintUsed:false, freezeUsed:false, insuranceUsed:false,
+    autoSkipLeft: 0, gameStartTime:Date.now(),totalTime:0,
+    attackCounter:0,shooterBonus:0,
+    action:'attack',combo:0,maxCombo:0,bossHp:0,riskAnswered:false,
+    sector:0,mutIdx:0,resolving:false,analyzed:false,
+    bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
+    lastAnsweredBtn:null, forensicFreeUsed: false,
+    bossRushMode: true, bossRushIndex: 0, bossRushQueue: []
+  };
+
+  const shuffledBosses = [...BOSSES].sort(() => 0.5 - Math.random());
+  game.bossRushQueue = shuffledBosses.slice(0, 5);
+  
+  updateStats();
+  history.replaceState({screen: 'attack'}, '');
+  showScreen('attack');
+  ui.hintsLeft.textContent=game.hintsLeft;
+  ui.btnHint.disabled=false;
+  ui.freezeLeft.textContent = getSkillLevel('freeze') > 0 ? '1' : '0';
+  ui.btnFreeze.disabled = getSkillLevel('freeze') === 0;
+  ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
+  renderVesScene();
+  renderIntel();
+  toast('👹 БОСС-РАШ НАЧАТ! Очки ×2.5','warning', 3000);
   game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
 }
 
 async function spawnAttack(){
   if(!game.running||game.paused)return;
-  game.attackCounter++;
-  const rush=game.mode==='bossrush';
-  if(!rush&&game.attackCounter%3===0&&game.attackCounter>1){
-    const ok=await startShooter();
-    if(!game.running)return;
-    if(ok){game.score+=50;game.shooterBonus=2;toast('🎯 +50 очков за дронов!','success',2000);playSuccess();updateStats();}
-    else{game.threat=Math.min(100,game.threat+10);game.shooterBonus=-2;toast(' Дроны прорвались! +10% угрозы','error',2000);playError();updateStats();if(game.threat>=100){endGame();return;}}
-  }else{
-    game.shooterBonus=0;
+  
+  if(!game.bossRushMode) {
+    if(game.attacksRepelled > 0 && game.attacksRepelled % 3 === 0){
+      const ok=await startShooter();
+      if(!game.running)return;
+      if(ok){game.score+=50;game.shooterBonus=2;toast('🎯 +50 очков за дронов!','success',2000);playSuccess();updateStats();}
+      else{game.threat=Math.min(100,game.threat+10);game.shooterBonus=-2;toast(' Дроны прорвались! +10% угрозы','error',2000);playError();updateStats();if(game.threat>=100){endGame();return;}}
+    }else{
+      game.shooterBonus=0;
+    }
+
+    if(game.attacksRepelled > 0 && Math.random()<0.15){
+      await showRandomEvent();
+      if(!game.running)return;
+    }
   }
 
-  if(!rush&&game.attackCounter>1&&Math.random()<0.15){
-    await showRandomEvent();
-    if(!game.running)return;
+  let attack;
+  if(game.bossRushMode) {
+    attack = game.bossRushQueue[game.bossRushIndex];
+  } else {
+    attack=pickAttack();
   }
-
-  const attack=pickAttack();
+  
+  if(!state.seenAttacks.includes(attack.id)) {
+    state.seenAttacks.push(attack.id);
+    STORE.set('seenAttacks', state.seenAttacks);
+  }
+  
   game.activeAttack=attack;
   game.phaseIndex=0;
   game.hintUsed=false;
@@ -1513,19 +1452,19 @@ async function spawnAttack(){
   renderVesScene();
   playAttackSound(attack.category);
   vibe([40,40,40]);
-  toast(game.mode==='bossrush'?'👹 БОСС '+(game.bossIdx+1)+'/5 • '+attack.name:'⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2200);
+  toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2000);
 }
 
 function startPhaseTimer(){
   clearInterval(game.timer);
-  let ticked=5;
+  let ticked=3;
   game.timer=setInterval(()=>{
     if(game.paused)return;
     game.timeLeft--;
     ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
+    if(game.timeLeft<=3) ui.timerValue.classList.add('critical');
     updateRiskIndicator();
-    if(game.timeLeft<=5){
-      ui.timerValue.className='timer-value critical';
+    if(game.timeLeft<=3){
       if(game.timeLeft===ticked){playTick();ticked--;}
     }
     if(game.timeLeft<=0){
@@ -1554,14 +1493,24 @@ function renderPhase(){
   ui.attackDesc.classList.toggle('boss',boss);
 
   ui.optionsGrid.innerHTML='';
-  buildOptions(phase).forEach((o,idx)=>{
+  buildOptions(phase).forEach(o=>{
     const b=document.createElement('button');
     b.className='option-btn';
     b.textContent=o;
-    b.dataset.k=idx+1;
     b.onclick=()=>handleAnswer(o===phase.correctOption,b);
     ui.optionsGrid.appendChild(b);
   });
+
+  if(mutator().id==='fog'){
+    const wrongOptions = [...ui.optionsGrid.children].filter(b => 
+      b.textContent !== phase.correctOption && !b.classList.contains('eliminated')
+    );
+    if(wrongOptions.length > 2) {
+      const idx = Math.floor(Math.random() * wrongOptions.length);
+      wrongOptions[idx].classList.add('eliminated');
+      wrongOptions[idx].disabled = true;
+    }
+  }
 
   let sec=CFG.baseTime(game.level)+effects().timeBonus+(game.shooterBonus||0);
   if(mutator().id==='surge')sec*=.7;
@@ -1582,12 +1531,8 @@ function renderPhase(){
   }
   
   ui.btnHint.disabled=false;
-  if(mutator().id==='jam'){
-    ui.btnHint.disabled=true;
-  }
-  if(game.hintsLeft<=0){
-    ui.btnHint.disabled=true;
-  }
+  if(mutator().id==='jam') ui.btnHint.disabled=true;
+  if(game.hintsLeft<=0) ui.btnHint.disabled=true;
 
   const btnSkip=$('btnSkip');
   if(btnSkip){
@@ -1601,26 +1546,14 @@ function renderPhase(){
 
   if(boss&&ui.bossHpContainer){
     const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
-    ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+    let dots = '';
+    for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
+    ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
   } else if(ui.bossHpContainer){
     ui.bossHpContainer.innerHTML='';
   }
 
   startPhaseTimer();
-
-  if(mutator().id==='fog'){
-    const ph = game.activePhase;
-    if(ph) {
-      const wrongOptions = [...ui.optionsGrid.children].filter(b => 
-        b.textContent !== ph.correctOption && !b.classList.contains('eliminated')
-      );
-      if(wrongOptions.length > 2) {
-        const k = Math.floor(Math.random() * wrongOptions.length);
-        wrongOptions[k].classList.add('eliminated');
-        wrongOptions[k].disabled = true;
-      }
-    }
-  }
   renderIntel();
   renderVesScene();
 }
@@ -1630,12 +1563,10 @@ ui.btnFreeze.onclick = function() {
     game.freezeUsed = true;
     ui.freezeLeft.textContent = '0';
     ui.btnFreeze.disabled = true;
-
     game.timeLeft += 5;
     ui.timerValue.textContent = mutator().id === 'blind' ? '??' : game.timeLeft;
     ui.timerValue.classList.remove('critical');
     updateRiskIndicator();
-
     toast('🧊 +5 секунд к таймеру!', 'info', 2000);
     beep(600, 200, 0.15, 'triangle');
     vibe([40, 40, 40]);
@@ -1663,7 +1594,7 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
       if(r.ok){
         const bonus=r.clean?60:30;
         game.score+=bonus;
-        gainIntel(15);
+        game.intel=Math.min(100,(game.intel||0)+15);
         toast(r.clean?'🛡️ ИДЕАЛЬНЫЙ БЛОК! +'+bonus:'🛡️ Отбито. +'+bonus,'success',2000);
         resolveRound(true,{shield:true,noScore:true});
       }else{
@@ -1697,10 +1628,15 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
         wrong[k].classList.add('eliminated');
         wrong.splice(k,1);
       }
-      gainIntel(CFG.intelPerScan);
+      
+      let intelGain = CFG.intelPerScan;
+      if(getSkillLevel('intel_boost')>0) intelGain = Math.round(intelGain * (1 + getSkillLevel('intel_boost') * 0.20));
+      game.intel=Math.min(100,(game.intel||0)+intelGain);
+      
+      renderIntel();
       beep(1200,120,.1,'triangle');
       if(!freeAnalyze){
-        toast(' −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+CFG.intelPerScan+' INTEL','info',2200);
+        toast(' −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+intelGain+' INTEL','info',2200);
       }
       return;
     }
@@ -1708,8 +1644,8 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
 });
 
 ui.btnHint.onclick=function(){
-  if(mutator().id==='jam'){toast('🚫 Глушилка: подсказки недоступны','error',1800);return;}
-  if(game.hintsLeft<=0||game.hintUsed||!game.activeAttack||game.resolving)return;
+  const _isFreeHint = (state.operator==='analyst' && opLevel('analyst')>=6);
+  if((!_isFreeHint && game.hintsLeft<=0) || game.hintUsed || !game.activeAttack || game.resolving) return;
 
   const phase=game.activePhase;
   if(!phase)return;
@@ -1728,8 +1664,7 @@ ui.btnHint.onclick=function(){
   toast('💡 '+phase.hint,'info',5000);
   beep(1000,100,0.08);
 
-  const freeHint = state.operator==='analyst' && opLevel('analyst')>=6;
-  if(!freeHint){
+  if(!_isFreeHint){
     game.hintsLeft--;
   } else {
     toast('🔍 Бесплатная подсказка (Аналитик ур.6)','info',1500);
@@ -1737,7 +1672,7 @@ ui.btnHint.onclick=function(){
   
   game.hintUsed=true;
   ui.hintsLeft.textContent=game.hintsLeft;
-  if(game.hintsLeft<=0)ui.btnHint.disabled=true;
+  if(game.hintsLeft<=0 && !_isFreeHint) ui.btnHint.disabled=true;
 };
 
 $('btnSkip').onclick=function(){
@@ -1797,22 +1732,28 @@ function resolveRound(correct,opt){
 
   if(boss){
     if(correct){
+      game.score += 25;
       const dmg=(game.bossMaxHp||100)/(game.bossPhases||3);
       game.bossHp=Math.max(0,(game.bossHp||0)-dmg);
       if(ui.bossHpContainer){
         const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
-        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+        let dots = '';
+        for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
+        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
       }
       playSuccess();vibe([30,30,30]);
       toast('💥 Удар по ядру! −'+Math.round(dmg)+' HP','success',1400);
     }else{
+      game.threat = Math.min(100, game.threat + 5);
       game.bossHp=Math.min(game.bossMaxHp,(game.bossHp||0)+15);
       if(ui.bossHpContainer){
         const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
-        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ФАЗА ${(game.phaseIndex||0)+1}/${game.bossPhases||3}</div></div>`;
+        let dots = '';
+        for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
+        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
       }
       playError();vibe(200);
-      toast('😈 Босс восстановил +15 HP','error',1800);
+      toast('😈 Босс восстановил +15 HP, +5% угрозы','error',1800);
     }
     if(game.phaseIndex<(game.bossPhases-1)){
       setTimeout(()=>{
@@ -1835,12 +1776,19 @@ function resolveRound(correct,opt){
 function finishRound(correct,a,opt){
   const eff=effects();
   const isBoss=!!opt.boss;
-  let rM=1+eff.scoreBonus+(game.tempScoreBonus||0);
+  let rM=1+eff.scoreBonus;
   let dM=1-eff.damageReduction;
+  
+  if(state.difficulty === 'easy') { dM *= 0.7; rM *= 0.8; }
+  else if(state.difficulty === 'hard') { dM *= 1.5; rM *= 1.5; }
   
   if(state.operator==='engineer'){
     if(opLevel('engineer')>=9) dM*=0.6;
     else if(opLevel('engineer')>=3) dM*=0.8;
+  }
+  
+  if(isBoss && getSkillLevel('hunter')>0) {
+    rM *= (1 + getSkillLevel('hunter') * 0.12);
   }
   
   if(game.hintUsed)rM*=.85;
@@ -1848,6 +1796,8 @@ function finishRound(correct,a,opt){
   if(mutator().id==='jam')dM*=.75;
   if(opt.shield)dM*=.5;
   rM*=riskMultiplier();
+  
+  if(game.bossRushMode) rM *= 2.5;
   
   if(state.operator==='analyst' && opLevel('analyst')>=9){
     if(game.maxTime && game.timeLeft/game.maxTime > 0.7){
@@ -1863,8 +1813,6 @@ function finishRound(correct,a,opt){
 
   if(correct){
     let pts=opt.noScore?0:Math.round(a.reward*rM*(isBoss?2.2:1));
-    if(isBoss&&getSkillLevel('hunter'))pts=Math.round(pts*(1+0.12*getSkillLevel('hunter')));
-    if(isBoss&&game.mode==='bossrush')pts=Math.round(pts*2.5);
     
     const critChance = getSkillLevel('crit') * 0.05;
     if (critChance > 0 && Math.random() < critChance) {
@@ -1876,15 +1824,28 @@ function finishRound(correct,a,opt){
     game.combo=(game.combo||0)+1;
     game.streakRepelled=(game.streakRepelled||0)+1;
     game.maxCombo=Math.max(game.maxCombo||0,game.combo);
+    
     let cm=comboMultiplier(game.combo);
-    if(getSkillLevel('combo'))cm=Math.round((cm+getSkillLevel('combo')*0.25)*100)/100;
+    if(getSkillLevel('combo_boost')>0) {
+      cm = Math.round(cm * (1 + getSkillLevel('combo_boost') * 0.05) * 100) / 100;
+    }
+    
     if(cm>1&&pts>0){pts=Math.round(pts*cm);showCombo(cm);}
     game.score+=pts;
     game.threat=Math.max(0,game.threat-(isBoss?18:8));
     game.attacksRepelled++;
-    gainIntel(8);
+    
+    let intelGain = 8;
+    if(getSkillLevel('intel_boost')>0) intelGain = Math.round(intelGain * (1 + getSkillLevel('intel_boost') * 0.20));
+    game.intel=Math.min(100,(game.intel||0)+intelGain);
+    
     if(state.operator)opAddXP(state.operator,Math.floor(pts/2)+10);
-    repairTurbines();
+    
+    let repairAmt = 5;
+    if(getSkillLevel('repair')>0) repairAmt = Math.round(5 * (1 + getSkillLevel('repair') * 0.02));
+    TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+repairAmt);});
+    STORE.set('turbineHealth',state.turbineHealth);
+    renderVesScene();
     
     if(pts>0 && game.lastAnsweredBtn){
       const rect=game.lastAnsweredBtn.getBoundingClientRect();
@@ -1897,16 +1858,44 @@ function finishRound(correct,a,opt){
       toast('🏆 БОСС УНИЧТОЖЕН! +'+pts,'success',4000);
       state.stats.bossesDefeated=(state.stats.bossesDefeated||0)+1;
       STORE.set('stats',state.stats);
-      if(game.mode==='bossrush'){game.bossIdx++;toast('👹 Босс '+game.bossIdx+'/5 повержен!','success',2600);}
+      
+      if(game.bossRushMode) {
+        game.bossRushIndex++;
+        if(game.bossRushIndex >= 5) {
+          setTimeout(()=>showVictory(), 1500);
+          return;
+        } else {
+          setTimeout(()=>spawnAttack(), 1500);
+          return;
+        }
+      }
     }else if(pts>0){
       toast('✅ +'+pts+(cm>1?' (x'+cm+')':''),'success',1500);
     }
     updateContract('repel',1);
     updateContract('combo',game.combo,true);
+    
+    if(!state.dailyCompleted) {
+      state.dailyStreak = (state.dailyStreak||0) + 1;
+      STORE.set('dailyStreak', state.dailyStreak);
+      if(state.dailyStreak >= 10) {
+        state.dailyCompleted = true;
+        state.credits += 500;
+        STORE.set('dailyCompleted', true);
+        STORE.set('credits', state.credits);
+        toast('🏆 Ежедневный вызов: 10 подряд! +500₡', 'achievement', 3000);
+      }
+    }
   }else{
     let dmg=Math.round(a.damage*dM*(isBoss?1.5:1)*(1+(game.level-1)*0.04));
     dmg=Math.max(2,dmg);
-    if(getSkillLevel('insurance')&&!game.insuranceUsed){dmg=Math.max(2,Math.round(dmg*0.6));game.insuranceUsed=true;toast('🧾 Страховка сработала: урон −40%','info',2600);}
+    
+    if(!game.insuranceUsed && getSkillLevel('insurance')>0) {
+      dmg = Math.round(dmg * 0.6);
+      game.insuranceUsed = true;
+      toast('🛡️ Страховка сработала! Урон −40%', 'info', 2000);
+    }
+    
     const t=TURBINES[Math.floor(Math.random()*5)];
     if(state.mapShields[t])dmg=Math.round(dmg*.7);
     game.threat=Math.min(100,game.threat+dmg);
@@ -1915,10 +1904,22 @@ function finishRound(correct,a,opt){
     game.streakRepelled=0;
     damageTurbine(t,Math.round(dmg/2));
     playError();
+    ui.attackDesc.classList.add('shake');
+    setTimeout(()=>ui.attackDesc.classList.remove('shake'), 500);
     toast('💥 +'+dmg+'% угрозы','error',2000);
+    
+    state.attackMistakes[a.id] = (state.attackMistakes[a.id]||0) + 1;
+    STORE.set('attackMistakes', state.attackMistakes);
+    
+    state.dailyStreak = 0;
+    STORE.set('dailyStreak', 0);
+    
+    if(game.bossRushMode && game.threat >= 100) {
+      setTimeout(()=>endGame(), 1000);
+      return;
+    }
   }
 
-  game.tempScoreBonus=0;
   game.hintUsed=false;
   game.analyzed=false;
   game.usedShield=false;
@@ -1928,19 +1929,21 @@ function finishRound(correct,a,opt){
   game.activePhase=null;
   game.lastAnsweredBtn=null;
 
-  const nl=game.mode==='bossrush'?game.level:1+Math.floor(game.attacksRepelled/5);
-  if(nl>game.level){
-    game.level=nl;
-    updateContract('level',nl,true);
-    const s=sectorOf(nl);
-    if(s!==game.sector){
-      game.sector=s;
-      game.mutIdx=s%MUTATORS.length;
-      const m=MUTATORS[game.mutIdx];
-      showBanner('СЕКТОР '+(s+1),m.name+' — '+m.desc);
-    }else{
-      playFanfare();
-      toast('🎯 УРОВЕНЬ '+nl,'success',2200);
+  if(!game.bossRushMode) {
+    const nl=1+Math.floor(game.attacksRepelled/5);
+    if(nl>game.level){
+      game.level=nl;
+      updateContract('level',nl,true);
+      const s=sectorOf(nl);
+      if(s!==game.sector){
+        game.sector=s;
+        game.mutIdx=s%MUTATORS.length;
+        const m=MUTATORS[game.mutIdx];
+        showBanner('СЕКТОР '+(s+1),m.name+' — '+m.desc);
+      }else{
+        playFanfare();
+        toast('🎯 УРОВЕНЬ '+nl,'success',2200);
+      }
     }
   }
 
@@ -1950,26 +1953,10 @@ function finishRound(correct,a,opt){
   renderIntel();
 
   if(game.threat>=100){endGame();return;}
-  if(game.mode==='bossrush'){
-    if(game.bossIdx>=BOSSES.length){
-      game.victory=true;
-      const bonus=1000;
-      state.credits+=bonus;STORE.set('credits',state.credits);updateCreditsUI();
-      state.stats.bossRushWins=(state.stats.bossRushWins||0)+1;STORE.set('stats',state.stats);
-      unlock('boss_rush');
-      showBanner('БОСС-РАШ ПРОЙДЕН','Все 5 боссов повержены! Бонус +'+bonus+' ₡');
-      setTimeout(()=>endGame(),2400);
-      return;
-    }
-    game.level=Math.min(8,game.level+1);
-    game.hintsLeft=Math.min(9,game.hintsLeft+1);
-    ui.hintsLeft.textContent=game.hintsLeft;
-    ui.btnHint.disabled=game.hintsLeft<=0;
-    game.threat=Math.max(0,game.threat-5);
-    toast('🔻 Передышка: −5% угрозы, +1 подсказка','info',3000);
-  }
-  if(game.level>CFG.runLength){
-    const bonus=500+game.score*0.25;
+  if(!game.bossRushMode && game.level>CFG.runLength){
+    let bonus=500+game.score*0.25;
+    if(getSkillLevel('energy')>0) bonus = Math.round(bonus * (1 + getSkillLevel('energy') * 0.08));
+    
     state.credits+=Math.round(bonus);
     STORE.set('credits',state.credits);
     showBanner('СМЕНА СДАНА','Бонус +'+Math.round(bonus)+' ₡');
@@ -1977,7 +1964,7 @@ function finishRound(correct,a,opt){
     setTimeout(()=>endGame(),2400);
     return;
   }
-  game.nextAttackTimer=setTimeout(()=>spawnAttack(),Math.max(1400,4200-game.level*180));
+  game.nextAttackTimer=setTimeout(()=>spawnAttack(),Math.max(1400,4200-(game.level||1)*180));
 }
 
 function endGame(){
@@ -1992,7 +1979,7 @@ function endGame(){
 
   const eff=effects();
   const xp=Math.round((game.score/2)*(1+eff.xpBonus));
-  const cr=Math.round((game.score/10+game.level*20)*(1+state.branches.power*0.08));
+  const cr=Math.round(game.score/10)+game.level*20;
 
   if(game.score>state.highScore){
     state.highScore=game.score;
@@ -2013,7 +2000,6 @@ function endGame(){
   state.stats.totalTime+=game.totalTime;
   if(game.level>state.stats.bestLevel)state.stats.bestLevel=game.level;
   if(game.maxCombo>state.stats.maxCombo)state.stats.maxCombo=game.maxCombo;
-  if(game.mode==='bossrush')state.stats.bossRushBest=Math.max(state.stats.bossRushBest||0,game.victory?5:game.bossIdx);
   STORE.set('stats',state.stats);
 
   updateContract('level',game.level,true);
@@ -2021,9 +2007,6 @@ function endGame(){
   updateContract('combo',game.maxCombo,true);
   checkAch();
 
-  $('gameoverIcon').textContent=game.victory?'🏅':'💥';
-  $('gameoverTitle').textContent=game.victory?'ПОБЕДА':'КРИТИЧЕСКИЙ СБОЙ';
-  $('gameoverSub').textContent=game.victory?'Босс-раш пройден — все 5 боссов повержены!':(game.mode==='bossrush'?'Босс-раш: повержено '+game.bossIdx+'/5':'Угроза достигла 100%');
   ui.finalScore.textContent=game.score;
   ui.finalLevel.textContent=game.level;
   ui.finalRepelled.textContent=game.attacksRepelled;
@@ -2032,12 +2015,37 @@ function endGame(){
   ui.creditsGained.textContent='+'+cr+' ₡';
   updateCreditsUI();
   showScreen('gameover');
-  if(game.victory)playFanfare();else playError();
+  playError();
   vibe([200,100,200,100,400]);
 }
 
+function showVictory(){
+  game.running=false;
+  game.paused=false;
+  clearInterval(game.timer);
+  clearTimeout(game.nextAttackTimer);
+  stopAmbient();
+  stopSiren();
+  
+  state.stats.bossRushWins = (state.stats.bossRushWins || 0) + 1;
+  if(game.score > (state.stats.bossRushBest || 0)) {
+    state.stats.bossRushBest = game.score;
+  }
+  STORE.set('stats', state.stats);
+  
+  state.credits += 1000;
+  STORE.set('credits', state.credits);
+  updateCreditsUI();
+  unlock('boss_rush_win');
+  
+  $('victoryScore').textContent = game.score;
+  showScreen('victory');
+  playFanfare();
+  vibe([100, 50, 100, 50, 200]);
+}
+
 function pauseGame(){
-  if(!game.running||game.paused)return;
+  if(!game.running || game.paused || game.resolving) return;
   game.paused=true;
   clearInterval(game.timer);
   clearTimeout(game.nextAttackTimer);
@@ -2045,7 +2053,7 @@ function pauseGame(){
 }
 
 function resumeGame(){
-  if(!game.running||!game.paused)return;
+  if(!game.running || !game.paused || game.resolving) return;
   game.paused=false;
   ui.pauseOverlay.classList.remove('active');
   if(game.activeAttack && game.timeLeft > 0){
@@ -2076,7 +2084,7 @@ window.addEventListener('popstate', () => {
   } else if (ui.pauseOverlay.classList.contains('active')) {
     ui.pauseOverlay.classList.remove('active');
     if (game.running && game.paused) resumeGame();
-  } else if (ui.screenGameOver.classList.contains('active')) {
+  } else if (ui.screenGameOver.classList.contains('active') || ui.screenVictory.classList.contains('active')) {
     showScreen('menu');
     updateMenu();
   } else if (ui.screenMap.classList.contains('active')) {
@@ -2086,29 +2094,6 @@ window.addEventListener('popstate', () => {
   } else if (game.running && !game.paused && ui.screenAttack.classList.contains('active')) {
     pauseGame();
   }
-});
-
-document.addEventListener('keydown',e=>{
-  if(state.hotkeysOn===false)return;
-  const tag=(e.target&&e.target.tagName)||'';
-  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;
-  if(ui.tutorialOverlay.classList.contains('active'))return;
-  if(document.querySelector('.mg-overlay.on'))return;
-  const modal=ui.modalOverlay.classList.contains('active');
-  const pause=ui.pauseOverlay.classList.contains('active');
-  if(e.code==='Space'||e.code==='Escape'){
-    if(modal&&e.code==='Escape'){ui.modalClose.click();return;}
-    if(pause){e.preventDefault();$('btnResume').click();return;}
-    if(!modal&&game.running&&ui.screenAttack.classList.contains('active')){e.preventDefault();pauseGame();}
-    return;
-  }
-  if(modal||pause||!game.running||game.resolving||!ui.screenAttack.classList.contains('active'))return;
-  const actMap={KeyA:'attack',KeyS:'shield',KeyD:'analyze'};
-  if(actMap[e.code]){const b=ui.actionBar.querySelector('[data-act="'+actMap[e.code]+'"]');if(b&&!b.disabled)b.click();return;}
-  if(e.code==='KeyQ'){if(!ui.btnHint.disabled)ui.btnHint.click();return;}
-  if(e.code==='KeyF'){if(!ui.btnFreeze.disabled)ui.btnFreeze.click();return;}
-  const dm=/^Digit([1-6])$/.exec(e.code);
-  if(dm){const btns=[...ui.optionsGrid.querySelectorAll('.option-btn')].filter(b=>!b.classList.contains('eliminated')&&!b.disabled);const b=btns[+dm[1]-1];if(b)b.click();}
 });
 
 let tutIndex=0;
@@ -2130,30 +2115,28 @@ function closeTutorial(){
   ui.tutorialOverlay.classList.remove('active');
 }
 
-$('btnStart').onclick=()=>openOperatorSelect('classic');
-$('btnBossRush').onclick=()=>openOperatorSelect('bossrush');
+$('btnStart').onclick=openOperatorSelect;
 $('btnBackMenu').onclick=()=>showScreen('menu');
 $('btnToMap').onclick=()=>openMap();
 $('btnBackOp').onclick=()=>openOperatorSelect();
 $('btnStartGame').onclick=startGame;
+$('btnBossRush').onclick=startBossRush;
 $('btnRestart').onclick=()=>{showScreen('menu');updateMenu();};
+$('btnQuickStart').onclick=()=>{selectedOperator=state.operator;selectedShields={...state.mapShields};openMap();};
+$('btnVictoryRestart').onclick=()=>{showScreen('menu');updateMenu();};
 $('btnUpgrade').onclick=openUpgrade;
 $('btnSkills').onclick=openSkills;
 $('btnContracts').onclick=openContracts;
 $('btnAchievements').onclick=openAchievements;
+$('btnCollection').onclick=openCollection;
 $('btnStats').onclick=openStats;
 $('btnSettings').onclick=openSettings;
 $('btnTutorial').onclick=()=>startTutorial(true);
 
 ui.modalClose.onclick = () => { if(ui.modalOverlay.classList.contains('active')) history.back(); };
 ui.modalOverlay.onclick = e => { if(e.target === ui.modalOverlay && ui.modalOverlay.classList.contains('active')) history.back(); };
-$('btnResume').onclick = () => { if(ui.pauseOverlay.classList.contains('active')) history.back(); };
-$('btnQuitGame').onclick = () => {
-    if(ui.pauseOverlay.classList.contains('active')){
-        history.back();
-        quitToMenu();
-    }
-};
+$('btnResume').onclick = resumeGame;
+$('btnQuitGame').onclick = quitToMenu;
 
 ui.tutNext.onclick=()=>{
   if(tutIndex>=TUTORIAL.length-1){closeTutorial();return;}
@@ -2173,9 +2156,37 @@ window.addEventListener('beforeunload',()=>{
   STORE.set('xp',state.xp);
 });
 
+function checkDailyBonus(){
+  const today = new Date().toISOString().slice(0,10);
+  if(state.lastDailyBonus !== today){
+    state.lastDailyBonus = today;
+    state.credits += 200;
+    state.xp += 50;
+    STORE.set('credits', state.credits);
+    STORE.set('xp', state.xp);
+    STORE.set('lastDailyBonus', today);
+    toast('🎁 Ежедневный бонус: +200₡, +50 XP', 'coin', 3000);
+  }
+  if(state.dailyDate !== today) {
+    state.dailyDate = today;
+    state.dailyStreak = 0;
+    state.dailyCompleted = false;
+    STORE.set('dailyDate', today);
+    STORE.set('dailyStreak', 0);
+    STORE.set('dailyCompleted', false);
+  }
+}
+
 function init(){
+  ['turbines','defense','staff','repair','energy','monitor'].forEach(k=>{
+    if(typeof state.branches[k] !== 'number') state.branches[k] = 0;
+  });
+  state.stats.bossRushBest = state.stats.bossRushBest || 0;
+  state.stats.bossRushWins = state.stats.bossRushWins || 0;
+  
   if(state.operator && !OPERATORS[state.operator]){state.operator=null;STORE.set('operator',null);}
   applyTheme(state.theme);
+  checkDailyBonus();
   tickIncome();
   checkContracts();
   updateMenu();
@@ -2186,8 +2197,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v'+VERSION,'color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cBig Update: Босс-раш • 97 атак • 6 веток прокачки • 11 навыков • Горячие клавиши','color:#8a9199;font-size:12px');
+console.log('%c⚡ WPPDef v1.1.0','color:#ff7b00;font-size:20px;font-weight:bold;');
+console.log('%cOptimized build','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
