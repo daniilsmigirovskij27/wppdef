@@ -1,14 +1,21 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!--
+  WPPDef © 2026 Даниил Шмигировский
+  Оригинал: https://github.com/daniilsmigirovskij27/wppdef
+  Любое копирование без указания автора — нарушение лицензии.
+-->
 <html lang="ru" data-theme="cyber">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="WPPDef — браузерная игра: защита ветроэлектростанции от кибератак.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v0.9.1 — Content & UI Fix</title>
+<title>WPPDef v0.9.3 — Modernized</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap');
-
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation}
 :root, [data-theme="cyber"] {
   --bg: #1a1c1e;
   --panel: #232629;
@@ -353,7 +360,6 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .boss-hp-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Oswald', sans-serif;font-size:10px;font-weight:700;color:var(--text);letter-spacing:2px}
 .prob-badge{font-size:10px!important;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--purple-dim);color:var(--purple)}
 
-/* FIX 1: Mini-game layout fix */
 #mgBody { width: 100%; display: flex; justify-content: center; }
 
 @media (max-width:600px){
@@ -380,7 +386,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v0.9.1 • CONTENT & UI FIX • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v0.9.3 • MODERNIZED • WIND POWER PLANT DEFENSE</div></header>
 
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
@@ -448,7 +454,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
   <div class="screen" id="screenAttack">
     <div class="ves-scene" id="vesScene"></div>
     <div class="attack-screen-inner">
-      <button class="pause-btn" id="btnPause">⏸️</button>
+      <button class="pause-btn" id="btnPause" aria-label="Пауза">⏸</button>
       <div id="bossHpContainer"></div>
       <div class="attack-header"><div class="attack-label" id="attackLabel">⚠️ ВХОДЯЩАЯ АТАКА</div><div class="attack-name" id="attackName">—</div></div>
       <div class="attack-description" id="attackDesc">—</div>
@@ -587,19 +593,16 @@ const ATTACKS=[
   {id:'cache_poison',category:'hard',name:'WEB CACHE POISONING',description:'Кэш отравлен.',wrongOptions:['Очистить','Игнорировать','Перезагрузить'],correctOption:'Cache-Control и Vary',damage:30,reward:148,hint:'Cache-Control.'},
   {id:'mem_cor',category:'hard',name:'MEMORY CORRUPTION',description:'Повреждение памяти.',wrongOptions:['Игнорировать','Перезагрузить','Сменить пароль'],correctOption:'ASLR и DEP',damage:32,reward:152,hint:'ASLR.'},
   {id:'sidechan',category:'hard',name:'SIDE-CHANNEL',description:'Анализ по времени.',wrongOptions:['Игнорировать','Ускорить ответ','Перезагрузить'],correctOption:'Константное время операций',damage:30,reward:148,hint:'Constant-time.'},
-  // NEW ATTACKS (15 total: 5 easy, 5 medium, 5 hard)
   {id:'spam_calls',category:'easy',name:'СПАМ-ЗВОНКИ',description:'Массовые звонки на телефоны диспетчеров.',wrongOptions:['Ответить всем','Игнорировать','Сменить номера'],correctOption:'Включить фильтр вызовов',damage:10,reward:38,hint:'Блокировка на уровне АТС.'},
   {id:'social_phish',category:'easy',name:'ФИШИНГ В СОЦСЕТЯХ',description:'Фейковый аккаунт директора просит данные.',wrongOptions:['Написать в ЛС','Заблокировать','Переслать коллегам'],correctOption:'Проверить через внутренний чат',damage:11,reward:40,hint:'Внешние каналы не доверенны.'},
   {id:'fake_login',category:'easy',name:'ПОДДЕЛЬНАЯ СТРАНИЦА',description:'Сотрудник ввёл пароль на клон-сайте.',wrongOptions:['Сменить пароль','Игнорировать','Удалить браузер'],correctOption:'Отозвать сессию и инструктаж',damage:12,reward:42,hint:'Срочный сброс токенов.'},
   {id:'weak_password',category:'easy',name:'СЛАБЫЙ ПАРОЛЬ',description:'Админ использует "admin123".',wrongOptions:['Уволить','Игнорировать','Сменить IP'],correctOption:'Принудительная смена + 2FA',damage:13,reward:45,hint:'Политика сложных паролей.'},
   {id:'usb_drop',category:'easy',name:'ЗАБЫТАЯ ФЛЕШКА',description:'Неизвестный USB в порту сервера.',wrongOptions:['Проверить содержимое','Выкинуть','Перезагрузить'],correctOption:'Физическое извлечение и аудит',damage:14,reward:48,hint:'Никакого подключения к сети.'},
-  
   {id:'iot_ddos',category:'medium',name:'DDoS ЧЕРЕЗ IoT',description:'Атака через умные камеры офиса.',wrongOptions:['Отключить интернет','Игнорировать','Перезагрузить роутер'],correctOption:'Сегментация сети IoT',damage:20,reward:75,hint:'Изоляция периметра.'},
   {id:'gps_spoof_med',category:'medium',name:'ПОДМЕНА GPS',description:'Трекер служебного авто показывает поле.',wrongOptions:['Позвонить водителю','Игнорировать','Перезагрузить трекер'],correctOption:'Переключить на ГЛОНАСС/инерцию',damage:21,reward:78,hint:'Резервные системы навигации.'},
   {id:'sms_intercept',category:'medium',name:'ПЕРЕХВАТ SMS',description:'Коды 2FA приходят на чужой номер.',wrongOptions:['Сменить номер','Игнорировать','Отключить 2FA'],correctOption:'Переход на аппаратные ключи',damage:22,reward:82,hint:'SIM-swap защита.'},
   {id:'mitm_proxy',category:'medium',name:'ПРОКСИ-АТАКА',description:'Трафик идёт через неизвестный узел.',wrongOptions:['Сменить пароль','Игнорировать','Перезагрузить ПК'],correctOption:'Принудительный HTTPS и проверка сертификатов',damage:20,reward:76,hint:'Шифрование канала.'},
   {id:'priv_esc_med',category:'medium',name:'ЭСКАЛАЦИЯ ПРАВ',description:'Пользователь получил доступ к /etc/shadow.',wrongOptions:['Удалить пользователя','Игнорировать','Перезагрузить'],correctOption:'Аудит sudo и закрытие уязвимости',damage:23,reward:84,hint:'Принцип наименьших привилегий.'},
-
   {id:'satellite_hack',category:'hard',name:'АТАКА НА СПУТНИК',description:'Попытка перехвата управления каналом связи.',wrongOptions:['Игнорировать','Перезагрузить терминал','Сменить частоту'],correctOption:'Активация резервного защищённого канала',damage:35,reward:150,hint:'Аппаратное шифрование.'},
   {id:'uav_firmware',category:'hard',name:'ПРОШИВКА БПЛА',description:'Обнаружена модификация кода дрона-инспектора.',wrongOptions:['Удалить дрон','Игнорировать','Перепрошить "как есть"'],correctOption:'Карантин и проверка хэш-сумм',damage:36,reward:155,hint:'Целостность кода.'},
   {id:'quantum_hack',category:'hard',name:'КВАНТОВЫЙ ВЗЛОМ',description:'Попытка расшифровки архивов алгоритмом Шора.',wrongOptions:['Удалить архивы','Игнорировать','Увеличить длину ключа RSA'],correctOption:'Переход на постквантовую криптографию',damage:38,reward:160,hint:'Алгоритмы, устойчивые к квантовым атакам.'},
@@ -620,12 +623,10 @@ const SKILLS=[
   {id:'analysis',name:'АНАЛИЗ',desc:'+10% к очкам',maxLevel:5,costs:[100,250,500,1000,2000]},
   {id:'shield',name:'КИБЕРЩИТ',desc:'−10% урона',maxLevel:5,costs:[150,300,600,1200,2500]},
   {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]},
-  // NEW SKILLS
   {id:'crit',name:'КРИТИЧЕСКИЙ ОТВЕТ',desc:'Шанс x2 очков за правильный ответ',maxLevel:5,costs:[500, 1500, 4000, 10000, 25000]},
   {id:'freeze',name:'ЗАМОРОЗКА',desc:'+5 сек к таймеру (1 раз за игру)',maxLevel:1,costs:[2000]}
 ];
 
-// FIX 4: Branches expanded to level 20 with exponential costs
 const BRANCHES={
   turbines:{name:'ВЕТРОГЕНЕРАТОРЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₡/сек`},
   defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
@@ -668,7 +669,7 @@ const CONTRACTS=[
 const TUTORIAL=[
   {icon:'🛡️',title:'ДОБРО ПОЖАЛОВАТЬ',text:'WPPDef — Wind Power Plant Defense. Защищайте турбины от кибератак в реальном времени.'},
   {icon:'🔥',title:'КОМБО-СИСТЕМА',text:'Серия правильных ответов даёт множитель x2, x3, x5! Промах — комбо сбрасывается.'},
-  {icon:'⚡',title:'РИСК / НАГРАДА',text:'Чем меньше времени — тем выше множитель очков. Рискуйте!'},
+  {icon:'⏱️',title:'РИСК / НАГРАДА',text:'Чем меньше времени — тем выше множитель очков. Рискуйте!'},
   {icon:'⚔️',title:'ТРИ ТАКТИКИ',text:'АТАКА (100%), ЗАЩИТА (Файрвол-мини-игра), АНАЛИЗ (убирает варианты + INTEL).'},
   {icon:'🎲',title:'СОБЫТИЯ',text:'Мини-игры на память, логику и реакцию.'},
   {icon:'🏭',title:'ЖИВАЯ ВЭС',text:'Турбины вверху — ваши. При уроне ломаются и искрят.'},
@@ -698,7 +699,6 @@ const RECENT_LIMIT=7;
 let game={};
 let selectedOperator=null;
 let selectedShields={};
-let shuffleTimer=null;
 
 const $=id=>document.getElementById(id);
 const ui={
@@ -809,7 +809,6 @@ function effects(){
   const d=state.branches.defense,s=state.branches.staff;const opBonus=state.operator?(OPERATORS[state.operator]?.bonus||{}):{};
   return{damageReduction:Math.min(0.7,d*0.05+getSkillDR()),timeBonus:d+getTimeBonus()+(opBonus.timeBonus||0)+(state.permanentBonuses?.timeBonus||0),scoreBonus:s*0.10+(getRewardMult()-1)+(state.permanentBonuses?.scoreBonus||0),xpBonus:s*0.05};
 }
-// FIX 2: Currency text updated to "Червонцы"
 function updateCreditsUI(){const cr=Math.floor(state.credits);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₡';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₡/с';}
 
 let audioCtx=null,ambientTimer=null,sirenTimer=null;
@@ -877,9 +876,10 @@ function checkAch(){
   if(state.operator&&opLevel(state.operator)>=5)unlock('op_master');
 }
 function updateStats(){
-  ui.statScore.textContent=game.score;ui.statLevel.textContent=game.level;ui.statThreat.textContent=game.threat+'%';
-  ui.statThreat.className='stat-value'+(game.threat>=80?' danger':game.threat>=50?' warning':'');
-  if(game.threat>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
+  const sc=game.score??0, lv=game.level??1, th=game.threat??0;
+  ui.statScore.textContent=sc;ui.statLevel.textContent=lv;ui.statThreat.textContent=th+'%';
+  ui.statThreat.className='stat-value'+(th>=80?' danger':th>=50?' warning':'');
+  if(th>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
 }
 function showScreen(n){
   ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver'].forEach(id=>$(id).classList.remove('active'));
@@ -973,11 +973,11 @@ function openStats(){
 function openSettings(){
   ui.modalTitle.textContent='⚙️ НАСТРОЙКИ';
   ui.modalBody.innerHTML=`
-    <div class="settings-row"><div><div class="settings-label">Тема</div></div><button class="btn ghost small" id="themeToggle">${state.theme==='cyber'?'🟠 Lesta':'🔴 Тревога'}</button></div>
+    <div class="settings-row"><div><div class="settings-label">Тема</div></div><button class="btn ghost small" id="themeToggle">${state.theme==='cyber'?'🟠 Кибер':'🔴 Тревога'}</button></div>
     <div class="settings-row"><div><div class="settings-label">Звуки</div></div><div class="toggle ${state.soundOn?'on':''}" id="soundToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
-    <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖</button></div>
-    <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️</button></div>`;
+    <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖 Повторить</button></div>
+    <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️ Сбросить</button></div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
   $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
@@ -994,20 +994,20 @@ function openSettings(){
 
 function renderOperators(){
   ui.operatorList.innerHTML='';
-  Object.values(OPERATORS).forEach(op=>{
+  Object.entries(OPERATORS).forEach(([opId,op])=>{
     const card=document.createElement('div');
-    const isSaved = !selectedOperator && state.operator === op.id;
-    const isSelected = selectedOperator === op.id || isSaved;
+    const isSaved = !selectedOperator && state.operator === opId;
+    const isSelected = selectedOperator === opId || isSaved;
     
-    if (isSaved) selectedOperator = op.id;
+    if (isSaved) selectedOperator = opId;
 
     card.className='operator-card'+(isSelected?' selected':'');
-    const lvl=opLevel(op.id);
-    const perks=opPerks(op.id);
+    const lvl=opLevel(opId);
+    const perks=opPerks(opId);
     const perksHTML=perks.map(p=>`<span class="perk ${p.unlocked?'unlocked':'locked'}">${p.unlocked?'✅':'🔒'} Ур.${p.lvl}: ${p.name} — ${p.desc}</span>`).join('');
     card.innerHTML=`<div class="operator-header"><div class="operator-icon">${op.icon}</div><div style="flex:1"><div class="operator-name">${op.name}</div><div class="operator-role">Ур. ${lvl}/10 • ${op.role}</div></div></div><div class="operator-desc">${op.desc}</div><div class="operator-perks">${perksHTML}</div>`;
     card.onclick=()=>{
-      selectedOperator=op.id;
+      selectedOperator=opId;
       document.querySelectorAll('.operator-card').forEach(c=>c.classList.remove('selected'));
       card.classList.add('selected');
       $('btnToMap').disabled=false;
@@ -1086,9 +1086,11 @@ function startShooter(){
       };
       ui.shooterField.appendChild(d);
     }
+    shooterState.remaining=5;
     shooterState.timer=setInterval(()=>{
-      const elapsed=(Date.now()-shooterState.startTime)/1000;
-      const remaining=Math.max(0,5-elapsed);
+      if(game.paused)return;
+      shooterState.remaining=Math.max(0,shooterState.remaining-0.05);
+      const remaining=shooterState.remaining;
       ui.shooterTimer.textContent=remaining.toFixed(1);
       if(remaining<=0){
         clearInterval(shooterState.timer);
@@ -1114,7 +1116,7 @@ const CFG = {
 
 const MUTATORS = [
   {id:'none',  name:'ШТИЛЬ',       desc:'Обычные условия'},
-  {id:'storm', name:'ШТОРМ',       desc:'Варианты перемешиваются каждые 3 сек'},
+  {id:'fog', name:'ТУМАН', desc:'Один вариант скрыт'},
   {id:'blind', name:'РАДИОТИШИНА', desc:'Таймер скрыт'},
   {id:'jam',   name:'ГЛУШИЛКА',    desc:'Подсказки отключены, урон −25%'},
   {id:'surge', name:'ПЕРЕГРУЗ',    desc:'Время −30%, очки ×1.6'}
@@ -1219,6 +1221,7 @@ function mgFirewall(){
     let left=CFG.firewallTime;
     $mg('mgTimer').textContent=left.toFixed(1);
     const t=setInterval(()=>{
+      if(game.paused)return;
       left-=.1;
       $mg('mgTimer').textContent=Math.max(0,left).toFixed(1);
       if(left<=0)finish(false);
@@ -1246,6 +1249,7 @@ function mgSequence(){
     btns.forEach(b=>b.disabled=true);
     let i=0;
     const show=setInterval(()=>{
+      if(game.paused)return;
       if(i>0)btns.find(b=>+b.dataset.p===seq[i-1])?.classList.remove('flash');
       if(i>=seq.length){
         clearInterval(show);
@@ -1266,6 +1270,7 @@ function mgSequence(){
         let tl=8;
         const tt=setInterval(()=>{
           if(done){clearInterval(tt);return;}
+          if(game.paused)return;
           tl-=.1;$mg('mgTimer').textContent='ПОВТОРИ '+tl.toFixed(1);
           if(tl<=0){clearInterval(tt);done=true;mg.classList.remove('on');res({ok:false});}
         },100);
@@ -1281,7 +1286,7 @@ function mgSequence(){
 function mgWires(){
   return new Promise(res=>{
     mg.classList.add('on');
-    $mg('mgTitle').textContent='✂️ ЛОГИЧЕСКАЯ БОМБА';
+    $mg('mgTitle').textContent='️ ЛОГИЧЕСКАЯ БОМБА';
     $mg('mgSub').textContent='Найди провод злоумышленника по уликам';
     const colors=['КРАСНЫЙ','СИНИЙ','ЗЕЛЁНЫЙ','ЖЁЛТЫЙ','БЕЛЫЙ','ЧЁРНЫЙ'];
     const target=Math.floor(Math.random()*6);
@@ -1298,6 +1303,7 @@ function mgWires(){
     $mg('mgTimer').textContent=tl.toFixed(1);
     const t=setInterval(()=>{
       if(done)return;
+      if(game.paused)return;
       tl-=.1;$mg('mgTimer').textContent=Math.max(0,tl).toFixed(1);
       if(tl<=0){done=true;clearInterval(t);mg.classList.remove('on');res({ok:false});}
     },100);
@@ -1339,7 +1345,9 @@ async function showRandomEvent(){
 async function startGame(){
   ensureAudio();startAmbient();tickIncome();checkContracts();
   
+  if(selectedOperator && !OPERATORS[selectedOperator]) selectedOperator=null;
   state.operator = selectedOperator || state.operator || 'engineer';
+  if(!OPERATORS[state.operator]) state.operator='engineer';
   
   if(Object.keys(selectedShields).length === 0) {
       toast('⚠️ Распределите щиты на карте ВЭС!', 'error', 2000);
@@ -1360,7 +1368,7 @@ async function startGame(){
     const hLvl = opLevel('hacker');
     hackerSkips = 1;
     if(hLvl >= 3) hackerSkips += 1;
-    if(hLvl >= 9) hackerSkips += 1;
+    if(hLvl >= 9) hackerSkips += 2;
   }
   
   game={
@@ -1371,10 +1379,10 @@ async function startGame(){
     running:true,paused:false,nextAttackTimer:null,
     hintsLeft:3+getFreeHints()+(opBonus.freeHints||0),
     hintUsed:false,
-    freezeUsed: false, // FIX 5: Track freeze usage
+    freezeUsed: false,
     autoSkipLeft: hackerSkips,
     gameStartTime:Date.now(),totalTime:0,
-    attackCounter:0,shooterBonus:0,tempScoreBonus:0,eventTimeBonus:0,
+    attackCounter:0,shooterBonus:0,tempScoreBonus:0,
     action:'attack',combo:0,maxCombo:0,bossHp:0,riskAnswered:false,
     sector:0,mutIdx:0,resolving:false,analyzed:false,
     bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
@@ -1388,7 +1396,6 @@ async function startGame(){
   ui.hintsLeft.textContent=game.hintsLeft;
   ui.btnHint.disabled=false;
   
-  // FIX 5: Initialize freeze button state
   const freezeLvl = getSkillLevel('freeze');
   ui.freezeLeft.textContent = freezeLvl > 0 ? '1' : '0';
   ui.btnFreeze.disabled = freezeLvl === 0;
@@ -1396,7 +1403,7 @@ async function startGame(){
   ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
   renderVesScene();
   renderIntel();
-  toast('🎮 Специалист: '+OPERATORS[state.operator].name,'success');
+  toast(' Специалист: '+OPERATORS[state.operator].name,'success');
   game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
 }
 
@@ -1407,7 +1414,7 @@ async function spawnAttack(){
     const ok=await startShooter();
     if(!game.running)return;
     if(ok){game.score+=50;game.shooterBonus=2;toast('🎯 +50 очков за дронов!','success',2000);playSuccess();updateStats();}
-    else{game.threat=Math.min(100,game.threat+10);game.shooterBonus=-2;toast('💥 Дроны прорвались! +10% угрозы','error',2000);playError();updateStats();if(game.threat>=100){endGame();return;}}
+    else{game.threat=Math.min(100,game.threat+10);game.shooterBonus=-2;toast(' Дроны прорвались! +10% угрозы','error',2000);playError();updateStats();if(game.threat>=100){endGame();return;}}
   }else{
     game.shooterBonus=0;
   }
@@ -1440,6 +1447,25 @@ async function spawnAttack(){
   toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2000);
 }
 
+function startPhaseTimer(){
+  clearInterval(game.timer);
+  let ticked=5;
+  game.timer=setInterval(()=>{
+    if(game.paused)return;
+    game.timeLeft--;
+    ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
+    updateRiskIndicator();
+    if(game.timeLeft<=5){
+      ui.timerValue.className='timer-value critical';
+      if(game.timeLeft===ticked){playTick();ticked--;}
+    }
+    if(game.timeLeft<=0){
+      clearInterval(game.timer);
+      handleAnswer(false,null);
+    }
+  },1000);
+}
+
 function renderPhase(){
   const a=game.activeAttack;
   if(!a)return;
@@ -1467,7 +1493,7 @@ function renderPhase(){
     ui.optionsGrid.appendChild(b);
   });
 
-  let sec=CFG.baseTime(game.level)+effects().timeBonus+(game.shooterBonus||0)+(game.eventTimeBonus||0);
+  let sec=CFG.baseTime(game.level)+effects().timeBonus+(game.shooterBonus||0);
   if(mutator().id==='surge')sec*=.7;
   if(boss)sec=Math.max(7,sec-2-game.phaseIndex*1.5);
   sec=Math.max(5,Math.round(sec));
@@ -1510,44 +1536,31 @@ function renderPhase(){
     ui.bossHpContainer.innerHTML='';
   }
 
-  clearInterval(game.timer);
-  let ticked=5;
-  game.timer=setInterval(()=>{
-    if(game.paused)return;
-    game.timeLeft--;
-    ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
-    updateRiskIndicator();
-    if(game.timeLeft<=5){
-      ui.timerValue.className='timer-value critical';
-      if(game.timeLeft===ticked){playTick();ticked--;}
-    }
-    if(game.timeLeft<=0){
-      clearInterval(game.timer);
-      handleAnswer(false,null);
-    }
-  },1000);
+  startPhaseTimer();
 
-  clearInterval(shuffleTimer);
-  if(mutator().id==='storm'){
-    shuffleTimer=setInterval(()=>{
-      if(game.paused||!game.activePhase)return;
-      const kids=[...ui.optionsGrid.children].filter(b=>!b.classList.contains('eliminated'));
-      kids.sort(()=>Math.random()-.5).forEach(k=>ui.optionsGrid.appendChild(k));
-      beep(400,40,.03);
-    },3000);
+  if(mutator().id==='fog'){
+    const phase = game.activePhase;
+    if(phase) {
+      const wrongOptions = [...ui.optionsGrid.children].filter(b => 
+        b.textContent !== phase.correctOption && !b.classList.contains('eliminated')
+      );
+      if(wrongOptions.length > 2) {
+        const idx = Math.floor(Math.random() * wrongOptions.length);
+        wrongOptions[idx].classList.add('eliminated');
+        wrongOptions[idx].disabled = true;
+      }
+    }
   }
   renderIntel();
   renderVesScene();
 }
 
-// FIX 5: Improved Freeze button logic (adds time directly instead of complex interval clearing)
 ui.btnFreeze.onclick = function() {
   if (getSkillLevel('freeze') > 0 && !game.freezeUsed && game.running && !game.paused && game.timeLeft > 0 && game.activeAttack) {
     game.freezeUsed = true;
     ui.freezeLeft.textContent = '0';
     ui.btnFreeze.disabled = true;
 
-    // Просто добавляем 5 секунд к текущему таймеру
     game.timeLeft += 5;
     ui.timerValue.textContent = mutator().id === 'blind' ? '??' : game.timeLeft;
     ui.timerValue.classList.remove('critical');
@@ -1574,7 +1587,6 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
     if(act==='shield'){
       game.resolving=true;
       clearInterval(game.timer);
-      clearInterval(shuffleTimer);
       const r=await mgFirewall();
       game.resolving=false;
       game.usedShield=true;
@@ -1600,7 +1612,7 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
         game.timeLeft=Math.max(1,game.timeLeft-CFG.analyzeCost);
       } else {
         game.forensicFreeUsed=true;
-        toast('🔬 Бесплатный анализ (Форензик ур.6) — без потери времени!','info',2000);
+        toast(' Бесплатный анализ (Форензик ур.6) — без потери времени!','info',2000);
       }
       
       ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
@@ -1619,7 +1631,7 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
       renderIntel();
       beep(1200,120,.1,'triangle');
       if(!freeAnalyze){
-        toast('🔍 −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+CFG.intelPerScan+' INTEL','info',2200);
+        toast(' −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+CFG.intelPerScan+' INTEL','info',2200);
       }
       return;
     }
@@ -1668,7 +1680,6 @@ $('btnSkip').onclick=function(){
   if(game.autoSkipLeft<=0)$('btnSkip').style.display='none';
   
   clearInterval(game.timer);
-  clearInterval(shuffleTimer);
   game.resolving=true;
   
   beep(600,150,0.1,'triangle');
@@ -1691,7 +1702,6 @@ $('btnSkip').onclick=function(){
 function handleAnswer(correct,btn,emp){
   if(game.resolving)return;
   clearInterval(game.timer);
-  clearInterval(shuffleTimer);
   const ph=game.activePhase;
   game.lastAnsweredBtn=btn;
   
@@ -1785,8 +1795,7 @@ function finishRound(correct,a,opt){
   if(correct){
     let pts=opt.noScore?0:Math.round(a.reward*rM*(isBoss?2.2:1));
     
-    // FIX 5: Critical hit logic
-    const critChance = getSkillLevel('crit') * 0.05; // 5%, 10%, 15%, 20%, 25%
+    const critChance = getSkillLevel('crit') * 0.05;
     if (critChance > 0 && Math.random() < critChance) {
       pts *= 2;
       toast('💥 КРИТИЧЕСКИЙ ОТВЕТ! x2 очков', 'success', 1500);
@@ -1796,7 +1805,7 @@ function finishRound(correct,a,opt){
     game.combo=(game.combo||0)+1;
     game.streakRepelled=(game.streakRepelled||0)+1;
     game.maxCombo=Math.max(game.maxCombo||0,game.combo);
-    const cm=game.combo>=10?5:game.combo>=7?3:game.combo>=4?2:1;
+    const cm=comboMultiplier(game.combo);
     if(cm>1&&pts>0){pts=Math.round(pts*cm);showCombo(cm);}
     game.score+=pts;
     game.threat=Math.max(0,game.threat-(isBoss?18:8));
@@ -1836,7 +1845,6 @@ function finishRound(correct,a,opt){
   }
 
   game.tempScoreBonus=0;
-  game.eventTimeBonus=0;
   game.hintUsed=false;
   game.analyzed=false;
   game.usedShield=false;
@@ -1885,7 +1893,6 @@ function endGame(){
   game.running=false;
   game.paused=false;
   clearInterval(game.timer);
-  clearInterval(shuffleTimer);
   clearTimeout(game.nextAttackTimer);
   stopAmbient();
   stopSiren();
@@ -1916,7 +1923,6 @@ function endGame(){
   if(game.maxCombo>state.stats.maxCombo)state.stats.maxCombo=game.maxCombo;
   STORE.set('stats',state.stats);
 
-  updateContract('games',1);
   updateContract('level',game.level,true);
   updateContract('score',game.score,true);
   updateContract('combo',game.maxCombo,true);
@@ -1938,42 +1944,25 @@ function pauseGame(){
   if(!game.running||game.paused)return;
   game.paused=true;
   clearInterval(game.timer);
-  clearInterval(shuffleTimer);
   clearTimeout(game.nextAttackTimer);
-  history.pushState({pause: true}, '');
   ui.pauseOverlay.classList.add('active');
 }
+
 function resumeGame(){
   if(!game.running||!game.paused)return;
   game.paused=false;
   ui.pauseOverlay.classList.remove('active');
-  if(game.activeAttack&&game.timeLeft>0){
-    let t=5;
-    game.timer=setInterval(()=>{
-      if(game.paused)return;
-      game.timeLeft--;
-      ui.timerValue.textContent=mutator().id==='blind'?'??':game.timeLeft;
-      updateRiskIndicator();
-      if(game.timeLeft<=5){
-        ui.timerValue.className='timer-value critical';
-        if(game.timeLeft===t){playTick();t--;}
-      }
-      if(game.timeLeft<=0){
-        clearInterval(game.timer);
-        handleAnswer(false,null);
-      }
-    },1000);
+  if(game.activeAttack && game.timeLeft > 0){
+    startPhaseTimer();
   } else if(game.running && !game.activeAttack) {
       game.nextAttackTimer = setTimeout(()=>spawnAttack(), 1000);
-  } else if(game.timeLeft>0){
-    spawnAttack();
   }
 }
+
 function quitToMenu(){
   game.running=false;
   game.paused=false;
   clearInterval(game.timer);
-  clearInterval(shuffleTimer);
   clearTimeout(game.nextAttackTimer);
   stopAmbient();
   stopSiren();
@@ -1982,7 +1971,9 @@ function quitToMenu(){
   updateMenu();
 }
 
-// Обработка кнопки "Назад" на Android
+const pauseBtn = document.getElementById('btnPause');
+if(pauseBtn) pauseBtn.addEventListener('click', pauseGame);
+
 window.addEventListener('popstate', () => {
   if (ui.modalOverlay.classList.contains('active')) {
     ui.modalOverlay.classList.remove('active');
@@ -2063,6 +2054,7 @@ window.addEventListener('beforeunload',()=>{
 });
 
 function init(){
+  if(state.operator && !OPERATORS[state.operator]){state.operator=null;STORE.set('operator',null);}
   applyTheme(state.theme);
   tickIncome();
   checkContracts();
@@ -2074,8 +2066,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v0.9.1','color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cContent & UI Fix','color:#8a9199;font-size:12px');
+console.log('%c⚡ WPPDef v0.9.3','color:#ff7b00;font-size:20px;font-weight:bold;');
+console.log('%cModernized build','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
