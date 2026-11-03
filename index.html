@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v1.1.0 — Optimized</title>
+<title>WPPDef v1.1.0 — Fixed</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
@@ -253,7 +253,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v1.1.0 • OPTIMIZED • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v1.1.0 • FIXED • WIND POWER PLANT DEFENSE</div></header>
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
   <div class="stat-card"><div class="stat-label">Уровень</div><div class="stat-value" id="statLevel">1</div></div>
@@ -276,10 +276,11 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <button class="menu-btn-mini" id="btnSkills">🎓 Навыки</button>
       <button class="menu-btn-mini" id="btnContracts">📜 Контракты</button>
       <button class="menu-btn-mini" id="btnAchievements">🏆 Достижения</button>
-      <button class="menu-btn-mini" id="btnStats">📊 Статистика</button>
       <button class="menu-btn-mini" id="btnCollection">📚 Коллекция</button>
+      <button class="menu-btn-mini" id="btnStats">📊 Статистика</button>
       <button class="menu-btn-mini" id="btnSettings">⚙️ Настройки</button>
       <button class="menu-btn-mini" id="btnDaily" style="border-color:var(--info);color:var(--info)">📅 Вызов</button>
+      <button class="menu-btn-mini" id="btnBossRush" style="border-color:var(--danger);color:var(--danger)">👹 БОСС-РАШ</button>
     </div>
     <button class="btn" id="btnStart" style="margin-bottom:10px">▶️ НАЧАТЬ ИГРУ</button>
     <button class="btn ghost small" id="btnTutorial">📖 Как играть</button>
@@ -570,25 +571,51 @@ const TUTORIAL=[
   {icon:'🌳',title:'6 ВЕТОК ПРОКАЧКИ',text:'Мельницы, Защита, Персонал, Ремонт, Энергоблок, Мониторинг.'}
 ];
 
-const state={
-  highScore:STORE.get('highScore',0),gamesPlayed:STORE.get('gamesPlayed',0),
-  skills:STORE.get('skills',{}),achievements:STORE.get('achievements',[]),
-  stats:STORE.get('stats',{}),xp:STORE.get('xp',0),tutorialSeen:STORE.get('tutorialSeen',false),
-  theme:STORE.get('theme','cyber'),soundOn:STORE.get('soundOn',true),vibeOn:STORE.get('vibeOn',true),
-  credits:STORE.get('credits',0),lastIncomeTick:STORE.get('lastIncomeTick',Date.now()),
-  branches:STORE.get('branches',{turbines:0,defense:0,staff:0}),
-  recentAttacks:STORE.get('recentAttacks',[]),operator:STORE.get('operator',null),
-  mapShields:STORE.get('mapShields',{}),contracts:STORE.get('contracts',{date:null,progress:{},claimed:[]}),
-  shooterWins:STORE.get('shooterWins',0),
-  operatorXP:STORE.get('operatorXP',{analyst:0,engineer:0,hacker:0,dispatcher:0,forensic:0}),
-  permanentBonuses:STORE.get('permanentBonuses',{scoreBonus:0,timeBonus:0}),
-  turbineHealth:STORE.get('turbineHealth',{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100}),
-  lastDailyBonus:STORE.get('lastDailyBonus',null),dailyDate:STORE.get('dailyDate',null),
-  dailyStreak:STORE.get('dailyStreak',0),dailyCompleted:STORE.get('dailyCompleted',false),
-  seenAttacks:STORE.get('seenAttacks',[]),difficulty:STORE.get('difficulty','normal'),
-  attackMistakes:STORE.get('attackMistakes',{})
+const rawBranches = STORE.get('branches', {});
+const safeBranches = {
+  turbines: typeof rawBranches.turbines === 'number' ? rawBranches.turbines : 0,
+  defense: typeof rawBranches.defense === 'number' ? rawBranches.defense : 0,
+  staff: typeof rawBranches.staff === 'number' ? rawBranches.staff : 0,
+  repair: typeof rawBranches.repair === 'number' ? rawBranches.repair : 0,
+  energy: typeof rawBranches.energy === 'number' ? rawBranches.energy : 0,
+  monitor: typeof rawBranches.monitor === 'number' ? rawBranches.monitor : 0
 };
-['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k=>{state.stats[k]=state.stats[k]||0;});
+
+const state = {
+  highScore: STORE.get('highScore', 0),
+  gamesPlayed: STORE.get('gamesPlayed', 0),
+  skills: STORE.get('skills', {}),
+  achievements: STORE.get('achievements', []),
+  stats: STORE.get('stats', {}),
+  xp: STORE.get('xp', 0),
+  tutorialSeen: STORE.get('tutorialSeen', false),
+  theme: STORE.get('theme', 'cyber'),
+  soundOn: STORE.get('soundOn', true),
+  vibeOn: STORE.get('vibeOn', true),
+  credits: STORE.get('credits', 0),
+  lastIncomeTick: STORE.get('lastIncomeTick', Date.now()),
+  branches: safeBranches,
+  recentAttacks: STORE.get('recentAttacks', []),
+  operator: STORE.get('operator', null),
+  mapShields: STORE.get('mapShields', {}),
+  contracts: STORE.get('contracts', {date:null, progress:{}, claimed:[]}),
+  shooterWins: STORE.get('shooterWins', 0),
+  operatorXP: STORE.get('operatorXP', {analyst:0,engineer:0,hacker:0,dispatcher:0,forensic:0}),
+  permanentBonuses: STORE.get('permanentBonuses', {scoreBonus:0,timeBonus:0}),
+  turbineHealth: STORE.get('turbineHealth', {'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100}),
+  lastDailyBonus: STORE.get('lastDailyBonus', null),
+  dailyDate: STORE.get('dailyDate', null),
+  dailyStreak: STORE.get('dailyStreak', 0),
+  dailyCompleted: STORE.get('dailyCompleted', false),
+  seenAttacks: Array.isArray(STORE.get('seenAttacks')) ? STORE.get('seenAttacks') : [],
+  difficulty: STORE.get('difficulty', 'normal'),
+  attackMistakes: STORE.get('attackMistakes', {})
+};
+
+if (!state.stats || typeof state.stats !== 'object') state.stats = {};
+['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k => {
+  if (typeof state.stats[k] !== 'number') state.stats[k] = 0;
+});
 
 const TURBINES=['ВЭУ-1','ВЭУ-2','ВЭУ-3','ВЭУ-4','ВЭУ-5'];
 const RECENT_LIMIT=7;
@@ -692,19 +719,19 @@ function updateRiskIndicator(){
 }
 function riskMultiplier(){if(!game.maxTime||!game.timeLeft)return 1;const ratio=game.timeLeft/game.maxTime;if(ratio<=0.2)return 3;if(ratio<=0.4)return 2;return 1;}
 
-function incomePerSec(){return state.branches.turbines*0.1;}
+function incomePerSec(){return (state.branches.turbines || 0) * 0.1;}
 function tickIncome(){
   const lvl=state.branches.turbines;if(lvl<=0){state.lastIncomeTick=Date.now();return;}
   const perSec=lvl*0.1;const now=Date.now();const elapsed=(now-state.lastIncomeTick)/1000;
   const gained=Math.min(elapsed,4*3600)*perSec;
-  if(gained>=0.01){state.credits+=gained;state.lastIncomeTick=now;STORE.set('credits',state.credits);STORE.set('lastIncomeTick',now);updateCreditsUI();}
+  if(gained>=0.01){state.credits=(state.credits||0)+gained;state.lastIncomeTick=now;STORE.set('credits',state.credits);STORE.set('lastIncomeTick',now);updateCreditsUI();}
   else{state.lastIncomeTick=now;STORE.set('lastIncomeTick',now);}
 }
 function effects(){
   const d=state.branches.defense,s=state.branches.staff;const opBonus=state.operator?(OPERATORS[state.operator]?.bonus||{}):{};
   return{damageReduction:Math.min(0.7,d*0.05+getSkillDR()),timeBonus:d+getTimeBonus()+(opBonus.timeBonus||0)+(state.permanentBonuses?.timeBonus||0),scoreBonus:s*0.10+(getRewardMult()-1)+(state.permanentBonuses?.scoreBonus||0),xpBonus:s*0.05};
 }
-function updateCreditsUI(){const cr=Math.floor(state.credits);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₡';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₡/с';}
+function updateCreditsUI(){const cr=Math.floor(state.credits||0);ui.statCredits.textContent=cr;ui.menuCredits.textContent=cr+' ₡';ui.menuIncome.textContent=incomePerSec().toFixed(1)+' ₡/с';}
 
 let audioCtx=null,ambientTimer=null,sirenTimer=null;
 function ensureAudio(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch{}}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();}
@@ -768,7 +795,7 @@ function checkAch(){
   if(state.seenAttacks.length >= ATTACKS.length + BOSSES.length) unlock('seen_all');
 }
 function updateStats(){
-  const sc=game.score??0, lv=game.level??1, th=game.threat??0;
+  const sc=game.score||0, lv=game.level||1, th=game.threat||0;
   ui.statScore.textContent=sc;ui.statLevel.textContent=lv;ui.statThreat.textContent=th+'%';
   ui.statThreat.className='stat-value'+(th>=80?' danger':th>=50?' warning':'');
   if(th>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
@@ -803,17 +830,17 @@ function openContracts(){
     html+=`<div class="contract-card ${done?'done':''} ${claimed?'claimed':''}"><div class="contract-header"><div class="contract-name">${c.name}</div><div class="contract-reward">+${c.reward} ₡</div></div><div class="contract-desc">${prog}/${c.target}</div><div class="contract-progress"><div class="contract-bar" style="width:${pct}%"></div></div><button class="contract-claim" data-c="${c.id}" ${!done||claimed?'disabled':''}>${claimed?'✓ ПОЛУЧЕНО':done?'ЗАБРАТЬ':'В ПРОЦЕССЕ'}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
-  ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits+=r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
+  ui.modalBody.querySelectorAll('.contract-claim').forEach(btn=>{btn.onclick=()=>{const c=CONTRACTS.find(x=>x.id===btn.dataset.c);if(!c)return;const r=c.reward;state.credits=(state.credits||0)+r;state.contracts.claimed.push(c.id);STORE.set('credits',state.credits);STORE.set('contracts',state.contracts);beep(880,100,0.12);toast('+'+r+' ₡','coin',2500);updateCreditsUI();openContracts();};});
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
 function openUpgrade(){
-  ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
-  for(const key of ['turbines','defense','staff','repair','energy','monitor']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
+  ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits||0)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
+  for(const key of ['turbines','defense','staff','repair','energy','monitor']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&(state.credits||0)>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
     html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₡`}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
-  ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if(state.credits<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
+  ui.modalBody.querySelectorAll('.branch-buy').forEach(btn=>{btn.onclick=()=>{const key=btn.dataset.b,b=BRANCHES[key],lvl=state.branches[key];if(lvl>=b.maxLevel)return;const cost=b.costs[lvl];if((state.credits||0)<cost)return;state.credits-=cost;state.branches[key]=lvl+1;STORE.set('credits',state.credits);STORE.set('branches',state.branches);beep(880,120,0.12);vibe([30,30,30]);toast('✅ '+b.name+' → '+(lvl+1),'success');openUpgrade();};});
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
 }
@@ -888,7 +915,7 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">Босс-раш побед</div><div class="stat-item-value">${s.bossRushWins || 0}</div></div>
     <div class="stat-item"><div class="stat-item-label">В игре</div><div class="stat-item-value">${h}ч ${m}м</div></div>
     <div class="stat-item"><div class="stat-item-label">XP</div><div class="stat-item-value">${state.xp}</div></div>
-    <div class="stat-item"><div class="stat-item-label">Червонцы</div><div class="stat-item-value">${Math.floor(state.credits)} ₡</div></div>
+    <div class="stat-item"><div class="stat-item-label">Червонцы</div><div class="stat-item-value">${Math.floor(state.credits||0)} ₡</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
     ${mistHtml}
   </div>`;
@@ -1283,7 +1310,7 @@ async function showRandomEvent(){
   STORE.set('stats',state.stats);
   if(r.ok){
     const cr=80+(game.level||1)*15;
-    state.credits+=cr;STORE.set('credits',state.credits);updateCreditsUI();
+    state.credits=(state.credits||0)+cr;STORE.set('credits',state.credits);updateCreditsUI();
     game.intel=Math.min(100,(game.intel||0)+40);
     game.threat=Math.max(0,game.threat-6);
     toast('✅ Инцидент закрыт: +'+cr+' ₡, +40 INTEL, −6% угрозы','coin',3000);
@@ -1735,39 +1762,36 @@ function resolveRound(correct,opt){
       game.score += 25;
       const dmg=(game.bossMaxHp||100)/(game.bossPhases||3);
       game.bossHp=Math.max(0,(game.bossHp||0)-dmg);
-      if(ui.bossHpContainer){
-        const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
-        let dots = '';
-        for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
-        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
-      }
       playSuccess();vibe([30,30,30]);
       toast('💥 Удар по ядру! −'+Math.round(dmg)+' HP','success',1400);
     }else{
-      game.threat = Math.min(100, game.threat + 5);
+      game.threat = Math.min(100, (game.threat||0) + 5);
       game.bossHp=Math.min(game.bossMaxHp,(game.bossHp||0)+15);
-      if(ui.bossHpContainer){
-        const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
-        let dots = '';
-        for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
-        ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
-      }
       playError();vibe(200);
       toast('😈 Босс восстановил +15 HP, +5% угрозы','error',1800);
     }
-    if(game.phaseIndex<(game.bossPhases-1)){
-      setTimeout(()=>{
-        game.phaseIndex++;
-        game.analyzed=false;
-        game.blockedAct=['shield','analyze'][Math.floor(Math.random()*2)];
-        game.resolving=false;
-        renderPhase();
-        toast('⚠️ ФАЗА '+(game.phaseIndex+1)+' • босс блокирует '+(game.blockedAct==='shield'?'ЗАЩИТУ':'АНАЛИЗ'),'warning',2600);
-      },1200);
+    
+    if(ui.bossHpContainer){
+      const max=game.bossMaxHp||100,hp=Math.max(0,game.bossHp||0);
+      let dots = '';
+      for(let i=0; i<3; i++) dots += i <= game.phaseIndex ? '●' : '○';
+      ui.bossHpContainer.innerHTML=`<div class="boss-hp"><div class="boss-hp-bar" style="width:${hp/max*100}%"></div><div class="boss-hp-label">БОСС ${Math.ceil(hp)}/${max} HP • ${dots}</div></div>`;
+    }
+
+    const win=(game.bossHp||0)<=0;
+    if(win || game.phaseIndex >= (game.bossPhases-1)){
+      setTimeout(()=>finishRound(win,a,{boss:true,emp:opt.emp}),700);
       return;
     }
-    const win=(game.bossHp||0)<=0;
-    setTimeout(()=>finishRound(win,a,{boss:true,emp:opt.emp}),700);
+    
+    setTimeout(()=>{
+      game.phaseIndex++;
+      game.analyzed=false;
+      game.blockedAct=['shield','analyze'][Math.floor(Math.random()*2)];
+      game.resolving=false;
+      renderPhase();
+      toast('⚠️ ФАЗА '+(game.phaseIndex+1)+' • босс блокирует '+(game.blockedAct==='shield'?'ЗАЩИТУ':'АНАЛИЗ'),'warning',2600);
+    },1200);
     return;
   }
   setTimeout(()=>finishRound(correct,a,opt),550);
@@ -1880,7 +1904,7 @@ function finishRound(correct,a,opt){
       STORE.set('dailyStreak', state.dailyStreak);
       if(state.dailyStreak >= 10) {
         state.dailyCompleted = true;
-        state.credits += 500;
+        state.credits = (state.credits||0) + 500;
         STORE.set('dailyCompleted', true);
         STORE.set('credits', state.credits);
         toast('🏆 Ежедневный вызов: 10 подряд! +500₡', 'achievement', 3000);
@@ -1957,7 +1981,7 @@ function finishRound(correct,a,opt){
     let bonus=500+game.score*0.25;
     if(getSkillLevel('energy')>0) bonus = Math.round(bonus * (1 + getSkillLevel('energy') * 0.08));
     
-    state.credits+=Math.round(bonus);
+    state.credits=(state.credits||0)+Math.round(bonus);
     STORE.set('credits',state.credits);
     showBanner('СМЕНА СДАНА','Бонус +'+Math.round(bonus)+' ₡');
     toast('🏅 ВЭС устояла все 15 уровней!','achievement',5000);
@@ -1987,17 +2011,17 @@ function endGame(){
   }
   state.gamesPlayed++;
   STORE.set('gamesPlayed',state.gamesPlayed);
-  state.xp+=xp;
-  state.credits+=cr;
+  state.xp=(state.xp||0)+xp;
+  state.credits=(state.credits||0)+cr;
   STORE.set('xp',state.xp);
   STORE.set('credits',state.credits);
   state.lastIncomeTick=Date.now();
   STORE.set('lastIncomeTick',state.lastIncomeTick);
 
-  state.stats.totalScore+=game.score;
-  state.stats.totalRepelled+=game.attacksRepelled;
-  state.stats.totalMissed+=game.attacksMissed;
-  state.stats.totalTime+=game.totalTime;
+  state.stats.totalScore=(state.stats.totalScore||0)+game.score;
+  state.stats.totalRepelled=(state.stats.totalRepelled||0)+game.attacksRepelled;
+  state.stats.totalMissed=(state.stats.totalMissed||0)+game.attacksMissed;
+  state.stats.totalTime=(state.stats.totalTime||0)+game.totalTime;
   if(game.level>state.stats.bestLevel)state.stats.bestLevel=game.level;
   if(game.maxCombo>state.stats.maxCombo)state.stats.maxCombo=game.maxCombo;
   STORE.set('stats',state.stats);
@@ -2033,7 +2057,7 @@ function showVictory(){
   }
   STORE.set('stats', state.stats);
   
-  state.credits += 1000;
+  state.credits = (state.credits||0) + 1000;
   STORE.set('credits', state.credits);
   updateCreditsUI();
   unlock('boss_rush_win');
@@ -2120,7 +2144,7 @@ $('btnBackMenu').onclick=()=>showScreen('menu');
 $('btnToMap').onclick=()=>openMap();
 $('btnBackOp').onclick=()=>openOperatorSelect();
 $('btnStartGame').onclick=startGame;
-$('btnBossRush').onclick=startBossRush;
+if($('btnBossRush')) $('btnBossRush').onclick=startBossRush;
 $('btnRestart').onclick=()=>{showScreen('menu');updateMenu();};
 $('btnQuickStart').onclick=()=>{selectedOperator=state.operator;selectedShields={...state.mapShields};openMap();};
 $('btnVictoryRestart').onclick=()=>{showScreen('menu');updateMenu();};
@@ -2160,8 +2184,8 @@ function checkDailyBonus(){
   const today = new Date().toISOString().slice(0,10);
   if(state.lastDailyBonus !== today){
     state.lastDailyBonus = today;
-    state.credits += 200;
-    state.xp += 50;
+    state.credits = (state.credits||0) + 200;
+    state.xp = (state.xp||0) + 50;
     STORE.set('credits', state.credits);
     STORE.set('xp', state.xp);
     STORE.set('lastDailyBonus', today);
@@ -2198,7 +2222,7 @@ function init(){
 init();
 
 console.log('%c⚡ WPPDef v1.1.0','color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cOptimized build','color:#8a9199;font-size:12px');
+console.log('%cFixed build','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
