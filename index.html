@@ -1,6 +1,8 @@
 <!DOCTYPE html><!--
   WPPDef © 2026 Даниил Шмигировский
   Оригинал: https://github.com/daniilsmigirovskij27/wppdef
+  v1.0.0 — Большое обновление: Босс-раш, 20 новых атак (97 всего), 6 веток прокачки,
+  11 навыков, горячие клавиши. Прогресс сохранений v0.9.x полностью совместим.
   Любое копирование без указания автора — нарушение лицензии.
 -->
 <html lang="ru" data-theme="cyber">
@@ -12,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v0.9.3 — Modernized</title>
+<title>WPPDef v1.0.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
@@ -164,6 +166,11 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn.skip{border-color:var(--gold);color:var(--gold)}
 .btn.skip:hover{background:var(--gold-dim);color:var(--gold)}
+.btn.rush{border-color:var(--purple);color:var(--purple)}
+.btn.rush:hover{background:var(--purple-dim);border-color:var(--purple);color:var(--purple)}
+.option-btn[data-k]::before{content:'['attr(data-k)'] ';color:var(--dim);font-size:11px;font-weight:700;opacity:.85}
+.action-btn[data-k]::after,.attack-tools .btn[data-k]::after{content:'['attr(data-k)']';color:var(--dim);font-size:10px;font-weight:700;margin-left:5px;opacity:.85}
+@media (hover:none) and (pointer:coarse){.option-btn[data-k]::before,.action-btn[data-k]::after,.attack-tools .btn[data-k]::after{content:none}}
 
 .attack-screen-inner{width:100%;display:flex;flex-direction:column;align-items:stretch;position:relative}
 .attack-header{text-align:center;margin-bottom:10px}
@@ -386,7 +393,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v0.9.3 • MODERNIZED • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v1.0.0 • WIND POWER PLANT DEFENSE • BIG UPDATE</div></header>
 
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
@@ -399,7 +406,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
   <div class="screen active" id="screenMenu">
     <div class="menu-icon">🛡️</div>
     <div class="menu-title">WPPDef</div>
-    <div class="menu-subtitle">Wind Power Plant Defense — живая оборона. Умные враги, тактика, мини-игры.</div>
+    <div class="menu-subtitle">Wind Power Plant Defense — живая оборона. Умные враги, тактика, мини-игры, босс-раш.</div>
     <div class="menu-stats">
       <div class="menu-stat"><div class="menu-stat-label">Рекорд</div><div class="menu-stat-value" id="menuHighScore">0</div></div>
       <div class="menu-stat"><div class="menu-stat-label">Игр</div><div class="menu-stat-value" id="menuGamesPlayed">0</div></div>
@@ -414,13 +421,16 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <button class="menu-btn-mini" id="btnStats">📊 Статистика</button>
       <button class="menu-btn-mini" id="btnSettings">⚙️ Настройки</button>
     </div>
-    <button class="btn" id="btnStart" style="margin-bottom:10px">▶️ НАЧАТЬ ИГРУ</button>
+    <div style="display:flex;gap:8px;width:100%;max-width:400px;margin-bottom:10px">
+      <button class="btn" id="btnStart" style="flex:2">▶️ ИГРАТЬ</button>
+      <button class="btn rush" id="btnBossRush" style="flex:1">👹 БОСС-РАШ</button>
+    </div>
     <button class="btn ghost small" id="btnTutorial">📖 Как играть</button>
   </div>
 
   <div class="screen" id="screenOperator">
     <div class="menu-title" style="font-size:20px;margin-bottom:6px">👤 ВЫБОР ДОЛЖНОСТИ</div>
-    <div class="menu-subtitle" style="margin-bottom:14px">У каждого — свой стиль и перки (ур. 3, 6, 9)</div>
+    <div class="menu-subtitle" id="opSubtitle" style="margin-bottom:14px">У каждого — свой стиль и перки (ур. 3, 6, 9)</div>
     <div id="operatorList" style="width:100%;max-width:440px;margin-bottom:12px"></div>
     <div style="display:flex;gap:8px;width:100%;max-width:420px">
       <button class="btn ghost small" id="btnBackMenu" style="flex:1">← Назад</button>
@@ -434,7 +444,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
     <div style="width:100%;max-width:420px">
       <div class="map-container">
         <div class="map-grid" id="mapGrid"></div>
-        <div class="map-info">Очков защиты: <strong id="shieldsLeft">3</strong> из <strong>3</strong></div>
+        <div class="map-info">Очков защиты: <strong id="shieldsLeft">3</strong> из <strong id="maxShields">3</strong></div>
       </div>
       <div style="display:flex;gap:8px">
         <button class="btn ghost small" id="btnBackOp" style="flex:1">← Назад</button>
@@ -461,13 +471,13 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
       <div class="risk-indicator" id="riskIndicator"></div>
       <div class="timer-display"><div class="timer-label">Время</div><div class="timer-value" id="timerValue">15</div></div>
       <div class="action-bar" id="actionBar">
-        <button class="action-btn active" data-act="attack">⚔️ АТАКА</button>
-        <button class="action-btn" data-act="shield">🛡️ ЗАЩИТА</button>
-        <button class="action-btn" data-act="analyze">🔍 АНАЛИЗ</button>
+        <button class="action-btn active" data-act="attack" data-k="A">⚔️ АТАКА</button>
+        <button class="action-btn" data-act="shield" data-k="S">🛡️ ЗАЩИТА</button>
+        <button class="action-btn" data-act="analyze" data-k="D">🔍 АНАЛИЗ</button>
       </div>
       <div class="attack-tools">
-        <button class="btn ghost small" id="btnHint">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
-        <button class="btn ghost small" id="btnFreeze">🧊 Стоп-время (<span id="freezeLeft">0</span>)</button>
+        <button class="btn ghost small" id="btnHint" data-k="Q">💡 Подсказка (<span id="hintsLeft">3</span>)</button>
+        <button class="btn ghost small" id="btnFreeze" data-k="F">🧊 Стоп-время (<span id="freezeLeft">0</span>)</button>
         <button class="btn skip small" id="btnSkip" style="display:none">⏭️ Пропуск (<span id="skipsLeft">1</span>)</button>
       </div>
       <div class="options-grid" id="optionsGrid"></div>
@@ -475,9 +485,9 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
   </div>
 
   <div class="screen" id="screenGameOver">
-    <div class="gameover-icon">💥</div>
-    <div class="gameover-title">КРИТИЧЕСКИЙ СБОЙ</div>
-    <div class="gameover-subtitle">Угроза достигла 100%</div>
+    <div class="gameover-icon" id="gameoverIcon">💥</div>
+    <div class="gameover-title" id="gameoverTitle">КРИТИЧЕСКИЙ СБОЙ</div>
+    <div class="gameover-subtitle" id="gameoverSub">Угроза достигла 100%</div>
     <div class="gameover-stats">
       <div class="menu-stat"><div class="menu-stat-label">Счёт</div><div class="menu-stat-value" id="finalScore">0</div></div>
       <div class="menu-stat"><div class="menu-stat-label">Уровень</div><div class="menu-stat-value" id="finalLevel">1</div></div>
@@ -499,6 +509,8 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <script>
 'use strict';
 
+const VERSION='1.0.0';
+
 // CRITICAL: SALT and SCHEMA remain unchanged to preserve player progress
 const SALT='wppdef_v080_sec_x9z2a1';
 const SCHEMA=8;
@@ -519,7 +531,7 @@ const MIGRATIONS={
   7:d=>{d.stats=d.stats||{};d.stats.bossesDefeated=d.stats.bossesDefeated??0;return d;},
   8:d=>{d.stats=d.stats||{};['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated'].forEach(k=>{d.stats[k]=d.stats[k]??0;});return d;}
 };
-const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth'];
+const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth','hotkeysOn'];
 
 function migrate(){
   const stored=STORE.get('schemaVersion',1);if(stored>=SCHEMA)return;
@@ -607,8 +619,29 @@ const ATTACKS=[
   {id:'uav_firmware',category:'hard',name:'ПРОШИВКА БПЛА',description:'Обнаружена модификация кода дрона-инспектора.',wrongOptions:['Удалить дрон','Игнорировать','Перепрошить "как есть"'],correctOption:'Карантин и проверка хэш-сумм',damage:36,reward:155,hint:'Целостность кода.'},
   {id:'quantum_hack',category:'hard',name:'КВАНТОВЫЙ ВЗЛОМ',description:'Попытка расшифровки архивов алгоритмом Шора.',wrongOptions:['Удалить архивы','Игнорировать','Увеличить длину ключа RSA'],correctOption:'Переход на постквантовую криптографию',damage:38,reward:160,hint:'Алгоритмы, устойчивые к квантовым атакам.'},
   {id:'scada_zero',category:'hard',name:'SCADA 0-DAY',description:'Неизвестная уязвимость в контроллере турбины.',wrongOptions:['Обновить антивирус','Игнорировать','Перезагрузить ПЛК'],correctOption:'Физическая изоляция сегмента',damage:37,reward:158,hint:'Воздушный зазор (air gap).'},
-  {id:'ai_poison',category:'hard',name:'ОТРАВЛЕНИЕ AI',description:'В обучающую выборку внесены вредоносные паттерны.',wrongOptions:['Перезагрузить сервер','Игнорировать','Удалить модель'],correctOption:'Откат к чистой версии и аудит данных',damage:34,reward:152,hint:'Валидация датасетов.'}
+  {id:'ai_poison',category:'hard',name:'ОТРАВЛЕНИЕ AI',description:'В обучающую выборку внесены вредоносные паттерны.',wrongOptions:['Перезагрузить сервер','Игнорировать','Удалить модель'],correctOption:'Откат к чистой версии и аудит данных',damage:34,reward:152,hint:'Валидация датасетов.'},
+  {id:'juice_jack',category:'easy',name:'ПОДЗАРЯДКА-ЛОВУШКА',description:'Бесплатная USB-зарядка в зоне отдыха., подозрительно новая.',wrongOptions:['Зарядиться быстро','Взять кабель у соседа','Зарядить и ноутбук'],correctOption:'Свой адаптер и розетка',damage:10,reward:42,hint:'USB-порт передаёт данные.'},
+  {id:'evil_twin',category:'easy',name:'EVIL TWIN',description:'Клон рабочей Wi-Fi сети с более сильным сигналом.',wrongOptions:['Подключиться к сильной','Забыть старую сеть','Усилить роутер'],correctOption:'Отключить автоподключение и проверить SSID',damage:11,reward:44,hint:'Автоподключение — уязвимость.'},
+  {id:'typosquat',category:'easy',name:'ТАЙПОСКВОТТИНГ',description:'Письмо с домена «wppdef.com», где буква «р» — кириллица.',wrongOptions:['Ответить на письмо','Открыть ссылку','Переслать коллегам'],correctOption:'Проверить домен и Punycode',damage:10,reward:40,hint:'Символы-двойники в домене.'},
+  {id:'fake_app',category:'easy',name:'ФЕЙКОВОЕ ПРИЛОЖЕНИЕ',description:'«Служебное» приложение просит доступ к контактам и файлам.',wrongOptions:['Установить','Разрешить доступ','Отправить коллегам'],correctOption:'Удалить и сообщить в ИБ',damage:12,reward:46,hint:'Только корпоративный стор.'},
+  {id:'shadow_it',category:'easy',name:'ТЕНЕВОЕ IT',description:'Сотрудники хранят отчёты в непроверенном облаке.',wrongOptions:['Запретить интернет','Игнорировать','Скачать всё обратно'],correctOption:'Реестр сервисов и DLP-контроль',damage:11,reward:44,hint:'Контроль облачных сервисов.'},
+  {id:'printer_hack',category:'easy',name:'ВЗЛОМ МФУ',description:'Принтер печатает чужие документы ночью.',wrongOptions:['Выключить принтер','Заменить картридж','Игнорировать'],correctOption:'Изолировать и обновить прошивку',damage:12,reward:48,hint:'Принтер — тоже компьютер.'},
+  {id:'cryptojack',category:'easy',name:'КРИПТОДЖЕКИНГ',description:'Сервер шумит, загрузка CPU 99% среди ночи.',wrongOptions:['Перезагрузить сервер','Улучшить охлаждение','Игнорировать'],correctOption:'Найти майнер и закрыть уязвимость',damage:13,reward:50,hint:'Майнер грузит процессор.'},
+  {id:'deepfake_voice',category:'medium',name:'ДИПФЕЙК-ЗВОНОК',description:'«Директор» голосом срочно просит перевести деньги.',wrongOptions:['Перевести','Попросить письмо','Положить трубку'],correctOption:'Кодовое слово и обратный звонок',damage:18,reward:75,hint:'Проверка по второму каналу.'},
+  {id:'sim_swap',category:'medium',name:'SIM-SWAP',description:'SMS-коды приходят не вам: номер перерегистрирован.',wrongOptions:['Сменить номер','Ждать','Выключить телефон'],correctOption:'Перейти на аппаратные ключи',damage:20,reward:80,hint:'Аппаратный ключ надёжнее SMS.'},
+  {id:'iot_botnet',category:'medium',name:'IoT-БОТНЕТ',description:'Датчики ветра шлют трафик на неизвестный сервер.',wrongOptions:['Выключить датчики','Игнорировать','Сменить пароль админа'],correctOption:'Сегментация IoT и фильтрация трафика',damage:21,reward:82,hint:'IoT — в отдельный VLAN.'},
+  {id:'cloud_key',category:'medium',name:'УТЕЧКА ОБЛАЧНОГО КЛЮЧА',description:'Рабочий ключ API попал в публичный репозиторий.',wrongOptions:['Удалить репозиторий','Сменить пароль','Игнорировать'],correctOption:'Отозвать ключ и ротация секретов',damage:19,reward:78,hint:'Секреты не живут в коде.'},
+  {id:'hvac_hack',category:'medium',name:'КЛИМАТ-СИСТЕМА',description:'Взломан контроллер вентиляции серверной.',wrongOptions:['Выключить вентиляцию','Игнорировать','Выставить 16°C'],correctOption:'Изолировать и перепрошить контроллер',damage:20,reward:78,hint:'Климат — точка входа.'},
+  {id:'patch_exploit',category:'medium',name:'ЭКСПЛОЙТ ПАТЧ-ДНЯ',description:'Патч вышел, а эксплойт уже применяют в атаках.',wrongOptions:['Ждать регламента','Игнорировать','Перезагрузить всё'],correctOption:'Экстренное развёртывание патча',damage:21,reward:80,hint:'Виртуальный патчинг на время.'},
+  {id:'dns_tunnel',category:'medium',name:'DNS-ТУННЕЛЬ',description:'Данные утекают через аномальные DNS-запросы.',wrongOptions:['Сменить DNS-сервер','Игнорировать','Отключить DNS'],correctOption:'Анализ и блокировка аномальных запросов',damage:20,reward:80,hint:'Длинные TXT-запросы — признак.'},
+  {id:'recruiter',category:'medium',name:'ВЕРБОВКА ИНСАЙДЕРА',description:'Сотруднику пишут «конкуренты» и предлагают деньги за схемы.',wrongOptions:['Уволить сотрудника','Игнорировать','Прочитать переписку'],correctOption:'Сообщить в СБ и зафиксировать контакт',damage:19,reward:76,hint:'Честный канал лучше шантажа.'},
+  {id:'log4shell',category:'hard',name:'LOG4SHELL',description:'JNDI-строки в логах веб-приложения.',wrongOptions:['Перезагрузить Java','Игнорировать','Собрать больше логов'],correctOption:'Патч библиотеки и WAF-правила',damage:32,reward:150,hint:'Уязвимость в логировании.'},
+  {id:'golden_ticket',category:'hard',name:'GOLDEN TICKET',description:'Поддельный билет Kerberos гуляет по домену.',wrongOptions:['Сменить пароль юзера','Игнорировать','Перезагрузить ПК'],correctOption:'Двойной сброс krbtgt',damage:34,reward:158,hint:'Двойной сброс — стандарт.'},
+  {id:'data_wiper',category:'hard',name:'ВАЙПЕР',description:'Утилита затирает загрузчики ПЛК на подстанции.',wrongOptions:['Перезагрузить ПЛК','Игнорировать','Выключить цех'],correctOption:'Автономные бэкапы и air gap',damage:36,reward:160,hint:'Стиль Industroyer.'},
+  {id:'harvest_now',category:'hard',name:'HARVEST NOW, DECRYPT LATER',description:'Атакующий копит зашифрованный трафик «на будущее».',wrongOptions:['Игнорировать','Увеличить RSA','Зашифровать повторно'],correctOption:'Постквантовая миграция уже сейчас',damage:33,reward:152,hint:'Квантовый компьютер уже близко.'},
+  {id:'firmware_backdoor',category:'hard',name:'БЭКДОР В ПРОШИВКЕ',description:'Подписанная прошивка контроллера содержит чужой код.',wrongOptions:['Откатить версию','Игнорировать','Переподписать'],correctOption:'Проверка хэшей и пересборка из исходников',damage:35,reward:158,hint:'Цепочка поставок под угрозой.'}
 ];
+
 
 const BOSSES=[
   {id:'boss_apt28',category:'boss',name:'APT28: КООРДИНИРОВАННАЯ',isBoss:true,bossHp:150,description:'ФАЗА 1/3: Фишинг на 5 сотрудников.',wrongOptions:['Заблокировать всех','Игнорировать','Отключить почту'],correctOption:'Заблокировать письма',damage:40,reward:120,hint:'Изолировать.',phase2:{description:'ФАЗА 2/3: Боковое перемещение.',wrongOptions:['Перезагрузить','Игнорировать','Мониторинг'],correctOption:'Сегментировать сеть',hint:'Сегментация.'},phase3:{description:'ФАЗА 3/3: Кража данных.',wrongOptions:['Уволить всех','Игнорировать','Перезагрузить'],correctOption:'Отозвать доступы',hint:'Отозвать.'}},
@@ -624,13 +657,21 @@ const SKILLS=[
   {id:'shield',name:'КИБЕРЩИТ',desc:'−10% урона',maxLevel:5,costs:[150,300,600,1200,2500]},
   {id:'intuition',name:'ИНТУИЦИЯ',desc:'+1 подсказка',maxLevel:3,costs:[500,1500,4000]},
   {id:'crit',name:'КРИТИЧЕСКИЙ ОТВЕТ',desc:'Шанс x2 очков за правильный ответ',maxLevel:5,costs:[500, 1500, 4000, 10000, 25000]},
-  {id:'freeze',name:'ЗАМОРОЗКА',desc:'+5 сек к таймеру (1 раз за игру)',maxLevel:1,costs:[2000]}
+  {id:'freeze',name:'ЗАМОРОЗКА',desc:'+5 сек к таймеру (1 раз за игру)',maxLevel:1,costs:[2000]},
+  {id:'combo',name:'СЦЕПКА',desc:'Усиливает комбо-множитель (+0.25 за уровень)',maxLevel:3,costs:[800,2200,5500]},
+  {id:'armor',name:'БРОНЯ',desc:'+1 щит на карте ВЭС',maxLevel:2,costs:[1500,5000]},
+  {id:'intel',name:'РАЗВЕДКА',desc:'+20% INTEL со всех источников',maxLevel:5,costs:[200,500,1000,2000,4000]},
+  {id:'insurance',name:'СТРАХОВКА',desc:'Первая ошибка за смену: урон −40%',maxLevel:1,costs:[3000]},
+  {id:'hunter',name:'ОХОТНИК',desc:'+12% очков на боссах',maxLevel:5,costs:[300,800,1800,4000,9000]}
 ];
 
 const BRANCHES={
   turbines:{name:'ВЕТРОГЕНЕРАТОРЫ',icon:'🏭',desc:'Пассивный доход',maxLevel:20,costs:[100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 50000000],effect:l=>l===0?'Нет дохода':`+${(l*0.1).toFixed(1)} ₡/сек`},
   defense:{name:'ЗАЩИТА',icon:'🛡️',desc:'−урон и +время',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`−${l*5}% урона, +${l} сек`},
-  staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`}
+  staff:{name:'ПЕРСОНАЛ',icon:'👥',desc:'+очки и XP',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Нет бонусов':`+${l*10}% очков`},
+  repair:{name:'РЕМОНТНЫЙ ЦЕХ',icon:'🔧',desc:'Ремонт турбин после атак',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартный ремонт':`+${l*10}% к ремонту турбин`},
+  power:{name:'ЭНЕРГОБЛОК',icon:'⚡',desc:'Выплата червонцев за смену',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартная выплата':`+${l*8}% червонцев за смену`},
+  intel:{name:'ЦЕНТР МОНИТОРИНГА',icon:'📡',desc:'Скорость набора INTEL',maxLevel:20,costs:[50, 100, 200, 400, 800, 1500, 3000, 6000, 12000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000],effect:l=>l===0?'Стандартный INTEL':`+${l*10}% INTEL`}
 };
 
 const OPERATORS={
@@ -656,7 +697,11 @@ const ACHIEVEMENTS=[
   {id:'tycoon',name:'МАГНАТ',desc:'5000 червонцев',icon:'💎'},
   {id:'builder',name:'СТРОИТЕЛЬ',desc:'Ветрогенераторы 5',icon:'🏗️'},
   {id:'shooter',name:'СТРЕЛОК',desc:'10 мини-игр',icon:'🎯'},
-  {id:'op_master',name:'МАСТЕР',desc:'Специалист 5 ур.',icon:'⭐'}
+  {id:'op_master',name:'МАСТЕР',desc:'Специалист 5 ур.',icon:'⭐'},
+  {id:'boss_rush',name:'ГЛАВНЫЙ ПРИЗ',desc:'Пройди Босс-раш',icon:'👹'},
+  {id:'architect',name:'АРХИТЕКТОР',desc:'Все ветки прокачки 5+',icon:'⚒️'},
+  {id:'polymath',name:'ПОЛИМАТ',desc:'5 навыков ур. 3+',icon:'🧠'},
+  {id:'no_miss',name:'НЕПРОБИВАЕМЫЙ',desc:'4 уровня без ошибок',icon:'💎'}
 ];
 
 const CONTRACTS=[
@@ -674,6 +719,8 @@ const TUTORIAL=[
   {icon:'🎲',title:'СОБЫТИЯ',text:'Мини-игры на память, логику и реакцию.'},
   {icon:'🏭',title:'ЖИВАЯ ВЭС',text:'Турбины вверху — ваши. При уроне ломаются и искрят.'},
   {icon:'💀',title:'БОССЫ',text:'3 фазы, лечится при ошибках, блокирует действия!'},
+  {icon:'👹',title:'БОСС-РАШ',text:'Новый режим: 5 боссов подряд без передышки. Очки ×2.5, за полную победу — бонус 1000 ₡.'},
+  {icon:'⌨️',title:'ГОРЯЧИЕ КЛАВИШИ',text:'1-6 — выбор варианта, A/S/D — тактики, Q — подсказка, F — стоп-время, Space — пауза. Отключаются в настройках.'},
   {icon:'🚀',title:'УДАЧИ!',text:'Не дайте угрозе достичь 100%. Станьте легендой!'}
 ];
 
@@ -683,6 +730,7 @@ const state={
   stats:STORE.get('stats',{}),
   xp:STORE.get('xp',0),tutorialSeen:STORE.get('tutorialSeen',false),
   theme:STORE.get('theme','cyber'),soundOn:STORE.get('soundOn',true),vibeOn:STORE.get('vibeOn',true),
+  hotkeysOn:STORE.get('hotkeysOn',true),
   credits:STORE.get('credits',0),lastIncomeTick:STORE.get('lastIncomeTick',Date.now()),
   branches:STORE.get('branches',{turbines:0,defense:0,staff:0}),
   recentAttacks:STORE.get('recentAttacks',[]),operator:STORE.get('operator',null),
@@ -692,7 +740,8 @@ const state={
   permanentBonuses:STORE.get('permanentBonuses',{scoreBonus:0,timeBonus:0}),
   turbineHealth:STORE.get('turbineHealth',{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100})
 };
-['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated'].forEach(k=>{state.stats[k]=state.stats[k]||0;});
+['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k=>{state.stats[k]=state.stats[k]||0;});
+['repair','power','intel'].forEach(k=>{state.branches[k]=state.branches[k]||0;});
 
 const TURBINES=['ВЭУ-1','ВЭУ-2','ВЭУ-3','ВЭУ-4','ВЭУ-5'];
 const RECENT_LIMIT=7;
@@ -779,7 +828,7 @@ function damageTurbine(name,dmg){
     spawnFloatingNumber(rect.left+rect.width/2, rect.top+20, '-'+dmg+'%', '#d93025');
   }
 }
-function repairTurbines(){TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+5);});STORE.set('turbineHealth',state.turbineHealth);renderVesScene();}
+function repairTurbines(){const heal=5*(1+state.branches.repair*0.10);TURBINES.forEach(t=>{state.turbineHealth[t]=Math.min(100,(state.turbineHealth[t]??100)+heal);});STORE.set('turbineHealth',state.turbineHealth);renderVesScene();}
 
 function showCombo(mult){
   ui.comboDisplay.textContent='COMBO x'+mult+'!';
@@ -787,6 +836,7 @@ function showCombo(mult){
   if(mult>=5)playFanfare();else if(mult>=3)playSuccess();else beep(880,80,0.1);
 }
 function comboMultiplier(streak){if(streak>=10)return 5;if(streak>=7)return 3;if(streak>=4)return 2;return 1;}
+function gainIntel(n){const m=1+getSkillLevel('intel')*0.20+state.branches.intel*0.10;game.intel=Math.min(100,Math.round((game.intel||0)+n*m));renderIntel();}
 
 function updateRiskIndicator(){
   if(!game.running||!game.timeLeft){ui.riskIndicator.textContent='';return;}
@@ -874,6 +924,10 @@ function checkAch(){
   if(state.credits>=5000)unlock('tycoon');if(state.branches.turbines>=5)unlock('builder');if(state.shooterWins>=10)unlock('shooter');
   for(const s of SKILLS){if(getSkillLevel(s.id)>=s.maxLevel){unlock('scholar');break;}}
   if(state.operator&&opLevel(state.operator)>=5)unlock('op_master');
+  if((state.stats.bossRushWins||0)>=1)unlock('boss_rush');
+  if(Object.values(state.branches).every(v=>v>=5))unlock('architect');
+  if(Object.values(state.skills).filter(v=>v>=3).length>=5)unlock('polymath');
+  if(game.level>=4&&game.attacksRepelled>0&&game.attacksMissed===0)unlock('no_miss');
 }
 function updateStats(){
   const sc=game.score??0, lv=game.level??1, th=game.threat??0;
@@ -889,6 +943,7 @@ function showScreen(n){
 function updateMenu(){ui.menuHighScore.textContent=state.highScore;ui.menuGamesPlayed.textContent=state.gamesPlayed;updateCreditsUI();}
 function pushRecent(id){state.recentAttacks.push(id);if(state.recentAttacks.length>RECENT_LIMIT)state.recentAttacks=state.recentAttacks.slice(-RECENT_LIMIT);STORE.set('recentAttacks',state.recentAttacks);}
 function pickAttack(){
+  if(game.mode==='bossrush')return game.bossSeq[game.bossIdx]||BOSSES[0];
   if(game.level>0&&game.level%5===0&&game.attacksRepelled>0&&game.attacksRepelled===(game.level-1)*5){
     const avail=BOSSES.filter(b=>!state.recentAttacks.includes(b.id));const pool=avail.length>0?avail:BOSSES;
     const b=pool[Math.floor(Math.random()*pool.length)];pushRecent(b.id);return b;
@@ -917,7 +972,7 @@ function openContracts(){
 }
 function openUpgrade(){
   ui.modalTitle.textContent='🏭 РАЗВИТИЕ БАЗЫ';let html='<div class="wallet-bar"><div class="coins">💰 '+Math.floor(state.credits)+' ₡</div><div class="income">📈 +'+incomePerSec().toFixed(1)+' ₡/с</div></div>';
-  for(const key of ['turbines','defense','staff']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
+  for(const key of ['turbines','defense','staff','repair','power','intel']){const b=BRANCHES[key],lvl=state.branches[key];const maxed=lvl>=b.maxLevel,cost=maxed?0:b.costs[lvl];const can=!maxed&&state.credits>=cost;const pips=Array.from({length:b.maxLevel},(_,i)=>'<div class="branch-pip '+(i<lvl?'filled':'')+'"></div>').join('');
     html+=`<div class="branch-card ${key==='turbines'?'turbines':''}"><div class="branch-header"><div class="branch-icon">${b.icon}</div><div class="branch-name">${b.name}</div><div class="branch-level">${lvl}/${b.maxLevel}</div></div><div class="branch-desc">${b.desc}</div><div class="branch-effect">${b.effect(lvl)}</div><div class="branch-progress">${pips}</div><button class="branch-buy" data-b="${key}" ${!can?'disabled':''}>${maxed?'✓ МАКС':`УЛУЧШИТЬ — ${cost} ₡`}</button></div>`;
   }
   ui.modalBody.innerHTML=html;
@@ -966,6 +1021,8 @@ function openStats(){
     <div class="stat-item"><div class="stat-item-label">XP</div><div class="stat-item-value">${state.xp}</div></div>
     <div class="stat-item"><div class="stat-item-label">Червонцы</div><div class="stat-item-value">${Math.floor(state.credits)} ₡</div></div>
     <div class="stat-item"><div class="stat-item-label">Событий</div><div class="stat-item-value">${s.eventsCount}</div></div>
+    <div class="stat-item"><div class="stat-item-label">Босс-раш</div><div class="stat-item-value">${s.bossRushBest||0}/5</div></div>
+    <div class="stat-item"><div class="stat-item-label">Побед в раше</div><div class="stat-item-value">${s.bossRushWins||0}</div></div>
   </div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
   ui.modalOverlay.classList.add('active');
@@ -976,6 +1033,7 @@ function openSettings(){
     <div class="settings-row"><div><div class="settings-label">Тема</div></div><button class="btn ghost small" id="themeToggle">${state.theme==='cyber'?'🟠 Кибер':'🔴 Тревога'}</button></div>
     <div class="settings-row"><div><div class="settings-label">Звуки</div></div><div class="toggle ${state.soundOn?'on':''}" id="soundToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Вибрация</div></div><div class="toggle ${state.vibeOn?'on':''}" id="vibeToggle"></div></div>
+    <div class="settings-row"><div><div class="settings-label">Горячие клавиши</div><div style="font-size:10px;color:var(--dim)">1-6 • A/S/D • Q • F • Space</div></div><div class="toggle ${state.hotkeysOn?'on':''}" id="hotkeysToggle"></div></div>
     <div class="settings-row"><div><div class="settings-label">Туториал</div></div><button class="btn ghost small" id="replayTut">📖 Повторить</button></div>
     <div class="settings-row"><div><div class="settings-label">Сброс</div></div><button class="btn danger small" id="resetBtn">🗑️ Сбросить</button></div>`;
   if (!ui.modalOverlay.classList.contains('active')) { history.pushState({modal: true}, ''); }
@@ -983,6 +1041,7 @@ function openSettings(){
   $('themeToggle').onclick=()=>{applyTheme(state.theme==='cyber'?'alarm':'cyber');openSettings();};
   $('soundToggle').onclick=()=>{state.soundOn=!state.soundOn;STORE.set('soundOn',state.soundOn);openSettings();};
   $('vibeToggle').onclick=()=>{state.vibeOn=!state.vibeOn;STORE.set('vibeOn',state.vibeOn);openSettings();};
+  $('hotkeysToggle').onclick=()=>{state.hotkeysOn=!state.hotkeysOn;STORE.set('hotkeysOn',state.hotkeysOn);openSettings();};
   $('replayTut').onclick=()=>{history.back();startTutorial(true);};
   $('resetBtn').onclick=()=>{
     if(!confirm('Удалить весь прогресс?'))return;
@@ -1018,7 +1077,11 @@ function renderOperators(){
   $('btnToMap').disabled = !(selectedOperator || state.operator);
 }
 
-function openOperatorSelect(){
+let pendingMode='classic';
+function openOperatorSelect(mode){
+  pendingMode=mode||'classic';
+  const sub=$('opSubtitle');
+  if(sub)sub.textContent=pendingMode==='bossrush'?'👹 БОСС-РАШ: 5 боссов подряд • очки ×2.5 • бонус 1000 ₡':'У каждого — свой стиль и перки (ур. 3, 6, 9)';
   renderOperators();
   showScreen('operator');
   history.pushState({screen: 'submenu'}, '');
@@ -1026,10 +1089,11 @@ function openOperatorSelect(){
 
 function openMap(){
   selectedShields={...state.mapShields};
-  const MAX=3;
+  const MAX=3+getSkillLevel('armor');
   function render(){
     const used=Object.values(selectedShields).filter(Boolean).length;
     ui.shieldsLeft.textContent=MAX-used;
+    const ms=$('maxShields');if(ms)ms.textContent=MAX;
     ui.mapGrid.innerHTML='';
     TURBINES.forEach(t=>{
       const cell=document.createElement('div');
@@ -1325,7 +1389,7 @@ async function showRandomEvent(){
   if(r.ok){
     const cr=80+(game.level||1)*15;
     state.credits+=cr;STORE.set('credits',state.credits);updateCreditsUI();
-    game.intel=Math.min(100,(game.intel||0)+40);
+    gainIntel(40);
     game.threat=Math.max(0,game.threat-6);
     toast('✅ Инцидент закрыт: +'+cr+' ₡, +40 INTEL, −6% угрозы','coin',3000);
     playSuccess();
@@ -1371,8 +1435,11 @@ async function startGame(){
     if(hLvl >= 9) hackerSkips += 2;
   }
   
+  const bossrush=pendingMode==='bossrush';
   game={
-    score:0,level:1,threat:0,
+    mode:pendingMode||'classic',victory:false,insuranceUsed:false,
+    bossSeq:bossrush?[...BOSSES].sort(()=>Math.random()-.5):null,bossIdx:0,
+    score:0,level:bossrush?3:1,threat:0,
     activeAttack:null,activePhase:null,phaseIndex:0,
     timer:null,timeLeft:0,maxTime:15,
     attacksRepelled:0,attacksMissed:0,streakRepelled:0,
@@ -1404,13 +1471,15 @@ async function startGame(){
   renderVesScene();
   renderIntel();
   toast(' Специалист: '+OPERATORS[state.operator].name,'success');
+  if(game.mode==='bossrush')toast('👹 БОСС-РАШ: 5 боссов подряд. Удачи!','warning',4000);
   game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
 }
 
 async function spawnAttack(){
   if(!game.running||game.paused)return;
   game.attackCounter++;
-  if(game.attackCounter%3===0&&game.attackCounter>1){
+  const rush=game.mode==='bossrush';
+  if(!rush&&game.attackCounter%3===0&&game.attackCounter>1){
     const ok=await startShooter();
     if(!game.running)return;
     if(ok){game.score+=50;game.shooterBonus=2;toast('🎯 +50 очков за дронов!','success',2000);playSuccess();updateStats();}
@@ -1419,7 +1488,7 @@ async function spawnAttack(){
     game.shooterBonus=0;
   }
 
-  if(game.attackCounter>1&&Math.random()<0.15){
+  if(!rush&&game.attackCounter>1&&Math.random()<0.15){
     await showRandomEvent();
     if(!game.running)return;
   }
@@ -1444,7 +1513,7 @@ async function spawnAttack(){
   renderVesScene();
   playAttackSound(attack.category);
   vibe([40,40,40]);
-  toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2000);
+  toast(game.mode==='bossrush'?'👹 БОСС '+(game.bossIdx+1)+'/5 • '+attack.name:'⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2200);
 }
 
 function startPhaseTimer(){
@@ -1485,10 +1554,11 @@ function renderPhase(){
   ui.attackDesc.classList.toggle('boss',boss);
 
   ui.optionsGrid.innerHTML='';
-  buildOptions(phase).forEach(o=>{
+  buildOptions(phase).forEach((o,idx)=>{
     const b=document.createElement('button');
     b.className='option-btn';
     b.textContent=o;
+    b.dataset.k=idx+1;
     b.onclick=()=>handleAnswer(o===phase.correctOption,b);
     ui.optionsGrid.appendChild(b);
   });
@@ -1539,15 +1609,15 @@ function renderPhase(){
   startPhaseTimer();
 
   if(mutator().id==='fog'){
-    const phase = game.activePhase;
-    if(phase) {
+    const ph = game.activePhase;
+    if(ph) {
       const wrongOptions = [...ui.optionsGrid.children].filter(b => 
-        b.textContent !== phase.correctOption && !b.classList.contains('eliminated')
+        b.textContent !== ph.correctOption && !b.classList.contains('eliminated')
       );
       if(wrongOptions.length > 2) {
-        const idx = Math.floor(Math.random() * wrongOptions.length);
-        wrongOptions[idx].classList.add('eliminated');
-        wrongOptions[idx].disabled = true;
+        const k = Math.floor(Math.random() * wrongOptions.length);
+        wrongOptions[k].classList.add('eliminated');
+        wrongOptions[k].disabled = true;
       }
     }
   }
@@ -1593,7 +1663,7 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
       if(r.ok){
         const bonus=r.clean?60:30;
         game.score+=bonus;
-        game.intel=Math.min(100,(game.intel||0)+15);
+        gainIntel(15);
         toast(r.clean?'🛡️ ИДЕАЛЬНЫЙ БЛОК! +'+bonus:'🛡️ Отбито. +'+bonus,'success',2000);
         resolveRound(true,{shield:true,noScore:true});
       }else{
@@ -1627,8 +1697,7 @@ ui.actionBar.querySelectorAll('.action-btn').forEach(btn=>{
         wrong[k].classList.add('eliminated');
         wrong.splice(k,1);
       }
-      game.intel=Math.min(100,(game.intel||0)+CFG.intelPerScan);
-      renderIntel();
+      gainIntel(CFG.intelPerScan);
       beep(1200,120,.1,'triangle');
       if(!freeAnalyze){
         toast(' −'+n+' варианта, −'+CFG.analyzeCost+' сек, +'+CFG.intelPerScan+' INTEL','info',2200);
@@ -1794,6 +1863,8 @@ function finishRound(correct,a,opt){
 
   if(correct){
     let pts=opt.noScore?0:Math.round(a.reward*rM*(isBoss?2.2:1));
+    if(isBoss&&getSkillLevel('hunter'))pts=Math.round(pts*(1+0.12*getSkillLevel('hunter')));
+    if(isBoss&&game.mode==='bossrush')pts=Math.round(pts*2.5);
     
     const critChance = getSkillLevel('crit') * 0.05;
     if (critChance > 0 && Math.random() < critChance) {
@@ -1805,12 +1876,13 @@ function finishRound(correct,a,opt){
     game.combo=(game.combo||0)+1;
     game.streakRepelled=(game.streakRepelled||0)+1;
     game.maxCombo=Math.max(game.maxCombo||0,game.combo);
-    const cm=comboMultiplier(game.combo);
+    let cm=comboMultiplier(game.combo);
+    if(getSkillLevel('combo'))cm=Math.round((cm+getSkillLevel('combo')*0.25)*100)/100;
     if(cm>1&&pts>0){pts=Math.round(pts*cm);showCombo(cm);}
     game.score+=pts;
     game.threat=Math.max(0,game.threat-(isBoss?18:8));
     game.attacksRepelled++;
-    game.intel=Math.min(100,(game.intel||0)+8);
+    gainIntel(8);
     if(state.operator)opAddXP(state.operator,Math.floor(pts/2)+10);
     repairTurbines();
     
@@ -1825,6 +1897,7 @@ function finishRound(correct,a,opt){
       toast('🏆 БОСС УНИЧТОЖЕН! +'+pts,'success',4000);
       state.stats.bossesDefeated=(state.stats.bossesDefeated||0)+1;
       STORE.set('stats',state.stats);
+      if(game.mode==='bossrush'){game.bossIdx++;toast('👹 Босс '+game.bossIdx+'/5 повержен!','success',2600);}
     }else if(pts>0){
       toast('✅ +'+pts+(cm>1?' (x'+cm+')':''),'success',1500);
     }
@@ -1833,6 +1906,7 @@ function finishRound(correct,a,opt){
   }else{
     let dmg=Math.round(a.damage*dM*(isBoss?1.5:1)*(1+(game.level-1)*0.04));
     dmg=Math.max(2,dmg);
+    if(getSkillLevel('insurance')&&!game.insuranceUsed){dmg=Math.max(2,Math.round(dmg*0.6));game.insuranceUsed=true;toast('🧾 Страховка сработала: урон −40%','info',2600);}
     const t=TURBINES[Math.floor(Math.random()*5)];
     if(state.mapShields[t])dmg=Math.round(dmg*.7);
     game.threat=Math.min(100,game.threat+dmg);
@@ -1854,7 +1928,7 @@ function finishRound(correct,a,opt){
   game.activePhase=null;
   game.lastAnsweredBtn=null;
 
-  const nl=1+Math.floor(game.attacksRepelled/5);
+  const nl=game.mode==='bossrush'?game.level:1+Math.floor(game.attacksRepelled/5);
   if(nl>game.level){
     game.level=nl;
     updateContract('level',nl,true);
@@ -1876,6 +1950,24 @@ function finishRound(correct,a,opt){
   renderIntel();
 
   if(game.threat>=100){endGame();return;}
+  if(game.mode==='bossrush'){
+    if(game.bossIdx>=BOSSES.length){
+      game.victory=true;
+      const bonus=1000;
+      state.credits+=bonus;STORE.set('credits',state.credits);updateCreditsUI();
+      state.stats.bossRushWins=(state.stats.bossRushWins||0)+1;STORE.set('stats',state.stats);
+      unlock('boss_rush');
+      showBanner('БОСС-РАШ ПРОЙДЕН','Все 5 боссов повержены! Бонус +'+bonus+' ₡');
+      setTimeout(()=>endGame(),2400);
+      return;
+    }
+    game.level=Math.min(8,game.level+1);
+    game.hintsLeft=Math.min(9,game.hintsLeft+1);
+    ui.hintsLeft.textContent=game.hintsLeft;
+    ui.btnHint.disabled=game.hintsLeft<=0;
+    game.threat=Math.max(0,game.threat-5);
+    toast('🔻 Передышка: −5% угрозы, +1 подсказка','info',3000);
+  }
   if(game.level>CFG.runLength){
     const bonus=500+game.score*0.25;
     state.credits+=Math.round(bonus);
@@ -1900,7 +1992,7 @@ function endGame(){
 
   const eff=effects();
   const xp=Math.round((game.score/2)*(1+eff.xpBonus));
-  const cr=Math.round(game.score/10)+game.level*20;
+  const cr=Math.round((game.score/10+game.level*20)*(1+state.branches.power*0.08));
 
   if(game.score>state.highScore){
     state.highScore=game.score;
@@ -1921,6 +2013,7 @@ function endGame(){
   state.stats.totalTime+=game.totalTime;
   if(game.level>state.stats.bestLevel)state.stats.bestLevel=game.level;
   if(game.maxCombo>state.stats.maxCombo)state.stats.maxCombo=game.maxCombo;
+  if(game.mode==='bossrush')state.stats.bossRushBest=Math.max(state.stats.bossRushBest||0,game.victory?5:game.bossIdx);
   STORE.set('stats',state.stats);
 
   updateContract('level',game.level,true);
@@ -1928,6 +2021,9 @@ function endGame(){
   updateContract('combo',game.maxCombo,true);
   checkAch();
 
+  $('gameoverIcon').textContent=game.victory?'🏅':'💥';
+  $('gameoverTitle').textContent=game.victory?'ПОБЕДА':'КРИТИЧЕСКИЙ СБОЙ';
+  $('gameoverSub').textContent=game.victory?'Босс-раш пройден — все 5 боссов повержены!':(game.mode==='bossrush'?'Босс-раш: повержено '+game.bossIdx+'/5':'Угроза достигла 100%');
   ui.finalScore.textContent=game.score;
   ui.finalLevel.textContent=game.level;
   ui.finalRepelled.textContent=game.attacksRepelled;
@@ -1936,7 +2032,7 @@ function endGame(){
   ui.creditsGained.textContent='+'+cr+' ₡';
   updateCreditsUI();
   showScreen('gameover');
-  playError();
+  if(game.victory)playFanfare();else playError();
   vibe([200,100,200,100,400]);
 }
 
@@ -1992,6 +2088,29 @@ window.addEventListener('popstate', () => {
   }
 });
 
+document.addEventListener('keydown',e=>{
+  if(state.hotkeysOn===false)return;
+  const tag=(e.target&&e.target.tagName)||'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;
+  if(ui.tutorialOverlay.classList.contains('active'))return;
+  if(document.querySelector('.mg-overlay.on'))return;
+  const modal=ui.modalOverlay.classList.contains('active');
+  const pause=ui.pauseOverlay.classList.contains('active');
+  if(e.code==='Space'||e.code==='Escape'){
+    if(modal&&e.code==='Escape'){ui.modalClose.click();return;}
+    if(pause){e.preventDefault();$('btnResume').click();return;}
+    if(!modal&&game.running&&ui.screenAttack.classList.contains('active')){e.preventDefault();pauseGame();}
+    return;
+  }
+  if(modal||pause||!game.running||game.resolving||!ui.screenAttack.classList.contains('active'))return;
+  const actMap={KeyA:'attack',KeyS:'shield',KeyD:'analyze'};
+  if(actMap[e.code]){const b=ui.actionBar.querySelector('[data-act="'+actMap[e.code]+'"]');if(b&&!b.disabled)b.click();return;}
+  if(e.code==='KeyQ'){if(!ui.btnHint.disabled)ui.btnHint.click();return;}
+  if(e.code==='KeyF'){if(!ui.btnFreeze.disabled)ui.btnFreeze.click();return;}
+  const dm=/^Digit([1-6])$/.exec(e.code);
+  if(dm){const btns=[...ui.optionsGrid.querySelectorAll('.option-btn')].filter(b=>!b.classList.contains('eliminated')&&!b.disabled);const b=btns[+dm[1]-1];if(b)b.click();}
+});
+
 let tutIndex=0;
 function renderTutorial(){
   const s=TUTORIAL[tutIndex];
@@ -2011,7 +2130,8 @@ function closeTutorial(){
   ui.tutorialOverlay.classList.remove('active');
 }
 
-$('btnStart').onclick=openOperatorSelect;
+$('btnStart').onclick=()=>openOperatorSelect('classic');
+$('btnBossRush').onclick=()=>openOperatorSelect('bossrush');
 $('btnBackMenu').onclick=()=>showScreen('menu');
 $('btnToMap').onclick=()=>openMap();
 $('btnBackOp').onclick=()=>openOperatorSelect();
@@ -2066,8 +2186,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v0.9.3','color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cModernized build','color:#8a9199;font-size:12px');
+console.log('%c⚡ WPPDef v'+VERSION,'color:#ff7b00;font-size:20px;font-weight:bold;');
+console.log('%cBig Update: Босс-раш • 97 атак • 6 веток прокачки • 11 навыков • Горячие клавиши','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
