@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500;700&display=swap">
 <meta name="theme-color" content="#1a1c1e" id="themeMeta">
-<title>WPPDef v1.1.0 — Fixed</title>
+<title>WPPDef v1.1.1 — Daily Challenge</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
@@ -253,7 +253,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 <body>
 <div class="combo-display" id="comboDisplay"></div>
 <div class="container">
-<header><h1>WPPDef</h1><div class="subtitle">v1.1.0 • FIXED • WIND POWER PLANT DEFENSE</div></header>
+<header><h1>WPPDef</h1><div class="subtitle">v1.1.1 • DAILY CHALLENGE • WIND POWER PLANT DEFENSE</div></header>
 <div class="stats-bar">
   <div class="stat-card"><div class="stat-label">Счёт</div><div class="stat-value" id="statScore">0</div></div>
   <div class="stat-card"><div class="stat-label">Уровень</div><div class="stat-value" id="statLevel">1</div></div>
@@ -362,6 +362,29 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
     </div>
     <button class="btn" id="btnVictoryRestart">🔄 В МЕНЮ</button>
   </div>
+  <div class="screen" id="screenDaily">
+    <div class="menu-icon">📅</div>
+    <div class="menu-title" style="color:var(--info)">ЕЖЕДНЕВНЫЙ ВЫЗОВ</div>
+    <div class="menu-subtitle" style="margin-bottom:14px">10 атак подряд. Ошибки = провал. Рекорд дня сохраняется.</div>
+    <div class="menu-stats" style="margin-bottom:14px">
+      <div class="menu-stat"><div class="menu-stat-label">Прогресс</div><div class="menu-stat-value" id="dailyProgress">0/10</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Рекорд дня</div><div class="menu-stat-value gold" id="dailyBest">0</div></div>
+      <div class="menu-stat"><div class="menu-stat-label">Ошибки</div><div class="menu-stat-value" id="dailyMistakes">0</div></div>
+      <div class="menu-stat gold"><div class="menu-stat-label">Награда</div><div class="menu-stat-value gold">500 ₡</div></div>
+    </div>
+    <div style="width:100%;max-width:400px;margin-bottom:14px">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:10px">
+        <div style="font-size:11px;color:var(--dim);margin-bottom:6px">ПРОГРЕСС</div>
+        <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+          <div id="dailyProgressBar" style="height:100%;background:var(--info);transition:width .3s;width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;width:100%;max-width:400px">
+      <button class="btn ghost small" id="btnDailyBack" style="flex:1">← Назад</button>
+      <button class="btn small" id="btnDailyStart" style="flex:2;background:var(--info);color:#1a1c1e;border-color:var(--info)">▶️ НАЧАТЬ</button>
+    </div>
+  </div>
 </div>
 </div>
 <div class="modal-overlay" id="modalOverlay"><div class="modal"><div class="modal-title" id="modalTitle"></div><div id="modalBody"></div><button class="btn ghost small modal-close" id="modalClose">Закрыть</button></div></div>
@@ -374,7 +397,7 @@ h1{font-family:'Oswald', sans-serif;font-size:26px;color:var(--accent);text-tran
 const _k1 = [0x77,0x70,0x70,0x64,0x65,0x66,0x5f,0x76,0x30,0x38,0x30];
 const _k2 = [0x5f,0x73,0x65,0x63,0x5f,0x78,0x39,0x7a,0x32,0x61,0x31];
 const SALT = String.fromCharCode(..._k1,..._k2);
-const SCHEMA = 9;
+const SCHEMA = 10;
 
 function secureHash(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193);}return(h>>>0).toString(36);}
 const STORE={
@@ -391,9 +414,10 @@ const MIGRATIONS={
   6:d=>{d.turbineHealth=d.turbineHealth??{'ВЭУ-1':100,'ВЭУ-2':100,'ВЭУ-3':100,'ВЭУ-4':100,'ВЭУ-5':100};return d;},
   7:d=>{d.stats=d.stats||{};d.stats.bossesDefeated=d.stats.bossesDefeated??0;return d;},
   8:d=>{d.stats=d.stats||{};['totalScore','bestLevel','totalRepelled','totalMissed','totalTime','eventsCount','maxCombo','bossesDefeated','bossRushBest','bossRushWins'].forEach(k=>{d.stats[k]=d.stats[k]??0;});return d;},
-  9:d=>{d.lastDailyBonus=d.lastDailyBonus||null;d.dailyDate=d.dailyDate||null;d.dailyStreak=d.dailyStreak||0;d.dailyCompleted=d.dailyCompleted||false;d.seenAttacks=d.seenAttacks||[];d.difficulty=d.difficulty||'normal';d.attackMistakes=d.attackMistakes||{};return d;}
+  9:d=>{d.lastDailyBonus=d.lastDailyBonus||null;d.dailyDate=d.dailyDate||null;d.dailyStreak=d.dailyStreak||0;d.dailyCompleted=d.dailyCompleted||false;d.seenAttacks=d.seenAttacks||[];d.difficulty=d.difficulty||'normal';d.attackMistakes=d.attackMistakes||{};return d;},
+  10:d=>{d.dailyBestScore=typeof d.dailyBestScore==='number'?d.dailyBestScore:0;d.dailyLastPlayedDate=d.dailyLastPlayedDate||null;return d;}
 };
-const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth','lastDailyBonus','dailyDate','dailyStreak','dailyCompleted','seenAttacks','difficulty','attackMistakes'];
+const SAVE_KEYS=['highScore','gamesPlayed','skills','achievements','stats','xp','tutorialSeen','theme','soundOn','vibeOn','credits','lastIncomeTick','branches','recentAttacks','operator','mapShields','contracts','shooterWins','operatorXP','permanentBonuses','turbineHealth','lastDailyBonus','dailyDate','dailyStreak','dailyCompleted','seenAttacks','difficulty','attackMistakes','dailyBestScore','dailyLastPlayedDate'];
 
 function migrate(){
   const stored=STORE.get('schemaVersion',1);if(stored>=SCHEMA)return;
@@ -403,6 +427,33 @@ function migrate(){
   STORE.set('schemaVersion',SCHEMA);
 }
 migrate();
+
+// PRNG для детерминированной генерации
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function getDailySeed() {
+  const dateStr = new Date().toISOString().slice(0,10);
+  let hash = 0;
+  for(let i = 0; i < dateStr.length; i++) {
+    hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+function generateDailyQueue(seed) {
+  const rng = mulberry32(seed);
+  const allAttacks = [...ATTACKS, ...BOSSES];
+  const shuffled = [...allAttacks].sort(() => rng() - 0.5);
+  return shuffled.slice(0, 10);
+}
 
 const ATTACKS=[
   {id:'ddos',category:'easy',name:'DDoS-АТАКА',description:'Аномальный трафик на порт 8080.',wrongOptions:['Игнорировать','Перезагрузить','Отключить интернет'],correctOption:'Переключить на резервный канал',damage:12,reward:40,hint:'Резервный канал снимет нагрузку.'},
@@ -548,7 +599,8 @@ const ACHIEVEMENTS=[
   {id:'iron_will',name:'ЖЕЛЕЗНАЯ ВОЛЯ',desc:'10 правильных ответов при <3 сек',icon:'🧠'},
   {id:'collector_all',name:'ВСЁ СОБРАНО',desc:'Открой все достижения',icon:'💯'},
   {id:'rich_master',name:'ОЛИГАРХ',desc:'100000 червонцев',icon:'💎'},
-  {id:'seen_all',name:'ВИДЕЛ ВСЁ',desc:'Открыть все атаки',icon:'👁️'}
+  {id:'seen_all',name:'ВИДЕЛ ВСЁ',desc:'Открыть все атаки',icon:'👁️'},
+  {id:'daily_master',name:'МАСТЕР ВЫЗОВА',desc:'Пройди ежедневный вызов без ошибок',icon:'📅'}
 ];
 
 const CONTRACTS=[
@@ -568,7 +620,8 @@ const TUTORIAL=[
   {icon:'💀',title:'БОССЫ',text:'3 фазы, лечится при ошибках, блокирует действия!'},
   {icon:'🚀',title:'УДАЧИ!',text:'Не дайте угрозе достичь 100%. Станьте легендой!'},
   {icon:'👹',title:'БОСС-РАШ',text:'5 боссов подряд. Очки ×2.5. +1000₡ за победу.'},
-  {icon:'🌳',title:'6 ВЕТОК ПРОКАЧКИ',text:'Мельницы, Защита, Персонал, Ремонт, Энергоблок, Мониторинг.'}
+  {icon:'🌳',title:'6 ВЕТОК ПРОКАЧКИ',text:'Мельницы, Защита, Персонал, Ремонт, Энергоблок, Мониторинг.'},
+  {icon:'📅',title:'ЕЖЕДНЕВНЫЙ ВЫЗОВ',text:'10 атак подряд без ошибок. +500₡ за идеальное прохождение.'}
 ];
 
 const rawBranches = STORE.get('branches', {});
@@ -609,7 +662,9 @@ const state = {
   dailyCompleted: STORE.get('dailyCompleted', false),
   seenAttacks: Array.isArray(STORE.get('seenAttacks')) ? STORE.get('seenAttacks') : [],
   difficulty: STORE.get('difficulty', 'normal'),
-  attackMistakes: STORE.get('attackMistakes', {})
+  attackMistakes: STORE.get('attackMistakes', {}),
+  dailyBestScore: STORE.get('dailyBestScore', 0),
+  dailyLastPlayedDate: STORE.get('dailyLastPlayedDate', null)
 };
 
 if (!state.stats || typeof state.stats !== 'object') state.stats = {};
@@ -628,7 +683,7 @@ const ui={
   statScore:$('statScore'),statLevel:$('statLevel'),statThreat:$('statThreat'),statCredits:$('statCredits'),
   menuHighScore:$('menuHighScore'),menuGamesPlayed:$('menuGamesPlayed'),menuCredits:$('menuCredits'),menuIncome:$('menuIncome'),
   screenMenu:$('screenMenu'),screenOperator:$('screenOperator'),screenMap:$('screenMap'),
-  screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),screenVictory:$('screenVictory'),
+  screenShooter:$('screenShooter'),screenAttack:$('screenAttack'),screenGameOver:$('screenGameOver'),screenVictory:$('screenVictory'),screenDaily:$('screenDaily'),
   attackLabel:$('attackLabel'),attackName:$('attackName'),attackDesc:$('attackDesc'),timerValue:$('timerValue'),
   optionsGrid:$('optionsGrid'),hintsLeft:$('hintsLeft'),btnHint:$('btnHint'),btnFreeze:$('btnFreeze'),freezeLeft:$('freezeLeft'),actionBar:$('actionBar'),
   finalScore:$('finalScore'),finalLevel:$('finalLevel'),finalRepelled:$('finalRepelled'),finalCombo:$('finalCombo'),
@@ -640,7 +695,8 @@ const ui={
   themeMeta:$('themeMeta'),mapGrid:$('mapGrid'),shieldsLeft:$('shieldsLeft'),
   shooterField:$('shooterField'),shooterTimer:$('shooterTimer'),dronesLeft:$('dronesLeft'),
   operatorList:$('operatorList'),vesScene:$('vesScene'),bossHpContainer:$('bossHpContainer'),
-  riskIndicator:$('riskIndicator'),comboDisplay:$('comboDisplay')
+  riskIndicator:$('riskIndicator'),comboDisplay:$('comboDisplay'),
+  dailyProgress:$('dailyProgress'),dailyBest:$('dailyBest'),dailyMistakes:$('dailyMistakes'),dailyProgressBar:$('dailyProgressBar')
 };
 
 function spawnFloatingNumber(x, y, text, color){
@@ -801,8 +857,8 @@ function updateStats(){
   if(th>=80&&game.running){ui.vesScene.classList.add('emergency');startSiren();}else{ui.vesScene.classList.remove('emergency');stopSiren();}
 }
 function showScreen(n){
-  ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver','screenVictory'].forEach(id=>$(id).classList.remove('active'));
-  const map={menu:'screenMenu',operator:'screenOperator',map:'screenMap',shooter:'screenShooter',attack:'screenAttack',gameover:'screenGameOver',victory:'screenVictory'};
+  ['screenMenu','screenOperator','screenMap','screenShooter','screenAttack','screenGameOver','screenVictory','screenDaily'].forEach(id=>$(id).classList.remove('active'));
+  const map={menu:'screenMenu',operator:'screenOperator',map:'screenMap',shooter:'screenShooter',attack:'screenAttack',gameover:'screenGameOver',victory:'screenVictory',daily:'screenDaily'};
   $(map[n]).classList.add('active');
 }
 function updateMenu(){ui.menuHighScore.textContent=state.highScore;ui.menuGamesPlayed.textContent=state.gamesPlayed;updateCreditsUI();}
@@ -1367,7 +1423,8 @@ async function startGame(){
     sector:0,mutIdx:0,resolving:false,analyzed:false,
     bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
     lastAnsweredBtn:null, forensicFreeUsed: false,
-    bossRushMode: false, bossRushIndex: 0, bossRushQueue: []
+    bossRushMode: false, bossRushIndex: 0, bossRushQueue: [],
+    dailyMode: false, dailyQueue: [], dailyIndex: 0, dailyMistakes: 0, dailyCompletedToday: false
   };
   
   updateStats();
@@ -1409,7 +1466,8 @@ function startBossRush(){
     sector:0,mutIdx:0,resolving:false,analyzed:false,
     bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
     lastAnsweredBtn:null, forensicFreeUsed: false,
-    bossRushMode: true, bossRushIndex: 0, bossRushQueue: []
+    bossRushMode: true, bossRushIndex: 0, bossRushQueue: [],
+    dailyMode: false, dailyQueue: [], dailyIndex: 0, dailyMistakes: 0, dailyCompletedToday: false
   };
 
   const shuffledBosses = [...BOSSES].sort(() => 0.5 - Math.random());
@@ -1429,8 +1487,75 @@ function startBossRush(){
   game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
 }
 
+function startDailyChallenge(){
+  ensureAudio();startAmbient();tickIncome();checkContracts();
+  state.operator = selectedOperator || state.operator || 'engineer';
+  
+  const today = todayKey();
+  const seed = getDailySeed();
+  const queue = generateDailyQueue(seed);
+  
+  game={
+    score:0,level:1,threat:0,
+    activeAttack:null,activePhase:null,phaseIndex:0,
+    timer:null,timeLeft:0,maxTime:15,
+    attacksRepelled:0,attacksMissed:0,streakRepelled:0,
+    running:true,paused:false,nextAttackTimer:null,
+    hintsLeft:3+getFreeHints(),
+    hintUsed:false, freezeUsed:false, insuranceUsed:false,
+    autoSkipLeft: 0, gameStartTime:Date.now(),totalTime:0,
+    attackCounter:0,shooterBonus:0,
+    action:'attack',combo:0,maxCombo:0,bossHp:0,riskAnswered:false,
+    sector:0,mutIdx:0,resolving:false,analyzed:false,
+    bossPhases:3,bossMaxHp:0,blockedAct:null,usedShield:false,intel:0,
+    lastAnsweredBtn:null, forensicFreeUsed: false,
+    bossRushMode: false, bossRushIndex: 0, bossRushQueue: [],
+    dailyMode: true, dailyQueue: queue, dailyIndex: 0, dailyMistakes: 0, dailyCompletedToday: false
+  };
+
+  updateStats();
+  history.replaceState({screen: 'attack'}, '');
+  showScreen('attack');
+  ui.hintsLeft.textContent=game.hintsLeft;
+  ui.btnHint.disabled=false;
+  ui.freezeLeft.textContent = getSkillLevel('freeze') > 0 ? '1' : '0';
+  ui.btnFreeze.disabled = getSkillLevel('freeze') === 0;
+  ui.actionBar.querySelectorAll('.action-btn').forEach(b=>b.classList.toggle('active',b.dataset.act==='attack'));
+  renderVesScene();
+  renderIntel();
+  toast('📅 ЕЖЕДНЕВНЫЙ ВЫЗОВ! 10 атак подряд','warning', 3000);
+  game.nextAttackTimer=setTimeout(()=>spawnAttack(),1500);
+}
+
 async function spawnAttack(){
   if(!game.running||game.paused)return;
+  
+  if(game.dailyMode) {
+    if(game.dailyIndex >= 10) {
+      completeDailyChallenge();
+      return;
+    }
+    const attack = game.dailyQueue[game.dailyIndex];
+    game.activeAttack = attack;
+    game.phaseIndex = 0;
+    game.hintUsed = false;
+    game.action = 'attack';
+    game.analyzed = false;
+    game.usedShield = false;
+    
+    if(!state.seenAttacks.includes(attack.id)) {
+      state.seenAttacks.push(attack.id);
+      STORE.set('seenAttacks', state.seenAttacks);
+    }
+    
+    showScreen('attack');
+    renderPhase();
+    renderVesScene();
+    playAttackSound(attack.category);
+    vibe([40,40,40]);
+    toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':'')+' ['+(game.dailyIndex+1)+'/10]','warning',2000);
+    return;
+  }
   
   if(!game.bossRushMode) {
     if(game.attacksRepelled > 0 && game.attacksRepelled % 3 === 0){
@@ -1480,6 +1605,43 @@ async function spawnAttack(){
   playAttackSound(attack.category);
   vibe([40,40,40]);
   toast('⚠️ '+attack.name+(attack.isBoss?' [БОСС]':''),'warning',2000);
+}
+
+function completeDailyChallenge(){
+  game.running=false;
+  game.paused=false;
+  clearInterval(game.timer);
+  clearTimeout(game.nextAttackTimer);
+  stopAmbient();
+  stopSiren();
+  
+  const today = todayKey();
+  const perfect = game.dailyMistakes === 0;
+  
+  if(game.score > (state.dailyBestScore || 0)) {
+    state.dailyBestScore = game.score;
+    STORE.set('dailyBestScore', state.dailyBestScore);
+  }
+  
+  state.dailyLastPlayedDate = today;
+  STORE.set('dailyLastPlayedDate', today);
+  
+  if(perfect && !state.dailyCompleted) {
+    state.credits = (state.credits || 0) + 500;
+    state.dailyCompleted = true;
+    STORE.set('credits', state.credits);
+    STORE.set('dailyCompleted', true);
+    toast('🏆 ИДЕАЛЬНО! +500₡', 'achievement', 4000);
+    unlock('daily_master');
+  } else if(!perfect) {
+    toast('✅ Вызов завершён! Счёт: '+game.score, 'success', 3000);
+  }
+  
+  updateCreditsUI();
+  showScreen('daily');
+  updateDailyScreen();
+  playFanfare();
+  vibe([100, 50, 100, 50, 200]);
 }
 
 function startPhaseTimer(){
@@ -1822,6 +1984,7 @@ function finishRound(correct,a,opt){
   rM*=riskMultiplier();
   
   if(game.bossRushMode) rM *= 2.5;
+  if(game.dailyMode) rM *= 1.5;
   
   if(state.operator==='analyst' && opLevel('analyst')>=9){
     if(game.maxTime && game.timeLeft/game.maxTime > 0.7){
@@ -1899,6 +2062,18 @@ function finishRound(correct,a,opt){
     updateContract('repel',1);
     updateContract('combo',game.combo,true);
     
+    if(game.dailyMode) {
+      game.dailyIndex++;
+      updateDailyScreen();
+      if(game.dailyIndex >= 10) {
+        setTimeout(()=>completeDailyChallenge(), 1000);
+        return;
+      } else {
+        setTimeout(()=>spawnAttack(), 1000);
+        return;
+      }
+    }
+    
     if(!state.dailyCompleted) {
       state.dailyStreak = (state.dailyStreak||0) + 1;
       STORE.set('dailyStreak', state.dailyStreak);
@@ -1935,6 +2110,19 @@ function finishRound(correct,a,opt){
     state.attackMistakes[a.id] = (state.attackMistakes[a.id]||0) + 1;
     STORE.set('attackMistakes', state.attackMistakes);
     
+    if(game.dailyMode) {
+      game.dailyMistakes++;
+      updateDailyScreen();
+      if(game.dailyMistakes >= 3) {
+        setTimeout(()=>{
+          toast('❌ Слишком много ошибок! Вызов провален.', 'error', 3000);
+          showScreen('menu');
+          updateMenu();
+        }, 1000);
+        return;
+      }
+    }
+    
     state.dailyStreak = 0;
     STORE.set('dailyStreak', 0);
     
@@ -1953,7 +2141,7 @@ function finishRound(correct,a,opt){
   game.activePhase=null;
   game.lastAnsweredBtn=null;
 
-  if(!game.bossRushMode) {
+  if(!game.bossRushMode && !game.dailyMode) {
     const nl=1+Math.floor(game.attacksRepelled/5);
     if(nl>game.level){
       game.level=nl;
@@ -1977,7 +2165,7 @@ function finishRound(correct,a,opt){
   renderIntel();
 
   if(game.threat>=100){endGame();return;}
-  if(!game.bossRushMode && game.level>CFG.runLength){
+  if(!game.bossRushMode && !game.dailyMode && game.level>CFG.runLength){
     let bonus=500+game.score*0.25;
     if(getSkillLevel('energy')>0) bonus = Math.round(bonus * (1 + getSkillLevel('energy') * 0.08));
     
@@ -1988,7 +2176,9 @@ function finishRound(correct,a,opt){
     setTimeout(()=>endGame(),2400);
     return;
   }
-  game.nextAttackTimer=setTimeout(()=>spawnAttack(),Math.max(1400,4200-(game.level||1)*180));
+  if(!game.dailyMode) {
+    game.nextAttackTimer=setTimeout(()=>spawnAttack(),Math.max(1400,4200-(game.level||1)*180));
+  }
 }
 
 function endGame(){
@@ -2068,6 +2258,25 @@ function showVictory(){
   vibe([100, 50, 100, 50, 200]);
 }
 
+function updateDailyScreen(){
+  if(game.dailyMode) {
+    ui.dailyProgress.textContent = game.dailyIndex + '/10';
+    ui.dailyMistakes.textContent = game.dailyMistakes;
+    ui.dailyProgressBar.style.width = (game.dailyIndex * 10) + '%';
+  } else {
+    ui.dailyProgress.textContent = '0/10';
+    ui.dailyMistakes.textContent = '0';
+    ui.dailyProgressBar.style.width = '0%';
+  }
+  ui.dailyBest.textContent = state.dailyBestScore || 0;
+}
+
+function openDailyChallenge(){
+  updateDailyScreen();
+  showScreen('daily');
+  history.pushState({screen: 'submenu'}, '');
+}
+
 function pauseGame(){
   if(!game.running || game.paused || game.resolving) return;
   game.paused=true;
@@ -2108,7 +2317,7 @@ window.addEventListener('popstate', () => {
   } else if (ui.pauseOverlay.classList.contains('active')) {
     ui.pauseOverlay.classList.remove('active');
     if (game.running && game.paused) resumeGame();
-  } else if (ui.screenGameOver.classList.contains('active') || ui.screenVictory.classList.contains('active')) {
+  } else if (ui.screenGameOver.classList.contains('active') || ui.screenVictory.classList.contains('active') || ui.screenDaily.classList.contains('active')) {
     showScreen('menu');
     updateMenu();
   } else if (ui.screenMap.classList.contains('active')) {
@@ -2144,7 +2353,10 @@ $('btnBackMenu').onclick=()=>showScreen('menu');
 $('btnToMap').onclick=()=>openMap();
 $('btnBackOp').onclick=()=>openOperatorSelect();
 $('btnStartGame').onclick=startGame;
-if($('btnBossRush')) $('btnBossRush').onclick=startBossRush;
+$('btnBossRush').onclick=startBossRush;
+$('btnDaily').onclick=openDailyChallenge;
+$('btnDailyBack').onclick=()=>showScreen('menu');
+$('btnDailyStart').onclick=startDailyChallenge;
 $('btnRestart').onclick=()=>{showScreen('menu');updateMenu();};
 $('btnQuickStart').onclick=()=>{selectedOperator=state.operator;selectedShields={...state.mapShields};openMap();};
 $('btnVictoryRestart').onclick=()=>{showScreen('menu');updateMenu();};
@@ -2207,6 +2419,7 @@ function init(){
   });
   state.stats.bossRushBest = state.stats.bossRushBest || 0;
   state.stats.bossRushWins = state.stats.bossRushWins || 0;
+  state.dailyBestScore = state.dailyBestScore || 0;
   
   if(state.operator && !OPERATORS[state.operator]){state.operator=null;STORE.set('operator',null);}
   applyTheme(state.theme);
@@ -2221,8 +2434,8 @@ function init(){
 }
 init();
 
-console.log('%c⚡ WPPDef v1.1.0','color:#ff7b00;font-size:20px;font-weight:bold;');
-console.log('%cFixed build','color:#8a9199;font-size:12px');
+console.log('%c⚡ WPPDef v1.1.1','color:#ff7b00;font-size:20px;font-weight:bold;');
+console.log('%cDaily Challenge','color:#8a9199;font-size:12px');
 </script>
 </body>
 </html>
